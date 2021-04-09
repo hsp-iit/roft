@@ -7,8 +7,8 @@
 #
 #===============================================================================
 
-CONVERSION_TOOL=/home/xenvre/robot-code/synthetic_tracknet_poserbpf/Conversion/nvdu_poses_to_ycbv.py
-YCBV_SYN_PATH=/mnt/synthetic-ycb-video-dataset/object_motion/
+CONVERSION_TOOL=?/synthetic_tracknet_poserbpf/Conversion/nvdu_poses_to_ycbv.py
+YCBV_SYN_PATH=?
 
 mkdir -p ./results/gt
 

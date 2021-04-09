@@ -19,8 +19,8 @@ ONLY_POSE=$8
 ONLY_VEL=$9
 
 # paths and names
-EXECUTABLE=robmo-misc-object-tracker-of
-YCBV_SYN_PATH=/mnt/synthetic-ycb-video-dataset/object_motion/
+EXECUTABLE=?
+YCBV_SYN_PATH=?
 CONFIG_ROOT_PATH=./config/
 OBJECT_ROOT_PATH=$YCBV_SYN_PATH/$OBJECT_NAME/
 OUTPUT_ROOT_PATH=./results/ours/
