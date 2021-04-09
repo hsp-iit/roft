@@ -1,0 +1,6 @@
+matplotlib
+numpy
+pytransform3d
+pyquaternion
+pyrender
+opencv-python
