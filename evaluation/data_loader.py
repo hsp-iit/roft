@@ -7,16 +7,17 @@
 #
 #===============================================================================
 
+import copy
 import numpy
 from objects import Objects
 
 
 class DataLoader():
 
-    def __init__(self, algorithm_name):
+    def __init__(self, algorithm):
         """Constructor."""
 
-        self.algorithm_name = algorithm_name
+        self.algorithm = algorithm
         self.load_methods =\
         {
             'gt' : self.load_gt,
@@ -48,13 +49,13 @@ class DataLoader():
 
     def load(self):
         """Load the data."""
-        self.load_methods[self.algorithm_name]()
+        self.load_methods[self.algorithm['name']]()
 
         return self.data
 
 
     def load_generic(self, file_path):
-
+        """Load from file."""
         data = []
 
         with open(file_path, newline = '') as csv_data:
@@ -79,36 +80,95 @@ class DataLoader():
 
 
     def load_ours(self):
-        """Load the data using our format."""
+        """Load the data of our algorithm using our format."""
 
-        variants = {'full'}
-        contents = {'execution_times', 'pose_estimate_ycb', 'velocity_estimate', 'pose_measurements', 'velocity_measurements'}
+        contents_map =\
+        {
+            'execution_times' : 'times',
+            'pose_estimate_ycb' : 'pose',
+            'velocity_estimate' : 'velocity',
+            'pose_measurements' : 'pose_meas',
+            'velocity_measurements' : 'vel_meas'
+        }
+
+        variant = self.algorithm['config']['variant']
+        path = self.paths['ours'] + variant
+        self.log('load_ours', 'loading data from ' + path, starter = True)
 
         self.data = {}
+        for object_name in self.objects:
+            object_path = path + '/' + object_name + '/'
 
-        for variant in variants:
-            self.data[variant] = {}
+            self.data[object_name] = {}
+            self.log('load_ours', 'processing object ' + object_name)
 
-            path = self.paths['ours'] + variant
-            self.log('load_ours', 'loading data from ' + path, starter = True)
-
-            for object_name in self.objects:
-                object_path = self.paths['ours'] + variant + '/' + object_name + '/'
-
-                self.data[variant][object_name] = {}
-                self.log('load_ours', 'processing object ' + object_name)
-
-                for content in contents:
-                    d = self.load_generic(object_path + content + '.txt')
-                    # This channel contains also a heading 6-sized vector of object velocities
-                    if content == 'pose_estimate_ycb':
-                        d = d[:, 6 : ]
-                    self.data[variant][object_name][content] = d
+            for content in contents_map:
+                d = self.load_generic(object_path + content + '.txt')
+                # This channel contains also a heading 6-sized vector of object velocities
+                if content == 'pose_estimate_ycb':
+                    d = d[:, 6 : ]
+                self.data[object_name][contents_map[content]] = d
 
 
     def load_se3_tracknet(self):
         """Load the data using our format for se3-TrackNet."""
-        pass
+
+        config = self.algorithm['config']
+
+        contents_map = { 'pred' : 'pose' }
+        # For dope, poses used durinig re-initialization are available
+        if config['reinit_from'] == 'dope':
+            contents_map['reinit_dope'] = 'pose_measurements'
+
+        # Video ids used in se3-tracknet dataset
+        video_ids =\
+        {
+            '003_cracker_box' : '0001',
+            '004_sugar_box' : '0002',
+            '005_tomato_soup_can' : '0003',
+            '006_mustard_bottle' : '0004',
+            '009_gelatin_box' : '0005',
+            '010_potted_meat_can' : '0006'
+        }
+
+        # Compose path to files according to the configuration
+        config_string = 'Synthetic_init_'
+        if config['reinit']:
+            config_string += config['reinit_from'] + '_'
+
+            if config['reinit_from'] == 'gt':
+                config_string += '0_'
+
+            config_string += str(config['reinit_fps']) + '_fps'
+        else:
+            config_string += 'reinit_None'
+
+        path = self.paths['se3tracknet'] + config_string
+        self.log('load_se3_tracknet', 'loading data from ' + path, starter = True)
+
+        # Load data for each object
+        for object_name in self.objects:
+            object_path = path + '/' + object_name + '/' + video_ids[object_name] + '/'
+
+            self.data[object_name] = {}
+            self.log('load_ours', 'processing object ' + object_name)
+
+            for content in contents_map:
+                d = self.load_generic(object_path + content + '.txt')
+
+                # Repeat dope poses using sample-and-hold approach
+                if content == 'reinit_dope':
+                    tmp = copy.deepcopy(d)
+                    d = []
+                    for i in range(tmp.shape[0]):
+                        for j in range(int((1.0 / float(config['reinit_fps']) / (1.0 / 30.0)))):
+                            d.append(tmp[i, 2 :])
+                            if i == (tmp.shape[0] - 1):
+                                break
+
+                    d = numpy.array(d)
+
+                self.data[object_name][contents_map[content]] = d
 
 
     def load_poserbpf(self):
