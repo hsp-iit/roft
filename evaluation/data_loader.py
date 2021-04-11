@@ -160,7 +160,7 @@ class DataLoader():
 
             config_string += str(config['reinit_fps']) + '_fps'
         else:
-            config_string += 'reinit_None'
+            config_string += 'gt_reinit_None'
 
         path = self.paths['se3tracknet'] + config_string
         self.log('load_se3_tracknet', 'loading data from ' + path, starter = True)
