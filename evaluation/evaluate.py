@@ -51,7 +51,7 @@ class Evaluator():
         self.metric_names = []
         if metric_name == 'rmse':
             self.metric_names = ['rmse_cartesian_' + coord for coord in ['x', 'y', 'z']]
-            # self.metric_names.append('rmse_angular')
+            self.metric_names.append('rmse_angular')
         elif metric_name == 'ad':
             self.metric_names = ['add', 'adi']
 
