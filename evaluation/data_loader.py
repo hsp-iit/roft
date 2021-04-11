@@ -42,6 +42,7 @@ class DataLoader():
 
     def log(self, method, msg, starter = False):
         """Log function."""
+
         if starter:
             print('DataLoader::' + method + '()')
         print('    info: ' + msg)
@@ -49,6 +50,7 @@ class DataLoader():
 
     def load(self):
         """Load the data."""
+
         self.load_methods[self.algorithm['name']]()
 
         return self.data
@@ -56,11 +58,24 @@ class DataLoader():
 
     def load_generic(self, file_path):
         """Load from file."""
+
         data = []
 
         with open(file_path, newline = '') as csv_data:
             for row in csv_data:
                 data.append([float(num_string.rstrip()) for num_string in row.rstrip().split(sep = ' ') if num_string != ''])
+        return numpy.array(data)
+
+
+    def load_poserbpf_indexes(self, file_path):
+        """Load sequence of PoseRBPF indexes."""
+
+        data = []
+
+        with open(file_path, newline = '') as csv_data:
+            for row in csv_data:
+                data.append(int(row.split(' ')[1].split('/')[1]) - 1)
+
         return numpy.array(data)
 
 
@@ -77,6 +92,8 @@ class DataLoader():
 
             d = self.load_generic(object_path  + 'poses_ycb.txt')
             self.data[object_name] = d
+
+        print('')
 
 
     def load_ours(self):
@@ -108,6 +125,8 @@ class DataLoader():
                 if content == 'pose_estimate_ycb':
                     d = d[:, 6 : ]
                 self.data[object_name][contents_map[content]] = d
+
+        print('')
 
 
     def load_se3_tracknet(self):
@@ -170,7 +189,64 @@ class DataLoader():
 
                 self.data[object_name][contents_map[content]] = d
 
+        print('')
+
 
     def load_poserbpf(self):
         """Load the data using our format for PoseRBPF."""
-        pass
+
+        config = self.algorithm['config']
+
+        contents_map = { 'Pose' : 'pose', 'Index' : 'indexes' }
+        # For dope, poses used durinig re-initialization are available
+        if config['reinit_from'] == 'dope':
+            contents_map['reinit_dope'] = 'pose_measurements'
+
+        # Compose path to files according to the configuration
+        config_string = str(config['particles']) + '_particles' + '/' + 'synthetic_' + str(config['fps']) + 'fps_reinit_'
+
+        if config['reinit']:
+            config_string += config['reinit_from']
+        else:
+            config_string += 'None'
+
+        path = self.paths['poserbpf'] + config_string
+        self.log('load_poserbpf', 'loading data from ' + path, starter = True)
+
+        # Load data for each object
+        for object_name in self.objects:
+            object_path = path + '/' + object_name + '/seq_10/'
+
+            self.data[object_name] = {}
+            self.log('load_poserbpf', 'processing object ' + object_name)
+
+            for content in contents_map:
+
+                if content == 'Index':
+                    content_name = 'Pose_' + object_name + '_seq10'
+                elif content == 'Pose':
+                    content_name = 'Pose_' + object_name + '_seq10_clean'
+                else:
+                    content_name = content
+
+                file_path = object_path + content_name + '.txt'
+                if content == 'Index':
+                    d = self.load_poserbpf_indexes(file_path)
+                else:
+                    d = self.load_generic(file_path)
+
+                # Repeat dope poses using sample-and-hold approach
+                if content == 'reinit_dope':
+                    tmp = copy.deepcopy(d)
+                    d = []
+                    for i in range(tmp.shape[0]):
+                        for j in range(int((1.0 / float(config['fps']) / (1.0 / 30.0)))):
+                            d.append(tmp[i, 2 :])
+                            if i == (tmp.shape[0] - 1):
+                                break
+
+                    d = numpy.array(d)
+
+                self.data[object_name][contents_map[content]] = d
+
+        print('')
