@@ -15,9 +15,9 @@ class Experiments():
 
         self._experiments = {}
 
-        self.add_algorithm_to_experiment('exp_w_dope_predictions', 'ours', variant = 'full')
-        self.add_algorithm_to_experiment('exp_w_dope_predictions', 'poserbpf', particles = 200, fps = 7, reinit = True, reinit_from = 'dope')
-        self.add_algorithm_to_experiment('exp_w_dope_predictions', 'se3tracknet', reinit = True, reinit_from = 'dope', reinit_fps = 5)
+        self.add_algorithm_to_experiment('exp_DOPE', 'ours', variant = 'full')
+        self.add_algorithm_to_experiment('exp_DOPE', 'poserbpf', particles = 200, fps = 7, reinit = True, reinit_from = 'dope')
+        self.add_algorithm_to_experiment('exp_DOPE', 'se3tracknet', reinit = True, reinit_from = 'dope', reinit_fps = 5)
 
 
     @property
