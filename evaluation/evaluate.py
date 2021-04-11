@@ -30,6 +30,7 @@ class Evaluator():
 
         self.data = {}
         self.results = {}
+        self.subset_from = subset_from
 
         # Load object names
         self.objects = Objects().objects
@@ -59,11 +60,11 @@ class Evaluator():
 
         # Process experiments
         if experiment_name is not None:
-            self.evaluate_experiment(experiment_name)
+            self.evaluate_experiment(experiment_name, self.subset_from)
         else:
             # Process all the experiments if the user does not specify a specific experiment
             for experiment in self.experiments.experiments:
-                self.evaluate_experiment(experiment)
+                self.evaluate_experiment(experiment, self.subset_from)
 
         # Render results
         if output_head is not None:
@@ -72,8 +73,14 @@ class Evaluator():
             if output_path is not None:
                 print('Rendered results saved to:')
                 for render_name in renders:
-                    file_path = os.path.join(output_path, render_name + '.' + extension)
+                    file_path = os.path.join(output_path, render_name)
+                    if self.subset_from is not None:
+                        file_path += '_subset_' + self.subset_from
+                    file_path +=  '.' + extension
+                    file_path = "_".join(file_path.split(' '))
+
                     print('"' + render_name + '" in ' + file_path)
+
                     with open(file_path, 'w') as f:
                         f.write(renders[render_name])
             else:
@@ -84,7 +91,7 @@ class Evaluator():
                     print('')
 
 
-    def evaluate_experiment(self, experiment_name):
+    def evaluate_experiment(self, experiment_name, subset_from = None):
         """Process a single experiment."""
 
         print('Processing experiment: ' + experiment_name)
@@ -116,20 +123,30 @@ class Evaluator():
 
                 gt_pose_all = self.data['gt'][object_name]
                 gt_pose = None
-                pose = object_data['pose']
+                pose_all = object_data['pose']
+                pose = None
 
-                # Check if the length of ground truth and pose is the same
-                if gt_pose_all.shape != pose.shape:
-                    # if not check if a list of indexes is provided
-                    if not 'indexes' in object_data:
-                        print('Algorithm ' + algorithm['name'] + ' (label ' + algorithm['label'] + ')' +\
-                              ' provides ' + str(pose.shape) + ' matrix as pose while the ground truth has shape ' + \
-                              str(gt_pose_all.shape) + '. However, a list of indexes for the poses has not been provided.' + \
-                              ' Cannot continue.')
-                    pose_indexes = object_data['indexes']
+                # Check if the user required a specific subset of indexes for the evaluation
+                # and use them for all algorithms different from the one whose indexes are considered
+                if subset_from is not None and algorithm['label'] != subset_from:
+                    pose_indexes = exp_data[subset_from][object_name]['indexes']
                     gt_pose = gt_pose_all[pose_indexes, :]
+                    pose = pose_all[pose_indexes, :]
                 else:
-                    gt_pose = gt_pose_all
+                # Check if the length of ground truth and pose is the same
+                    if gt_pose_all.shape != pose_all.shape:
+                        # if not check if a list of indexes is provided
+                        if not 'indexes' in object_data:
+                            print('Algorithm ' + algorithm['name'] + ' (label ' + algorithm['label'] + ')' +\
+                                  ' provides ' + str(pose_all.shape) + ' matrix as pose while the ground truth has shape ' + \
+                                  str(gt_pose_all.shape) + '. However, a list of indexes for the poses has not been provided.' + \
+                                  ' Cannot continue.')
+                        pose_indexes = object_data['indexes']
+                        pose = pose_all
+                        gt_pose = gt_pose_all[pose_indexes, :]
+                    else:
+                        pose = pose_all
+                        gt_pose = gt_pose_all
 
                 for metric_name in self.metrics:
                     exp_results[algorithm['label']][object_name][metric_name] = self.metrics[metric_name].evaluate(gt_pose, pose)
@@ -146,7 +163,7 @@ class Evaluator():
             renderer = ResultsLaTeXRenderer()
 
         for result_name in self.results:
-            renders[result_name] = renderer.render(result_name, self.results[result_name], self.objects, self.experiments)
+            renders[result_name] = renderer.render(result_name, self.results[result_name], self.objects, self.experiments, self.subset_from)
 
         return renderer.extension, renders
 
@@ -164,7 +181,7 @@ def main():
 
     options = parser.parse_args()
 
-    evaluator = Evaluator(options.metric_name, options.experiment_name, options.output_head, options.output_path)
+    evaluator = Evaluator(options.metric_name, options.experiment_name, options.output_head, options.output_path, options.use_subset)
 
 
 if __name__ == '__main__':
