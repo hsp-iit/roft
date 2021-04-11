@@ -28,7 +28,9 @@ class ResultsMarkdownRenderer():
             'rmse_cartesian_x' : 'x',
             'rmse_cartesian_y' : 'y',
             'rmse_cartesian_z' : 'z',
-            'rmse_angular' : 'ang'
+            'rmse_angular' : 'ang',
+            'add' : 'ADD',
+            'adi' : 'ADI'
         }
 
         self.digits =\
@@ -36,7 +38,9 @@ class ResultsMarkdownRenderer():
             'rmse_cartesian_x' : Decimal('.1'),
             'rmse_cartesian_y' : Decimal('.1'),
             'rmse_cartesian_z' : Decimal('.1'),
-            'rmse_angular' : Decimal('.001')
+            'rmse_angular' : Decimal('.001'),
+            'add' : Decimal('.01'),
+            'adi' : Decimal('.01')
         }
 
         less_than = lambda x, y : x < y
@@ -47,7 +51,9 @@ class ResultsMarkdownRenderer():
             'rmse_cartesian_x' : less_than,
             'rmse_cartesian_y' : less_than,
             'rmse_cartesian_z' : less_than,
-            'rmse_angular' : less_than
+            'rmse_angular' : less_than,
+            'add' : greater_than,
+            'adi' : greater_than
         }
 
         self.extension = 'md'
