@@ -13,25 +13,37 @@ class Experiments():
     def __init__(self):
         """Constructor."""
 
-        self.experiments = {}
+        self._experiments = {}
 
         self.add_algorithm_to_experiment('exp_w_dope_predictions', 'ours', variant = 'full')
+        self.add_algorithm_to_experiment('exp_w_dope_predictions', 'poserbpf', particles = 200, fps = 7, reinit = True, reinit_from = 'dope')
         self.add_algorithm_to_experiment('exp_w_dope_predictions', 'se3tracknet', reinit = True, reinit_from = 'dope', reinit_fps = 5)
-        self.add_algorithm_to_experiment('exp_w_dope_predictions', 'poserbpf', particles = 200, fps = 7, reinit = False, dope = True)
+
+
+    @property
+    def experiments(self):
+        """Return all the experiments."""
+        return self._experiments
+
+
+    def __call__(self, experiment_name):
+        """Return an experiment given the name."""
+
+        return self._experiments[experiment_name]
 
 
     def add_algorithm_to_experiment(self, experiment_name, algorithm_name, **algorithm_conf):
         """Add a new algorithm to the a named experiment."""
 
-        if experiment_name not in self.experiments:
-            self.experiments[experiment_name] = []
+        if experiment_name not in self._experiments:
+            self._experiments[experiment_name] = []
 
         # if a label is not provided, it is set equal to the algorithm name
-        algorithm_label = ''
+        algorithm_label = algorithm_name
         if 'label' in algorithm_conf:
             label = algorithm_conf['label']
 
-        self.experiments[experiment_name].append\
+        self._experiments[experiment_name].append\
         (
             {
                 'label' : algorithm_label,
@@ -41,10 +53,24 @@ class Experiments():
         )
 
 
-    def experiment(self, experiment_name):
-        """Return an experiment given the name."""
+    def print_experiment(self, experiment_name):
+        """Print experiment configuration."""
 
-        return self.experiments[experiment_name]
+        string = 'Experiment name: ' + experiment_name + '\n\r'
+
+        experiment = self._experiments[experiment_name]
+
+        for algorithm in experiment:
+            string += '    algorithm: ' + algorithm['name'] + ', '
+            string += 'label: ' + algorithm['label'] + ', '
+            string += 'config: '
+
+            for key in algorithm['config']:
+                string += key + '=' + str(algorithm['config'][key]) + ', '
+
+            string += '\n\r'
+
+        return string
 
 
     def __str__(self):
@@ -52,19 +78,8 @@ class Experiments():
 
         string = ''
 
-        for experiment_name in self.experiments:
-            string += 'Experiment name: ' + experiment_name + '\n\r'
-
-            experiment = self.experiments[experiment_name]
-
-            for algorithm in experiment:
-                string += '    algorithm: ' + algorithm['name'] + ' '
-                string += '(config: '
-
-                for key in algorithm['config']:
-                    string += key + '=' + str(algorithm['config'][key]) + ', '
-
-                string += ')\n\r'
+        for experiment_name in self._experiments:
+            string += self.print_experiment(experiment_name)
 
         return string
 
