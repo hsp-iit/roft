@@ -13,11 +13,11 @@ class Objects():
         """Constructor"""
 
         self.objects =\
-        {
+        [
             '003_cracker_box',
             '004_sugar_box',
             '005_tomato_soup_can',
             '006_mustard_bottle',
             '009_gelatin_box',
             '010_potted_meat_can'
-        }
+        ]
