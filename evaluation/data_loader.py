@@ -88,7 +88,7 @@ class DataLoader():
             object_path = self.paths['gt'] + '/' + object_name + '/'
 
             self.data[object_name] = {}
-            self.log('load_gt', 'processing object ' + object_name)
+            # self.log('load_gt', 'processing object ' + object_name)
 
             d = self.load_generic(object_path  + 'poses_ycb.txt')
             self.data[object_name] = d
@@ -117,7 +117,7 @@ class DataLoader():
             object_path = path + '/' + object_name + '/'
 
             self.data[object_name] = {}
-            self.log('load_ours', 'processing object ' + object_name)
+            # self.log('load_ours', 'processing object ' + object_name)
 
             for content in contents_map:
                 d = self.load_generic(object_path + content + '.txt')
@@ -170,7 +170,7 @@ class DataLoader():
             object_path = path + '/' + object_name + '/' + video_ids[object_name] + '/'
 
             self.data[object_name] = {}
-            self.log('load_ours', 'processing object ' + object_name)
+            # self.log('load_ours', 'processing object ' + object_name)
 
             for content in contents_map:
                 d = self.load_generic(object_path + content + '.txt')
@@ -218,7 +218,7 @@ class DataLoader():
             object_path = path + '/' + object_name + '/seq_10/'
 
             self.data[object_name] = {}
-            self.log('load_poserbpf', 'processing object ' + object_name)
+            # self.log('load_poserbpf', 'processing object ' + object_name)
 
             for content in contents_map:
 
