@@ -152,7 +152,9 @@ class Evaluator():
                         gt_pose = gt_pose_all
 
                 for metric_name in self.metrics:
-                    exp_results[algorithm['label']][object_name][metric_name] = self.metrics[metric_name].evaluate(gt_pose, pose)
+                    exp_results[algorithm['label']][object_name][metric_name] = self.metrics[metric_name].evaluate(object_name, gt_pose, pose)
+
+        print('')
 
 
     def render(self, head):
