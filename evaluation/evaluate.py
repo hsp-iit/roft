@@ -18,8 +18,15 @@ from results_renderer import ResultsMarkdownRenderer, ResultsLaTeXRenderer
 
 class Evaluator():
 
-    def __init__(self, metric_name, experiment_name, output_head, output_path):
-        """Constructor."""
+    def __init__(self, metric_name, experiment_name, output_head, output_path, subset_from):
+        """Constructor.
+
+           metric_name = the desired metric
+           experiment_name = one of the experiments defined in experiments.Experiments
+           output_head = markdown or latex
+           output_path = where to save results
+           subset_from = name of the algorithm whose ground truth indexes should be used for the evaluation
+        """
 
         self.data = {}
         self.results = {}
@@ -145,12 +152,15 @@ class Evaluator():
 
 
 def main():
+    experiments = Experiments().experiments
+    experiment_names = [name for name in experiments]
+
     parser = argparse.ArgumentParser()
-    parser.add_argument('--metric-name', dest = 'metric_name', type = str, required = True)
-    parser.add_argument('--experiment-name', dest = 'experiment_name', type = str, required = False)
-    parser.add_argument('--use-subset', dest = 'use_subset', type = str, required = False)
-    parser.add_argument('--output_head', dest = 'output_head', type = str, required = False)
-    parser.add_argument('--output_path', dest = 'output_path', type = str, required = False)
+    parser.add_argument('--metric-name', dest = 'metric_name', type = str, required = True, help = "available metrics: ['rmse', 'ad']")
+    parser.add_argument('--experiment-name', dest = 'experiment_name', type = str, required = False, help = 'available experiments: ' + str(experiment_names))
+    parser.add_argument('--use-subset', dest = 'use_subset', type = str, required = False, help = "name of the algorithm whose ground truth indexes should be used for the evaluation. available names are ['ours', 'se3tracknet, 'poserbpf']")
+    parser.add_argument('--output_head', dest = 'output_head', type = str, required = False, help = "available heads: ['markdown', 'latex']")
+    parser.add_argument('--output_path', dest = 'output_path', type = str, required = False, help = "where to save results")
 
     options = parser.parse_args()
 
