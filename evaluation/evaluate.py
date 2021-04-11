@@ -34,15 +34,14 @@ class Evaluator():
 
         # Load object names
         self.objects = Objects().objects
-        print('List of objects:')
-        print(self.objects)
+        print('List of objects: ' + str(self.objects))
         print('')
 
         # Load experiments
         self.experiments = Experiments()
         print('Available experiments:')
-        print(self.experiments)
         print('')
+        print(self.experiments)
 
         # Load ground truth data
         self.data['gt'] = DataLoader({'name' : 'gt'}).load()
@@ -74,6 +73,7 @@ class Evaluator():
                 print('Rendered results saved to:')
                 for render_name in renders:
                     file_path = os.path.join(output_path, render_name)
+                    file_path += '_' + metric_name
                     if self.subset_from is not None:
                         file_path += '_subset_' + self.subset_from
                     file_path +=  '.' + extension
@@ -95,6 +95,7 @@ class Evaluator():
         """Process a single experiment."""
 
         print('Processing experiment: ' + experiment_name)
+        print('')
 
         self.data[experiment_name] = {}
         exp_data = self.data[experiment_name]
@@ -118,6 +119,8 @@ class Evaluator():
 
             # For each object
             for object_name in self.objects:
+                print('    processing object ' + object_name)
+
                 exp_results[algorithm['label']][object_name] = {}
                 object_data = exp_data[algorithm['label']][object_name]
 
