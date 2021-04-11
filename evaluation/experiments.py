@@ -21,11 +21,11 @@ class Experiments():
 
         self.add_algorithm_to_experiment('exp_real', 'ours', variant = 'full')
         self.add_algorithm_to_experiment('exp_real', 'poserbpf', particles = 200, fps = 7, reinit = False, reinit_from = '')
-        self.add_algorithm_to_experiment('exp_real', 'se3tracknet', reinit = False, reinit_from = '', reinit_fps = 5)
+        self.add_algorithm_to_experiment('exp_real', 'se3tracknet', reinit = False, reinit_from = '', reinit_fps = -1)
 
         self.add_algorithm_to_experiment('exp_real_rbpf50', 'ours', variant = 'full')
         self.add_algorithm_to_experiment('exp_real_rbpf50', 'poserbpf', particles = 50, fps = 15, reinit = False, reinit_from = '')
-        self.add_algorithm_to_experiment('exp_real_rbpf50', 'se3tracknet', reinit = False, reinit_from = '', reinit_fps = 5)
+        self.add_algorithm_to_experiment('exp_real_rbpf50', 'se3tracknet', reinit = False, reinit_from = '', reinit_fps = -1)
 
     @property
     def experiments(self):
