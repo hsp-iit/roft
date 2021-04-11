@@ -53,7 +53,7 @@ class ResultsMarkdownRenderer():
         self.extension = 'md'
 
 
-    def render(self, results_name, results, objects, experiments_data):
+    def render(self, results_name, results, objects, experiments_data, subset_from):
         """Renderer."""
 
         algorithm_names = [name for name in results]
@@ -101,6 +101,8 @@ class ResultsMarkdownRenderer():
         experiment_configuration = experiments_data.print_experiment(results_name)
 
         output = '### ' + results_name + '\r\n\r\n'
+        if subset_from is not None:
+            output += '**Ground truth frames taken from ' + subset_from + ' results.**\r\n\r\n'
         output += experiment_configuration
         output += markdown_table.render(header_vector, data_matrix)
 
