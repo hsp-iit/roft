@@ -9,6 +9,7 @@
 
 import copy
 import numpy
+from pyquaternion import Quaternion
 
 
 class Metric():
@@ -89,4 +90,29 @@ class Metric():
 
 
     def rmse_angular(self, reference, signal, **kwargs):
-        pass
+        """Evaluate the RMSE angular error for the orientation.
+
+        References for the adopted metric available in: https://link.springer.com/article/10.1007/s10851-009-0161-2"""
+
+        def aa_to_r(aa):
+            """Axis angle to rotation matrix."""
+            q = Quaternion(axis=[aa[0], aa[1], aa[2]], angle=aa[3])
+
+            return q.rotation_matrix
+
+        def r_to_log(r):
+            """Rotation matrix to its norm."""
+            q = Quaternion(matrix = r)
+            axis = q.axis * q.angle
+
+            return numpy.linalg.norm(axis)
+
+        error = numpy.empty(reference.shape[0])
+
+        for i in range(reference.shape[0]):
+            R_reference = aa_to_r(reference[i, 3 :])
+            R_signal = aa_to_r(signal[i, 3 :])
+            R_error = numpy.dot(R_reference, R_signal.transpose())
+            error[i] = r_to_log(R_error) * 180.0 / numpy.pi
+
+        return numpy.linalg.norm(error) / numpy.sqrt(error.shape[0])
