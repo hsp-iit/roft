@@ -89,8 +89,10 @@ class Experiments():
 
         string = ''
 
-        for experiment_name in self._experiments:
+        for i, experiment_name in enumerate(self._experiments):
             string += self.print_experiment(experiment_name)
+            if i != len(self.experiments) - 1:
+                string += '\n\r'
 
         return string
 
