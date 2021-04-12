@@ -30,7 +30,8 @@ class Metric():
             'rmse_cartesian_z' : self.rmse_cartesian_z,
             'rmse_angular' : self.rmse_angular,
             'add' : self.add,
-            'adi' : self.adi
+            'adi' : self.adi,
+            'add-distances' : self.add_distances
         }
 
         if name not in self.mapping:
@@ -58,10 +59,10 @@ class Metric():
         return numpy.array(data)
 
 
-    def evaluate(self, object_name, reference, signal):
+    def evaluate(self, object_name, indexes, reference, signal):
         """Evaluate the metric on the signal according to its name."""
 
-        return self.mapping[self.name](object_name, reference, signal)
+        return self.mapping[self.name](object_name, indexes, reference, signal)
 
 
     def rmse_cartesian(self, reference, signal, coordinate_name):
@@ -74,25 +75,25 @@ class Metric():
         return numpy.linalg.norm(reference[:, index] - signal[:, index]) / numpy.sqrt(signal.shape[0]) * 100.0
 
 
-    def rmse_cartesian_x(self, object_name, reference, signal):
+    def rmse_cartesian_x(self, object_name, indexes, reference, signal):
         """Evaluate the RMSE cartesian error for the x coordinate."""
 
         return self.rmse_cartesian(reference, signal, 'x')
 
 
-    def rmse_cartesian_y(self, object_name, reference, signal):
+    def rmse_cartesian_y(self, object_name, indexes, reference, signal):
         """Evaluate the RMSE cartesian error for the y coordinate."""
 
         return self.rmse_cartesian(reference, signal, 'y')
 
 
-    def rmse_cartesian_z(self, object_name, reference, signal):
+    def rmse_cartesian_z(self, object_name, indexes, reference, signal):
         """Evaluate the RMSE cartesian error for the y coordinate."""
 
         return self.rmse_cartesian(reference, signal, 'z')
 
 
-    def rmse_angular(self, object_name, reference, signal):
+    def rmse_angular(self, object_name, indexes, reference, signal):
         """Evaluate the RMSE angular error for the orientation.
 
         References for the adopted metric available in: https://link.springer.com/article/10.1007/s10851-009-0161-2"""
@@ -121,16 +122,28 @@ class Metric():
         return numpy.linalg.norm(error) / numpy.sqrt(error.shape[0])
 
 
-    def adi(self, object_name, reference, signal):
+    def adi(self, object_name, indexes, reference, signal):
         """Evaluate ADI-AUC."""
 
-        return self.auc(object_name, reference, signal, 'adi')
+        distances, auc = self.auc(object_name, reference, signal, 'adi')
+
+        return auc
 
 
-    def add(self, object_name, reference, signal):
+    def add(self, object_name, indexes, reference, signal):
         """Evaluate ADD-AUC."""
 
-        return self.auc(object_name, reference, signal, 'add')
+        distances, auc = self.auc(object_name, reference, signal, 'add')
+
+        return auc
+
+
+    def add_distances(self, object_name, indexes, reference, signal):
+        """Evaluate sorted ADD distances."""
+
+        distances, auc = self.auc(object_name, reference, signal, 'add')
+
+        return numpy.sort(distances)
 
 
     def auc(self, object_name, reference, signal, ad_name):
@@ -150,7 +163,7 @@ class Metric():
                 distances.append(bop_add(estimate_R, estimate_t, gt_R, gt_t, self.auc_points[object_name]))
 
         distances = numpy.array(distances)
-
+        distances_copy = copy.deepcopy(distances)
         threshold = 0.1
         inf_indexes = numpy.where(distances > threshold)[0]
         distances[inf_indexes] = numpy.inf
@@ -158,4 +171,4 @@ class Metric():
         n = len(sorted_distances)
         accuracy = numpy.cumsum(numpy.ones((n, ), numpy.float32)) / n
 
-        return VOCap(sorted_distances, accuracy) * 100.0
+        return distances_copy, VOCap(sorted_distances, accuracy) * 100.0
