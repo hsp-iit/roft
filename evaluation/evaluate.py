@@ -49,13 +49,13 @@ class Evaluator():
         # Initialize metrics
         self.metrics = {}
         self.metric_names = []
-        if metric_name == 'rmse':
-            self.metric_names = ['rmse_cartesian_' + coord for coord in ['x', 'y', 'z']]
-            self.metric_names.append('rmse_angular')
-        elif metric_name == 'ad':
+        if metric_name == 'ad':
             self.metric_names = ['add', 'adi']
         elif metric_name == 'add-distances':
             self.metric_names = ['add-distances']
+        elif metric_name == 'rmse':
+            self.metric_names = ['rmse_cartesian_' + coord for coord in ['x', 'y', 'z']]
+            self.metric_names.append('rmse_angular')
 
         self.metrics = { name : Metric(name) for name in self.metric_names }
 
