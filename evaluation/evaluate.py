@@ -53,6 +53,9 @@ class Evaluator():
             self.metric_names = ['add', 'adi']
         elif metric_name == 'add-distances':
             self.metric_names = ['add-distances']
+        elif metric_name == 'error':
+            self.metric_names = ['error_cartesian_' + coord for coord in ['x', 'y', 'z']]
+            self.metric_names.append('error_angular')
         elif metric_name == 'rmse':
             self.metric_names = ['rmse_cartesian_' + coord for coord in ['x', 'y', 'z']]
             self.metric_names.append('rmse_angular')
@@ -198,7 +201,7 @@ def main():
     experiment_names = [name for name in experiments]
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--metric-name', dest = 'metric_name', type = str, required = True, help = "available metrics: ['ad', 'add-distances', 'rmse']")
+    parser.add_argument('--metric-name', dest = 'metric_name', type = str, required = True, help = "available metrics: ['ad', 'add-distances', 'error', 'rmse']")
     parser.add_argument('--experiment-name', dest = 'experiment_name', type = str, required = False, help = 'available experiments: ' + str(experiment_names))
     parser.add_argument('--use-subset', dest = 'use_subset', type = str, required = False, help = "name of the algorithm whose ground truth indexes should be used for the evaluation. available names are ['ours', 'se3tracknet, 'poserbpf']")
     parser.add_argument('--output_head', dest = 'output_head', type = str, required = False, help = "available heads: ['latex', 'markdown', 'plot']")
