@@ -209,20 +209,36 @@ class Metric():
     def auc(self, object_name, reference, signal, ad_name):
         """Evaluate AUC for the Average Distance metric having name ad_name."""
 
-        distances = []
-        for i in range(reference.shape[0]):
-            gt_t = reference[i, 0 : 3]
-            gt_R = Quaternion(axis = reference[i, 3 : 6], angle = reference[i, 6]).rotation_matrix
+        if object_name == 'ALL':
+            names = [name for name in signal]
+        else:
+            names = [object_name]
+            signal = { object_name : signal}
+            reference = { object_name : reference }
 
-            estimate_t = signal[i, 0 : 3]
-            estimate_R = Quaternion(axis = signal[i, 3 : 6], angle = signal[i, 6]).rotation_matrix
+        distances = None
+        for i, name in enumerate(names):
+            sig = signal[name]
+            ref = reference[name]
 
-            if ad_name == 'adi':
-                distances.append(bop_adi(estimate_R, estimate_t, gt_R, gt_t, self.auc_points[object_name]))
-            elif ad_name == 'add':
-                distances.append(bop_add(estimate_R, estimate_t, gt_R, gt_t, self.auc_points[object_name]))
+            dists = []
+            for j in range(ref.shape[0]):
+                gt_t = ref[j, 0 : 3]
+                gt_R = Quaternion(axis = ref[j, 3 : 6], angle = ref[j, 6]).rotation_matrix
 
-        distances = numpy.array(distances)
+                estimate_t = sig[j, 0 : 3]
+                estimate_R = Quaternion(axis = sig[j, 3 : 6], angle = sig[j, 6]).rotation_matrix
+
+                if ad_name == 'adi':
+                    dists.append(bop_adi(estimate_R, estimate_t, gt_R, gt_t, self.auc_points[name]))
+                elif ad_name == 'add':
+                    dists.append(bop_add(estimate_R, estimate_t, gt_R, gt_t, self.auc_points[name]))
+
+            if i == 0:
+                distances = numpy.array(dists)
+            else:
+                distances = numpy.concatenate((distances, dists), axis = 0)
+
         distances_copy = copy.deepcopy(distances)
         threshold = 0.1
         inf_indexes = numpy.where(distances > threshold)[0]
