@@ -90,7 +90,8 @@ class ResultsMatplotlibRenderer():
 
         figure = plt.gcf()
         figure.set_size_inches(self.cm_to_inch(48, 24))
-        plt.show()
+
+        return [figure]
 
 
 class ResultsMarkdownRenderer():
