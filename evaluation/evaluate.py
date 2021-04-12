@@ -134,6 +134,8 @@ class Evaluator():
 
                 # Check if the user required a specific subset of indexes for the evaluation
                 # and use them for all algorithms different from the one whose indexes are considered
+                # e.g. PoseRBPF running at 7fps will produce less frames than the ground truth
+                # and we might want to evaluate all the algorithms on that subset of frames
                 if subset_from is not None and algorithm['label'] != subset_from:
                     pose_indexes = exp_data[subset_from][object_name]['indexes']
                     gt_pose = gt_pose_all[pose_indexes, :]
