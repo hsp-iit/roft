@@ -79,7 +79,7 @@ class Metric():
         return (reference[:, index] - signal[:, index]) * 100.0
 
 
-    def error_angular(self, reference, signal):
+    def error_angular(self, object_name, indexes, reference, signal):
         """Evaluate the angular error for the orientation.
 
         References for the adopted metric available in: https://link.springer.com/article/10.1007/s10851-009-0161-2"""
@@ -111,19 +111,19 @@ class Metric():
     def error_cartesian_x(self, object_name, indexes, reference, signal):
         """Evaluate the Cartesian error for the x coordinate."""
 
-        return self.cartesian_error(reference, signal, 'x')
+        return self.error_cartesian(reference, signal, 'x')
 
 
     def error_cartesian_y(self, object_name, indexes, reference, signal):
         """Evaluate the Cartesian error for the y coordinate."""
 
-        return self.cartesian_error(reference, signal, 'y')
+        return self.error_cartesian(reference, signal, 'y')
 
 
     def error_cartesian_z(self, object_name, indexes, reference, signal):
         """Evaluate the Cartesian error for the y coordinate."""
 
-        return self.cartesian_error(reference, signal, 'z')
+        return self.error_cartesian(reference, signal, 'z')
 
 
     def rmse_cartesian(self, reference, signal, coordinate_name):
@@ -155,7 +155,7 @@ class Metric():
     def rmse_angular(self, object_name, indexes, reference, signal):
         """Evaluate the RMSE angular error for the orientation."""
 
-        error = self.error_angular(reference, signal)
+        error = self.error_angular(object_name, indexes, reference, signal)
 
         return numpy.linalg.norm(error) / numpy.sqrt(error.shape[0])
 
