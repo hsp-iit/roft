@@ -91,7 +91,19 @@ class Evaluator():
                             f.write(renders[render_name])
 
                 elif output_head == 'plot':
-                    pass
+                    for render_name in renders:
+                        file_path = os.path.join(output_path, render_name)
+                        file_path += '_' + metric_name
+                        if self.subset_from is not None:
+                            file_path += '_subset_' + self.subset_from
+
+                        for i, figure in enumerate(renders[render_name]):
+                            file_path_i = file_path + '_' + str(i) + '.' + extension
+                            file_path_i = "_".join(file_path_i.split(' '))
+
+                            print('"' + render_name + '" in ' + file_path_i)
+
+                            figure.savefig(file_path_i, bbox_inches='tight', dpi = 150)
 
 
     def evaluate_experiment(self, experiment_name, subset_from = None):
