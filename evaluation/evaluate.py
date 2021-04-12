@@ -13,7 +13,7 @@ from data_loader import DataLoader
 from experiments import Experiments
 from objects import Objects
 from metrics import Metric
-from results_renderer import ResultsMarkdownRenderer, ResultsLaTeXRenderer
+from results_renderer import ResultsMatplotlibRenderer, ResultsMarkdownRenderer, ResultsLaTeXRenderer
 
 
 class Evaluator():
@@ -54,6 +54,8 @@ class Evaluator():
             self.metric_names.append('rmse_angular')
         elif metric_name == 'ad':
             self.metric_names = ['add', 'adi']
+        elif metric_name == 'add-distances':
+            self.metric_names = ['add-distances']
 
         self.metrics = { name : Metric(name) for name in self.metric_names }
 
@@ -70,25 +72,26 @@ class Evaluator():
             extension, renders = self.render(output_head)
 
             if output_path is not None:
-                print('Rendered results saved to:')
-                for render_name in renders:
-                    file_path = os.path.join(output_path, render_name)
-                    file_path += '_' + metric_name
-                    if self.subset_from is not None:
-                        file_path += '_subset_' + self.subset_from
-                    file_path +=  '.' + extension
-                    file_path = "_".join(file_path.split(' '))
 
-                    print('"' + render_name + '" in ' + file_path)
+                if output_head == 'markdown' or output_head == 'latex':
 
-                    with open(file_path, 'w') as f:
-                        f.write(renders[render_name])
-            else:
-                for render_name in renders:
-                    print('')
-                    print('Render for "' + render_name + '"')
-                    print(renders[render_name])
-                    print('')
+                    print('Rendered results saved to:')
+
+                    for render_name in renders:
+                        file_path = os.path.join(output_path, render_name)
+                        file_path += '_' + metric_name
+                        if self.subset_from is not None:
+                            file_path += '_subset_' + self.subset_from
+                        file_path +=  '.' + extension
+                        file_path = "_".join(file_path.split(' '))
+
+                        print('"' + render_name + '" in ' + file_path)
+
+                        with open(file_path, 'w') as f:
+                            f.write(renders[render_name])
+
+                elif output_head == 'plot':
+                    pass
 
 
     def evaluate_experiment(self, experiment_name, subset_from = None):
@@ -148,11 +151,12 @@ class Evaluator():
                         pose = pose_all
                         gt_pose = gt_pose_all[pose_indexes, :]
                     else:
+                        pose_indexes = list(range(pose_all.shape[0]))
                         pose = pose_all
                         gt_pose = gt_pose_all
 
                 for metric_name in self.metrics:
-                    exp_results[algorithm['label']][object_name][metric_name] = self.metrics[metric_name].evaluate(object_name, gt_pose, pose)
+                    exp_results[algorithm['label']][object_name][metric_name] = self.metrics[metric_name].evaluate(object_name, pose_indexes, gt_pose, pose)
 
         print('')
 
@@ -166,6 +170,8 @@ class Evaluator():
             renderer = ResultsMarkdownRenderer()
         elif head == 'latex':
             renderer = ResultsLaTeXRenderer()
+        elif head == 'plot':
+            renderer = ResultsMatplotlibRenderer()
 
         for result_name in self.results:
             renders[result_name] = renderer.render(result_name, self.results[result_name], self.objects, self.experiments, self.subset_from)
@@ -178,10 +184,10 @@ def main():
     experiment_names = [name for name in experiments]
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--metric-name', dest = 'metric_name', type = str, required = True, help = "available metrics: ['rmse', 'ad']")
+    parser.add_argument('--metric-name', dest = 'metric_name', type = str, required = True, help = "available metrics: ['ad', 'add-distances', 'rmse']")
     parser.add_argument('--experiment-name', dest = 'experiment_name', type = str, required = False, help = 'available experiments: ' + str(experiment_names))
     parser.add_argument('--use-subset', dest = 'use_subset', type = str, required = False, help = "name of the algorithm whose ground truth indexes should be used for the evaluation. available names are ['ours', 'se3tracknet, 'poserbpf']")
-    parser.add_argument('--output_head', dest = 'output_head', type = str, required = False, help = "available heads: ['markdown', 'latex']")
+    parser.add_argument('--output_head', dest = 'output_head', type = str, required = False, help = "available heads: ['latex', 'markdown', 'plot']")
     parser.add_argument('--output_path', dest = 'output_path', type = str, required = False, help = "where to save results")
 
     options = parser.parse_args()
