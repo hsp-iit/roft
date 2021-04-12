@@ -85,6 +85,10 @@ class DataLoader():
         self.log('load_gt', 'loading data from ' + self.paths['gt'], starter = True)
 
         for object_name in self.objects:
+
+            if object_name == 'ALL':
+                continue
+
             object_path = self.paths['gt'] + '/' + object_name + '/'
 
             self.data[object_name] = {}
@@ -114,6 +118,10 @@ class DataLoader():
 
         self.data = {}
         for object_name in self.objects:
+
+            if object_name == 'ALL':
+                continue
+
             object_path = path + '/' + object_name + '/'
 
             self.data[object_name] = {}
@@ -167,6 +175,10 @@ class DataLoader():
 
         # Load data for each object
         for object_name in self.objects:
+
+            if object_name == 'ALL':
+                continue
+
             object_path = path + '/' + object_name + '/' + video_ids[object_name] + '/'
 
             self.data[object_name] = {}
@@ -215,6 +227,10 @@ class DataLoader():
 
         # Load data for each object
         for object_name in self.objects:
+
+            if object_name == 'ALL':
+                continue
+
             object_path = path + '/' + object_name + '/seq_10/'
 
             self.data[object_name] = {}

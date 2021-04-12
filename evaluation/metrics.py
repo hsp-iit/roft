@@ -43,7 +43,8 @@ class Metric():
             exit(1)
 
         # Load point clouds for ADD-AUC and ADI-AUC evaluation
-        self.auc_points = { object_name : self.load_point_cloud(os.path.join('./YCB_Video_Models/models/', object_name, 'points.xyz')) for object_name in Objects().objects }
+        self.auc_points = { object_name : self.load_point_cloud(os.path.join('./YCB_Video_Models/models/', object_name, 'points.xyz'))\
+                            for object_name in Objects().objects if object_name != 'ALL'}
 
 
     def log(self, method, msg, starter = False):
@@ -63,17 +64,34 @@ class Metric():
         return numpy.array(data)
 
 
+    def make_union_objects(self, signal):
+        """Given a dictionary of signal for several objects, return the union of those signals."""
+
+        tmp_signal = copy.deepcopy(signal)
+        names = [name for name in tmp_signal]
+        signal = tmp_signal[names[0]]
+
+        for i in range(1, len(names)):
+            signal = numpy.concatenate((signal, tmp_signal[names[i]]), axis = 0)
+
+        return signal
+
+
     def evaluate(self, object_name, indexes, reference, signal):
         """Evaluate the metric on the signal according to its name."""
 
         return self.mapping[self.name](object_name, indexes, reference, signal)
 
 
-    def error_cartesian(self, reference, signal, coordinate_name):
+    def error_cartesian(self, object_name, reference, signal, coordinate_name):
         """Evaluate the Cartesian error for the specified coordinate."""
 
         index_mapping = {'x' : 0, 'y' : 1, 'z' : 2}
         index = index_mapping[coordinate_name]
+
+        if object_name == 'ALL':
+            reference = self.make_union_objects(reference)
+            signal = self.make_union_objects(signal)
 
         # Expressed in centimeters
         return (reference[:, index] - signal[:, index]) * 100.0
@@ -97,6 +115,10 @@ class Metric():
 
             return numpy.linalg.norm(axis)
 
+        if object_name == 'ALL':
+            reference = self.make_union_objects(reference)
+            signal = self.make_union_objects(signal)
+
         error = numpy.empty(reference.shape[0])
 
         for i in range(reference.shape[0]):
@@ -111,25 +133,25 @@ class Metric():
     def error_cartesian_x(self, object_name, indexes, reference, signal):
         """Evaluate the Cartesian error for the x coordinate."""
 
-        return self.error_cartesian(reference, signal, 'x')
+        return self.error_cartesian(object_name, reference, signal, 'x')
 
 
     def error_cartesian_y(self, object_name, indexes, reference, signal):
         """Evaluate the Cartesian error for the y coordinate."""
 
-        return self.error_cartesian(reference, signal, 'y')
+        return self.error_cartesian(object_name, reference, signal, 'y')
 
 
     def error_cartesian_z(self, object_name, indexes, reference, signal):
         """Evaluate the Cartesian error for the y coordinate."""
 
-        return self.error_cartesian(reference, signal, 'z')
+        return self.error_cartesian(object_name, reference, signal, 'z')
 
 
-    def rmse_cartesian(self, reference, signal, coordinate_name):
+    def rmse_cartesian(self, object_name, reference, signal, coordinate_name):
         """Evaluate the RMSE Cartesian error for the specified coordinate."""
 
-        error = self.error_cartesian(reference, signal, coordinate_name)
+        error = self.error_cartesian(object_name, reference, signal, coordinate_name)
 
         return numpy.linalg.norm(error) / numpy.sqrt(error.shape[0])
 
@@ -137,19 +159,19 @@ class Metric():
     def rmse_cartesian_x(self, object_name, indexes, reference, signal):
         """Evaluate the RMSE Cartesian error for the x coordinate."""
 
-        return self.rmse_cartesian(reference, signal, 'x')
+        return self.rmse_cartesian(object_name, reference, signal, 'x')
 
 
     def rmse_cartesian_y(self, object_name, indexes, reference, signal):
         """Evaluate the RMSE Cartesian error for the y coordinate."""
 
-        return self.rmse_cartesian(reference, signal, 'y')
+        return self.rmse_cartesian(object_name, reference, signal, 'y')
 
 
     def rmse_cartesian_z(self, object_name, indexes, reference, signal):
         """Evaluate the RMSE Cartesian error for the y coordinate."""
 
-        return self.rmse_cartesian(reference, signal, 'z')
+        return self.rmse_cartesian(object_name, reference, signal, 'z')
 
 
     def rmse_angular(self, object_name, indexes, reference, signal):

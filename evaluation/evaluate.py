@@ -121,6 +121,11 @@ class Evaluator():
         self.results[experiment_name] = {}
         exp_results = self.results[experiment_name]
 
+        # Reserve a variable for the virtual object 'ALL'
+        # (representing a unique sequence given by the union of all the sequences)
+        gt_pose_ALL = {}
+        pose_ALL = {}
+
         # Load experiment
         experiment = self.experiments(experiment_name)
 
@@ -137,40 +142,48 @@ class Evaluator():
 
             # For each object
             for object_name in self.objects:
+
                 print('    processing object ' + object_name)
-
                 exp_results[algorithm['label']][object_name] = {}
-                object_data = exp_data[algorithm['label']][object_name]
 
-                gt_pose_all = self.data['gt'][object_name]
-                gt_pose = None
-                pose_all = object_data['pose']
-                pose = None
-
-                # Check if the user required a specific subset of indexes for the evaluation
-                # and use them for all algorithms different from the one whose indexes are considered
-                # e.g. PoseRBPF running at 7fps will produce less frames than the ground truth
-                # and we might want to evaluate all the algorithms on that subset of frames
-                if subset_from is not None and algorithm['label'] != subset_from:
-                    pose_indexes = exp_data[subset_from][object_name]['indexes']
-                    gt_pose = gt_pose_all[pose_indexes, :]
-                    pose = pose_all[pose_indexes, :]
+                if object_name == 'ALL':
+                    gt_pose = gt_pose_ALL
+                    pose = pose_ALL
                 else:
-                # Check if the length of ground truth and pose is the same
-                    if gt_pose_all.shape != pose_all.shape:
-                        # if not check if a list of indexes is provided
-                        if not 'indexes' in object_data:
-                            print('Algorithm ' + algorithm['name'] + ' (label ' + algorithm['label'] + ')' +\
-                                  ' provides ' + str(pose_all.shape) + ' matrix as pose while the ground truth has shape ' + \
-                                  str(gt_pose_all.shape) + '. However, a list of indexes for the poses has not been provided.' + \
-                                  ' Cannot continue.')
-                        pose_indexes = object_data['indexes']
-                        pose = pose_all
+                    object_data = exp_data[algorithm['label']][object_name]
+
+                    gt_pose_all = self.data['gt'][object_name]
+                    gt_pose = None
+                    pose_all = object_data['pose']
+                    pose = None
+
+                    # Check if the user required a specific subset of indexes for the evaluation
+                    # and use them for all algorithms different from the one whose indexes are considered
+                    # e.g. PoseRBPF running at 7fps will produce less frames than the ground truth
+                    # and we might want to evaluate all the algorithms on that subset of frames
+                    if subset_from is not None and algorithm['label'] != subset_from:
+                        pose_indexes = exp_data[subset_from][object_name]['indexes']
                         gt_pose = gt_pose_all[pose_indexes, :]
+                        pose = pose_all[pose_indexes, :]
                     else:
-                        pose_indexes = list(range(pose_all.shape[0]))
-                        pose = pose_all
-                        gt_pose = gt_pose_all
+                    # Check if the length of ground truth and pose is the same
+                        if gt_pose_all.shape != pose_all.shape:
+                            # if not check if a list of indexes is provided
+                            if not 'indexes' in object_data:
+                                print('Algorithm ' + algorithm['name'] + ' (label ' + algorithm['label'] + ')' +\
+                                      ' provides ' + str(pose_all.shape) + ' matrix as pose while the ground truth has shape ' + \
+                                      str(gt_pose_all.shape) + '. However, a list of indexes for the poses has not been provided.' + \
+                                      ' Cannot continue.')
+                            pose_indexes = object_data['indexes']
+                            pose = pose_all
+                            gt_pose = gt_pose_all[pose_indexes, :]
+                        else:
+                            pose_indexes = list(range(pose_all.shape[0]))
+                            pose = pose_all
+                            gt_pose = gt_pose_all
+
+                    gt_pose_ALL[object_name] = gt_pose
+                    pose_ALL[object_name] = pose
 
                 for metric_name in self.metrics:
                     exp_results[algorithm['label']][object_name][metric_name] = self.metrics[metric_name].evaluate(object_name, pose_indexes, gt_pose, pose)
