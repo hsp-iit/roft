@@ -8,7 +8,89 @@
 #===============================================================================
 
 import markdown_table
+import matplotlib
+import matplotlib.pyplot as plt
+import numpy
 from decimal import Decimal
+from matplotlib import rc
+
+rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
+rc('text', usetex = True)
+
+
+class ResultsLaTeXRenderer():
+
+    def __init__(self):
+        """Contructor."""
+
+        self.extension = 'tex'
+
+
+    def render(self, results_name, results, objects, experiments_data, subset_from):
+        """Renderer."""
+        pass
+
+
+class ResultsMatplotlibRenderer():
+
+    def __init__(self):
+        """Constructor."""
+
+        self.extension = 'png'
+
+
+    def cm_to_inch(self, *tupl):
+        """Convert a tuple of centimeters to inches."""
+
+        inch = 2.54
+        if isinstance(tupl[0], tuple):
+            return tuple(i/inch for i in tupl[0])
+        else:
+            return tuple(i/inch for i in tupl)
+
+
+    def render(self, results_name, results, objects, experiments_data, subset_from):
+        """Renderer."""
+
+        # Find metric name
+        algorithm_names = [name for name in results]
+        metric_names = [name for name in results[algorithm_names[0]][objects[0]]]
+
+        if 'add-distances' in metric_names:
+            return self.render_add_distances(results, objects)
+
+
+    def render_add_distances(self, results, objects):
+        """Render ADD distances."""
+
+        fig, ax = plt.subplots(int(numpy.ceil(len(objects) / 3)), 3)
+
+        for i, object_name in enumerate(objects):
+            axis = ax[int(i / 3), int(i % 3)]
+            axis.set_title('$\mathrm{' + "\,".join(object_name.split('_')) + '}$')
+            axis.grid()
+
+            # Plot data
+            for j, alg_name in enumerate(results):
+                distances = results[alg_name][object_name]['add-distances']
+                axis.plot(distances)
+
+            # Add x axis labels to final row only
+            if int(i / 3) == int((len(objects) - 1) / 3):
+                axis.set_xlabel('Samples')
+            # Add y axis labels to first column only
+            if int(i % 3) == 0:
+                axis.set_ylabel('$\mathrm{ADD\,-\,distances}$')
+
+        # Add legend
+        algorithm_labels = []
+        for j, alg_name in enumerate(results):
+            algorithm_labels.append('$\mathrm{' + alg_name + '}$')
+        fig.legend(labels = algorithm_labels, ncol = 3, loc = "upper center", frameon = False)
+
+        figure = plt.gcf()
+        figure.set_size_inches(self.cm_to_inch(48, 24))
+        plt.show()
 
 
 class ResultsMarkdownRenderer():
@@ -113,15 +195,3 @@ class ResultsMarkdownRenderer():
         output += markdown_table.render(header_vector, data_matrix)
 
         return output
-
-
-class ResultsLaTeXRenderer():
-
-    def __init__(self):
-        """Contructor."""
-        pass
-
-
-    def render(self, results_name, results):
-        """Contructor."""
-        pass
