@@ -58,6 +58,8 @@ class ResultsMatplotlibRenderer():
 
         if 'add-distances' in metric_names:
             return self.render_add_distances(results, objects)
+        elif 'error_cartesian' in metric_names or 'error_angular' in metric_names:
+            return self.render_error(results, objects)
 
 
     def render_add_distances(self, results, objects):
@@ -77,7 +79,7 @@ class ResultsMatplotlibRenderer():
 
             # Add x axis labels to final row only
             if int(i / 3) == int((len(objects) - 1) / 3):
-                axis.set_xlabel('Samples')
+                axis.set_xlabel('$\mathrm{Samples}$')
             # Add y axis labels to first column only
             if int(i % 3) == 0:
                 axis.set_ylabel('$\mathrm{ADD\,-\,distances}$')
@@ -92,6 +94,64 @@ class ResultsMatplotlibRenderer():
         figure.set_size_inches(self.cm_to_inch(48, 24))
 
         return [figure]
+
+
+    def render_error(self, results, objects):
+        """Render Cartesian and angular error as function of time."""
+
+        figures = []
+
+        for i, object_name in enumerate(objects):
+
+            fig, ax = plt.subplots(2, 2)
+
+            # Plot data
+            for j, alg_name in enumerate(results):
+                error_x = results[alg_name][object_name]['error_cartesian_x']
+                error_y = results[alg_name][object_name]['error_cartesian_y']
+                error_z = results[alg_name][object_name]['error_cartesian_z']
+                error_angular = results[alg_name][object_name]['error_angular']
+
+                ax[0, 0].plot(error_x, linewidth = 0.8)
+                ax[0, 1].plot(error_y, linewidth = 0.8)
+                ax[1, 0].plot(error_z, linewidth = 0.8)
+                ax[1, 1].plot(error_angular, linewidth = 0.8)
+
+                ax[0, 0].grid()
+                ax[0, 1].grid()
+                ax[1, 0].grid()
+                ax[1, 1].grid()
+
+                # Add titles
+                ax[0, 0].set_title('$e_{x}$')
+                ax[0, 1].set_title('$e_{y}$')
+                ax[1, 0].set_title('$e_{z}$')
+                ax[1, 1].set_title('$e_{a}$')
+
+                # Add x axis labels to final row only
+                ax[1, 0].set_xlabel('$\mathrm{Samples}$')
+                ax[1, 1].set_xlabel('$\mathrm{Samples}$')
+
+                # Add y axis labels
+                ax[0, 0].set_ylabel('$(cm)$')
+                ax[0, 1].set_ylabel('$(cm)$')
+                ax[1, 0].set_ylabel('$(cm)$')
+                ax[1, 1].set_ylabel('$(deg)$')
+
+            algorithm_labels = []
+            for j, alg_name in enumerate(results):
+                algorithm_labels.append('$\mathrm{' + alg_name + '}$')
+            fig.legend(labels = algorithm_labels, ncol = 3, loc = "upper center", frameon = False)
+
+            figure = plt.gcf()
+            plt.subplots_adjust(hspace = 0.4)
+            figure.set_size_inches(self.cm_to_inch(36, 12))
+
+            figures.append(figure)
+
+
+
+        return figures
 
 
 class ResultsMarkdownRenderer():
