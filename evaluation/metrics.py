@@ -29,6 +29,10 @@ class Metric():
             'rmse_cartesian_y' : self.rmse_cartesian_y,
             'rmse_cartesian_z' : self.rmse_cartesian_z,
             'rmse_angular' : self.rmse_angular,
+            'error_cartesian_x' : self.error_cartesian_x,
+            'error_cartesian_y' : self.error_cartesian_y,
+            'error_cartesian_z' : self.error_cartesian_z,
+            'error_angular' : self.error_angular,
             'add' : self.add,
             'adi' : self.adi,
             'add-distances' : self.add_distances
@@ -65,36 +69,18 @@ class Metric():
         return self.mapping[self.name](object_name, indexes, reference, signal)
 
 
-    def rmse_cartesian(self, reference, signal, coordinate_name):
-        """Evaluate the RMSE cartesian error for the specified coordinate."""
+    def error_cartesian(self, reference, signal, coordinate_name):
+        """Evaluate the Cartesian error for the specified coordinate."""
 
         index_mapping = {'x' : 0, 'y' : 1, 'z' : 2}
         index = index_mapping[coordinate_name]
 
         # Expressed in centimeters
-        return numpy.linalg.norm(reference[:, index] - signal[:, index]) / numpy.sqrt(signal.shape[0]) * 100.0
+        return (reference[:, index] - signal[:, index]) * 100.0
 
 
-    def rmse_cartesian_x(self, object_name, indexes, reference, signal):
-        """Evaluate the RMSE cartesian error for the x coordinate."""
-
-        return self.rmse_cartesian(reference, signal, 'x')
-
-
-    def rmse_cartesian_y(self, object_name, indexes, reference, signal):
-        """Evaluate the RMSE cartesian error for the y coordinate."""
-
-        return self.rmse_cartesian(reference, signal, 'y')
-
-
-    def rmse_cartesian_z(self, object_name, indexes, reference, signal):
-        """Evaluate the RMSE cartesian error for the y coordinate."""
-
-        return self.rmse_cartesian(reference, signal, 'z')
-
-
-    def rmse_angular(self, object_name, indexes, reference, signal):
-        """Evaluate the RMSE angular error for the orientation.
+    def error_angular(self, reference, signal):
+        """Evaluate the angular error for the orientation.
 
         References for the adopted metric available in: https://link.springer.com/article/10.1007/s10851-009-0161-2"""
 
@@ -118,6 +104,58 @@ class Metric():
             R_signal = aa_to_r(signal[i, 3 :])
             R_error = numpy.dot(R_reference, R_signal.transpose())
             error[i] = r_to_log(R_error) * 180.0 / numpy.pi
+
+        return error
+
+
+    def error_cartesian_x(self, object_name, indexes, reference, signal):
+        """Evaluate the Cartesian error for the x coordinate."""
+
+        return self.cartesian_error(reference, signal, 'x')
+
+
+    def error_cartesian_y(self, object_name, indexes, reference, signal):
+        """Evaluate the Cartesian error for the y coordinate."""
+
+        return self.cartesian_error(reference, signal, 'y')
+
+
+    def error_cartesian_z(self, object_name, indexes, reference, signal):
+        """Evaluate the Cartesian error for the y coordinate."""
+
+        return self.cartesian_error(reference, signal, 'z')
+
+
+    def rmse_cartesian(self, reference, signal, coordinate_name):
+        """Evaluate the RMSE Cartesian error for the specified coordinate."""
+
+        error = self.error_cartesian(reference, signal, coordinate_name)
+
+        return numpy.linalg.norm(error) / numpy.sqrt(error.shape[0])
+
+
+    def rmse_cartesian_x(self, object_name, indexes, reference, signal):
+        """Evaluate the RMSE Cartesian error for the x coordinate."""
+
+        return self.rmse_cartesian(reference, signal, 'x')
+
+
+    def rmse_cartesian_y(self, object_name, indexes, reference, signal):
+        """Evaluate the RMSE Cartesian error for the y coordinate."""
+
+        return self.rmse_cartesian(reference, signal, 'y')
+
+
+    def rmse_cartesian_z(self, object_name, indexes, reference, signal):
+        """Evaluate the RMSE Cartesian error for the y coordinate."""
+
+        return self.rmse_cartesian(reference, signal, 'z')
+
+
+    def rmse_angular(self, object_name, indexes, reference, signal):
+        """Evaluate the RMSE angular error for the orientation."""
+
+        error = self.error_angular(reference, signal)
 
         return numpy.linalg.norm(error) / numpy.sqrt(error.shape[0])
 
