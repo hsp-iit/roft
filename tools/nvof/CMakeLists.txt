@@ -8,3 +8,4 @@
 #===============================================================================
 
 add_subdirectory(dumper)
+add_subdirectory(renderer)
