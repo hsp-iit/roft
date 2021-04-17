@@ -30,14 +30,11 @@ do
     fi
 
     echo "Converting ground truth to YCB-Video format for object "$object_name
-    GT_PATH=./results/gt/$object_name/
-    mkdir -p $GT_PATH
-    rm -f $GT_PATH/poses_ycb.txt
     python $CONVERSION_TOOL\
            --format gt\
            --obj_id $OBJECT_ID\
            --in_path $YCBV_SYN_PATH/$object_name/gt/poses.txt\
-           --out_path $GT_PATH/poses_ycb.txt
+           --out_path $YCBV_SYN_PATH/$object_name/gt/poses_ycb.txt
 
     for folder in `ls ./results/ours`; do
         IN_FILE_PATH=./results/ours/$folder/$object_name/pose_estimate.txt
