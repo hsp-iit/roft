@@ -15,21 +15,21 @@ class Experiments():
 
         self._experiments = {}
 
-        self.add_algorithm_to_experiment('exp_DOPE', 'ours', variant = 'full')
-        self.add_algorithm_to_experiment('exp_DOPE', 'poserbpf', particles = 200, fps = 7, reinit = True, reinit_from = 'dope')
-        self.add_algorithm_to_experiment('exp_DOPE', 'se3tracknet', reinit = True, reinit_from = 'dope', reinit_fps = 5)
+        self.add_algorithm_to_experiment('exp_ycbvs_DOPE', 'ours', variant = 'full', dataset = 'ycbv_synthetic')
+        self.add_algorithm_to_experiment('exp_ycbvs_DOPE', 'poserbpf', particles = 200, fps = 7, reinit = True, reinit_from = 'dope', dataset = 'ycbv_synthetic')
+        self.add_algorithm_to_experiment('exp_ycbvs_DOPE', 'se3tracknet', reinit = True, reinit_from = 'dope', reinit_fps = 5, dataset = 'ycbv_synthetic')
 
-        self.add_algorithm_to_experiment('exp_real', 'ours', variant = 'full')
-        self.add_algorithm_to_experiment('exp_real', 'poserbpf', particles = 200, fps = 7, reinit = False, reinit_from = '')
-        self.add_algorithm_to_experiment('exp_real', 'se3tracknet', reinit = True, reinit_from = 'dope', reinit_fps = 5)
+        self.add_algorithm_to_experiment('exp_ycbvs_real', 'ours', variant = 'full', dataset = 'ycbv_synthetic')
+        self.add_algorithm_to_experiment('exp_ycbvs_real', 'poserbpf', particles = 200, fps = 7, reinit = False, reinit_from = '', dataset = 'ycbv_synthetic')
+        self.add_algorithm_to_experiment('exp_ycbvs_real', 'se3tracknet', reinit = True, reinit_from = 'dope', reinit_fps = 5, dataset = 'ycbv_synthetic')
 
-        self.add_algorithm_to_experiment('exp_real_rbpf50', 'ours', variant = 'full')
-        self.add_algorithm_to_experiment('exp_real_rbpf50', 'poserbpf', particles = 50, fps = 15, reinit = False, reinit_from = '')
-        self.add_algorithm_to_experiment('exp_real_rbpf50', 'se3tracknet', reinit = True, reinit_from = 'dope', reinit_fps = 5)
+        self.add_algorithm_to_experiment('exp_ycbvs_real_rbpf50', 'ours', variant = 'full', dataset = 'ycbv_synthetic')
+        self.add_algorithm_to_experiment('exp_ycbvs_real_rbpf50', 'poserbpf', particles = 50, fps = 15, reinit = False, reinit_from = '', dataset = 'ycbv_synthetic')
+        self.add_algorithm_to_experiment('exp_ycbvs_real_rbpf50', 'se3tracknet', reinit = True, reinit_from = 'dope', reinit_fps = 5, dataset = 'ycbv_synthetic')
 
-        self.add_algorithm_to_experiment('exp_ideal', 'ours', variant = 'full')
-        self.add_algorithm_to_experiment('exp_ideal', 'poserbpf', particles = 200, fps = 30, reinit = True, reinit_from = 'rbpf')
-        self.add_algorithm_to_experiment('exp_ideal', 'se3tracknet', reinit = True, reinit_from = 'dope', reinit_fps = 5)
+        self.add_algorithm_to_experiment('exp_ycbvs_ideal', 'ours', variant = 'full', dataset = 'ycbv_synthetic')
+        self.add_algorithm_to_experiment('exp_ycbvs_ideal', 'poserbpf', particles = 200, fps = 30, reinit = True, reinit_from = 'rbpf', dataset = 'ycbv_synthetic')
+        self.add_algorithm_to_experiment('exp_ycbvs_ideal', 'se3tracknet', reinit = True, reinit_from = 'dope', reinit_fps = 5, dataset = 'ycbv_synthetic')
 
     @property
     def experiments(self):

@@ -140,8 +140,10 @@ class Evaluator():
             print('Processing metrics' + str(self.metric_names) + ' for algorithm with label ' + algorithm['label'] + '.')
             exp_results[algorithm['label']] = {}
 
+            dataset_name = algorithm['config']['dataset']
+
             # For each object
-            for object_name in self.objects:
+            for object_name in self.objects[dataset_name]:
 
                 print('    processing object ' + object_name)
                 exp_results[algorithm['label']][object_name] = {}
@@ -150,43 +152,53 @@ class Evaluator():
                     gt_pose = gt_pose_ALL
                     pose = pose_ALL
                 else:
-                    object_data = exp_data[algorithm['label']][object_name]
-
-                    gt_pose_all = self.data['gt'][object_name]
                     gt_pose = None
-                    pose_all = object_data['pose']
                     pose = None
+                    # For each sequence belonging to the object
+                    for i, sequence_data in enumerate(exp_data[algorithm['label']][object_name]):
 
-                    # Check if the user required a specific subset of indexes for the evaluation
-                    # and use them for all algorithms different from the one whose indexes are considered
-                    # e.g. PoseRBPF running at 7fps will produce less frames than the ground truth
-                    # and we might want to evaluate all the algorithms on that subset of frames
-                    if subset_from is not None and algorithm['label'] != subset_from:
-                        pose_indexes = exp_data[subset_from][object_name]['indexes']
-                        gt_pose = gt_pose_all[pose_indexes, :]
-                        pose = pose_all[pose_indexes, :]
-                    else:
-                    # Check if the length of ground truth and pose is the same
-                        if gt_pose_all.shape != pose_all.shape:
-                            # if not check if a list of indexes is provided
-                            if not 'indexes' in object_data:
-                                print('Algorithm ' + algorithm['name'] + ' (label ' + algorithm['label'] + ')' +\
-                                      ' provides ' + str(pose_all.shape) + ' matrix as pose while the ground truth has shape ' + \
-                                      str(gt_pose_all.shape) + '. However, a list of indexes for the poses has not been provided.' + \
-                                      ' Cannot continue.')
-                            pose_indexes = object_data['indexes']
-                            pose = pose_all
-                            gt_pose = gt_pose_all[pose_indexes, :]
+                        seq_gt_pose_all = self.data['gt'][dataset_name][object_name][i]
+                        seq_gt_pose = None
+                        seq_pose_all = sequence_data['pose']
+                        seq_pose = None
+
+                        # Check if the user required a specific subset of indexes for the evaluation
+                        # and use them for all algorithms different from the one whose indexes are considered
+                        # e.g. PoseRBPF running at 7fps will produce less frames than the ground truth
+                        # and we might want to evaluate all the algorithms on that subset of frames
+                        if subset_from is not None and algorithm['label'] != subset_from:
+                            seq_pose_indexes = exp_data[subset_from][object_name][i]['indexes']
+                            seq_gt_pose = seq_gt_pose_all[seq_pose_indexes, :]
+                            seq_pose = seq_pose_all[seq_pose_indexes, :]
                         else:
-                            pose_indexes = list(range(pose_all.shape[0]))
-                            pose = pose_all
-                            gt_pose = gt_pose_all
+                            # Check if the length of ground truth and pose is the same
+                            if seq_gt_pose_all.shape != seq_pose_all.shape:
+                                # if not check if a list of indexes is provided
+                                if not 'indexes' in sequence_data:
+                                    print('Algorithm ' + algorithm['name'] + ' (label ' + algorithm['label'] + ')' +\
+                                          ' provides ' + str(seq_pose_all.shape) + ' matrix as pose while the ground truth has shape ' + \
+                                          str(seq_gt_pose_all.shape) + '. However, a list of indexes for the poses has not been provided.' + \
+                                          ' Cannot continue.')
+                                seq_pose_indexes = sequence_data['indexes']
+                                seq_pose = seq_pose_all
+                                seq_gt_pose = seq_gt_pose_all[seq_pose_indexes, :]
+                            else:
+                                seq_pose = seq_pose_all
+                                seq_gt_pose = seq_gt_pose_all
+
+                        # Concatenate data belonging to the same object
+                        if i == 0:
+                            gt_pose = seq_gt_pose
+                            pose = seq_pose
+                        else:
+                            gt_pose = numpy.concatenate((gt_pose, seq_gt_pose), axis = 0)
+                            pose = numpy.concatenate((pose, seq_pose), axis = 0)
 
                     gt_pose_ALL[object_name] = gt_pose
                     pose_ALL[object_name] = pose
 
                 for metric_name in self.metrics:
-                    exp_results[algorithm['label']][object_name][metric_name] = self.metrics[metric_name].evaluate(object_name, pose_indexes, gt_pose, pose)
+                    exp_results[algorithm['label']][object_name][metric_name] = self.metrics[metric_name].evaluate(object_name, gt_pose, pose)
 
         print('')
 

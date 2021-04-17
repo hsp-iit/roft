@@ -79,29 +79,35 @@ class DataLoader():
         return numpy.array(data)
 
 
+    def load_gt_ycbv_synthetic(self):
+        """Load gt data using our format for dataset ycbv synthetic."""
+
+        self.data['ycbv_synthetic'] = {}
+        for object_name in self.objects['ycbv_synthetic']:
+
+            if object_name == 'ALL':
+                continue
+
+            object_path = self.paths['gt'] + '/ycbv_synthetic/' + object_name + '/'
+            self.data['ycbv_synthetic'][object_name] = [self.load_generic(object_path  + 'poses_ycb.txt')]
+
+
     def load_gt(self):
         """Load gt data using our format."""
 
         self.log('load_gt', 'loading data from ' + self.paths['gt'], starter = True)
 
-        for object_name in self.objects:
-
-            if object_name == 'ALL':
-                continue
-
-            object_path = self.paths['gt'] + '/' + object_name + '/'
-
-            self.data[object_name] = {}
-            # self.log('load_gt', 'processing object ' + object_name)
-
-            d = self.load_generic(object_path  + 'poses_ycb.txt')
-            self.data[object_name] = d
+        self.load_gt_ycbv_synthetic()
 
         print('')
 
 
     def load_ours(self):
         """Load the data of our algorithm using our format."""
+
+        config = self.algorithm['config']
+
+        dataset_name = config['dataset']
 
         contents_map =\
         {
@@ -117,14 +123,18 @@ class DataLoader():
         self.log('load_ours', 'loading data from ' + path, starter = True)
 
         self.data = {}
-        for object_name in self.objects:
+        for object_name in self.objects[dataset_name]:
 
             if object_name == 'ALL':
                 continue
 
+            object_data = []
+
+            object_video_data = {}
+
             object_path = path + '/' + object_name + '/'
 
-            self.data[object_name] = {}
+            object_video_data = {}
             # self.log('load_ours', 'processing object ' + object_name)
 
             for content in contents_map:
@@ -132,7 +142,12 @@ class DataLoader():
                 # This channel contains also a heading 6-sized vector of object velocities
                 if content == 'pose_estimate_ycb':
                     d = d[:, 6 : ]
-                self.data[object_name][contents_map[content]] = d
+
+                object_video_data[contents_map[content]] = d
+
+            object_data.append(object_video_data)
+
+            self.data[object_name] = object_data
 
         print('')
 
@@ -143,23 +158,36 @@ class DataLoader():
         config = self.algorithm['config']
 
         contents_map = { 'pred' : 'pose' }
+        dataset_map = { 'ycbv_synthetic' : 'Synthetic', 'ho3d' : 'HO3D' }
+
+        dataset_name = config['dataset']
+        se3_dataset_name = dataset_map[config['dataset']]
+
         # For dope, poses used durinig re-initialization are available
         if config['reinit_from'] == 'dope':
             contents_map['reinit_dope'] = 'pose_measurements'
 
         # Video ids used in se3-tracknet dataset
-        video_ids =\
+        video_ids = {}
+        video_ids['ycbv_synthetic'] =\
         {
-            '003_cracker_box' : '0001',
-            '004_sugar_box' : '0002',
-            '005_tomato_soup_can' : '0003',
-            '006_mustard_bottle' : '0004',
-            '009_gelatin_box' : '0005',
-            '010_potted_meat_can' : '0006'
+            '003_cracker_box' : ['0001'],
+            '004_sugar_box' : ['0002'],
+            '005_tomato_soup_can' : ['0003'],
+            '006_mustard_bottle' : ['0004'],
+            '009_gelatin_box' : ['0005'],
+            '010_potted_meat_can' : ['0006']
+        }
+        video_ids['ho3d'] =\
+        {
+            '003_cracker_box' : ['0001', '0002', '0003'],
+            '004_sugar_box' : ['0004', '0005', '0006', '0007', '0008'],
+            '006_mustard_bottle' : ['0009', '0010', '0011', '0012'],
+            '010_potted_meat_can' : ['0013', '0014', '0015', '0016', '0017']
         }
 
         # Compose path to files according to the configuration
-        config_string = 'Synthetic_init_'
+        config_string = se3_dataset_name + '_init_'
         if config['reinit']:
             config_string += config['reinit_from'] + '_'
 
@@ -174,32 +202,40 @@ class DataLoader():
         self.log('load_se3_tracknet', 'loading data from ' + path, starter = True)
 
         # Load data for each object
-        for object_name in self.objects:
+        for object_name in self.objects[dataset_name]:
 
             if object_name == 'ALL':
                 continue
 
-            object_path = path + '/' + object_name + '/' + video_ids[object_name] + '/'
+            object_data = []
 
-            self.data[object_name] = {}
-            # self.log('load_ours', 'processing object ' + object_name)
+            for i, video_id in enumerate(video_ids[dataset_name][object_name]):
+                object_path = path + '/' + object_name + '/' + video_id + '/'
 
-            for content in contents_map:
-                d = self.load_generic(object_path + content + '.txt')
+                # self.data[object_name] = {}
+                object_video_data = {}
+                # self.log('load_ours', 'processing object ' + object_name)
 
-                # Repeat dope poses using sample-and-hold approach
-                if content == 'reinit_dope':
-                    tmp = copy.deepcopy(d)
-                    d = []
-                    for i in range(tmp.shape[0]):
-                        for j in range(int((1.0 / float(config['reinit_fps']) / (1.0 / 30.0)))):
-                            d.append(tmp[i, 2 :])
-                            if i == (tmp.shape[0] - 1):
-                                break
+                for content in contents_map:
+                    d = self.load_generic(object_path + content + '.txt')
+
+                    # Repeat dope poses using sample-and-hold approach
+                    if content == 'reinit_dope':
+                        tmp = copy.deepcopy(d)
+                        d = []
+                        for j in range(tmp.shape[0]):
+                            for k in range(int((1.0 / float(config['reinit_fps']) / (1.0 / 30.0)))):
+                                d.append(tmp[j, 2 :])
+                                if j == (tmp.shape[0] - 1):
+                                    break
 
                     d = numpy.array(d)
 
-                self.data[object_name][contents_map[content]] = d
+                    object_video_data[contents_map[content]] = d
+
+                object_data.append(object_video_data)
+
+            self.data[object_name] = object_data
 
         print('')
 
@@ -210,12 +246,29 @@ class DataLoader():
         config = self.algorithm['config']
 
         contents_map = { 'Pose' : 'pose', 'Index' : 'indexes' }
+        dataset_map = { 'ycbv_synthetic' : 'synthetic' }
+
+        dataset_name = config['dataset']
+        poserbpf_dataset_name = dataset_map[config['dataset']]
+
         # For dope, poses used durinig re-initialization are available
         if config['reinit_from'] == 'dope':
             contents_map['reinit_dope'] = 'pose_measurements'
 
+        # Video ids used in se3-tracknet dataset
+        video_ids = {}
+        video_ids['ycbv_synthetic'] =\
+        {
+            '003_cracker_box' : ['seq_10'],
+            '004_sugar_box' : ['seq_10'],
+            '005_tomato_soup_can' : ['seq_10'],
+            '006_mustard_bottle' : ['seq_10'],
+            '009_gelatin_box' : ['seq_10'],
+            '010_potted_meat_can' : ['seq_10']
+        }
+
         # Compose path to files according to the configuration
-        config_string = str(config['particles']) + '_particles' + '/' + 'synthetic_' + str(config['fps']) + 'fps_reinit_'
+        config_string = str(config['particles']) + '_particles' + '/' + poserbpf_dataset_name + '_' + str(config['fps']) + 'fps_reinit_'
 
         if config['reinit']:
             config_string += config['reinit_from']
@@ -226,43 +279,52 @@ class DataLoader():
         self.log('load_poserbpf', 'loading data from ' + path, starter = True)
 
         # Load data for each object
-        for object_name in self.objects:
+        for object_name in self.objects[dataset_name]:
 
             if object_name == 'ALL':
                 continue
 
-            object_path = path + '/' + object_name + '/seq_10/'
+            object_data = []
 
-            self.data[object_name] = {}
-            # self.log('load_poserbpf', 'processing object ' + object_name)
+            for i, video_id in enumerate(video_ids[dataset_name][object_name]):
 
-            for content in contents_map:
+                object_path = path + '/' + object_name + '/' + video_id + '/'
 
-                if content == 'Index':
-                    content_name = 'Pose_' + object_name + '_seq10'
-                elif content == 'Pose':
-                    content_name = 'Pose_' + object_name + '_seq10_clean'
-                else:
-                    content_name = content
+                object_video_data = {}
+                # self.log('load_poserbpf', 'processing object ' + object_name)
 
-                file_path = object_path + content_name + '.txt'
-                if content == 'Index':
-                    d = self.load_poserbpf_indexes(file_path)
-                else:
-                    d = self.load_generic(file_path)
+                for content in contents_map:
 
-                # Repeat dope poses using sample-and-hold approach
-                if content == 'reinit_dope':
-                    tmp = copy.deepcopy(d)
-                    d = []
-                    for i in range(tmp.shape[0]):
-                        for j in range(int((1.0 / float(config['fps']) / (1.0 / 30.0)))):
-                            d.append(tmp[i, 2 :])
-                            if i == (tmp.shape[0] - 1):
-                                break
+                    video_id_cut = ''.join(video_id.split('_'))
+                    if content == 'Index':
+                        content_name = 'Pose_' + object_name + '_' + video_id_cut
+                    elif content == 'Pose':
+                        content_name = 'Pose_' + object_name + '_' + video_id_cut + '_clean'
+                    else:
+                        content_name = content
 
-                    d = numpy.array(d)
+                    file_path = object_path + content_name + '.txt'
+                    if content == 'Index':
+                        d = self.load_poserbpf_indexes(file_path)
+                    else:
+                        d = self.load_generic(file_path)
 
-                self.data[object_name][contents_map[content]] = d
+                    # Repeat dope poses using sample-and-hold approach
+                    if content == 'reinit_dope':
+                        tmp = copy.deepcopy(d)
+                        d = []
+                        for i in range(tmp.shape[0]):
+                            for j in range(int((1.0 / float(config['fps']) / (1.0 / 30.0)))):
+                                d.append(tmp[i, 2 :])
+                                if i == (tmp.shape[0] - 1):
+                                    break
+
+                        d = numpy.array(d)
+
+                    object_video_data[contents_map[content]] = d
+
+                object_data.append(object_video_data)
+
+            self.data[object_name] = object_data
 
         print('')

@@ -43,8 +43,7 @@ class Metric():
             exit(1)
 
         # Load point clouds for ADD-AUC and ADI-AUC evaluation
-        self.auc_points = { object_name : self.load_point_cloud(os.path.join('./YCB_Video_Models/models/', object_name, 'points.xyz'))\
-                            for object_name in Objects().objects if object_name != 'ALL'}
+        self.auc_points = { object_name : self.load_point_cloud(os.path.join('./YCB_Video_Models/models/', object_name, 'points.xyz')) for object_name in Objects().objects['models']}
 
 
     def log(self, method, msg, starter = False):
@@ -77,10 +76,10 @@ class Metric():
         return signal
 
 
-    def evaluate(self, object_name, indexes, reference, signal):
+    def evaluate(self, object_name, reference, signal):
         """Evaluate the metric on the signal according to its name."""
 
-        return self.mapping[self.name](object_name, indexes, reference, signal)
+        return self.mapping[self.name](object_name, reference, signal)
 
 
     def error_cartesian(self, object_name, reference, signal, coordinate_name):
@@ -97,7 +96,7 @@ class Metric():
         return (reference[:, index] - signal[:, index]) * 100.0
 
 
-    def error_angular(self, object_name, indexes, reference, signal):
+    def error_angular(self, object_name, reference, signal):
         """Evaluate the angular error for the orientation.
 
         References for the adopted metric available in: https://link.springer.com/article/10.1007/s10851-009-0161-2"""
@@ -130,19 +129,19 @@ class Metric():
         return error
 
 
-    def error_cartesian_x(self, object_name, indexes, reference, signal):
+    def error_cartesian_x(self, object_name, reference, signal):
         """Evaluate the Cartesian error for the x coordinate."""
 
         return self.error_cartesian(object_name, reference, signal, 'x')
 
 
-    def error_cartesian_y(self, object_name, indexes, reference, signal):
+    def error_cartesian_y(self, object_name, reference, signal):
         """Evaluate the Cartesian error for the y coordinate."""
 
         return self.error_cartesian(object_name, reference, signal, 'y')
 
 
-    def error_cartesian_z(self, object_name, indexes, reference, signal):
+    def error_cartesian_z(self, object_name, reference, signal):
         """Evaluate the Cartesian error for the y coordinate."""
 
         return self.error_cartesian(object_name, reference, signal, 'z')
@@ -156,33 +155,33 @@ class Metric():
         return numpy.linalg.norm(error) / numpy.sqrt(error.shape[0])
 
 
-    def rmse_cartesian_x(self, object_name, indexes, reference, signal):
+    def rmse_cartesian_x(self, object_name, reference, signal):
         """Evaluate the RMSE Cartesian error for the x coordinate."""
 
         return self.rmse_cartesian(object_name, reference, signal, 'x')
 
 
-    def rmse_cartesian_y(self, object_name, indexes, reference, signal):
+    def rmse_cartesian_y(self, object_name, reference, signal):
         """Evaluate the RMSE Cartesian error for the y coordinate."""
 
         return self.rmse_cartesian(object_name, reference, signal, 'y')
 
 
-    def rmse_cartesian_z(self, object_name, indexes, reference, signal):
+    def rmse_cartesian_z(self, object_name, reference, signal):
         """Evaluate the RMSE Cartesian error for the y coordinate."""
 
         return self.rmse_cartesian(object_name, reference, signal, 'z')
 
 
-    def rmse_angular(self, object_name, indexes, reference, signal):
+    def rmse_angular(self, object_name, reference, signal):
         """Evaluate the RMSE angular error for the orientation."""
 
-        error = self.error_angular(object_name, indexes, reference, signal)
+        error = self.error_angular(object_name, reference, signal)
 
         return numpy.linalg.norm(error) / numpy.sqrt(error.shape[0])
 
 
-    def adi(self, object_name, indexes, reference, signal):
+    def adi(self, object_name, reference, signal):
         """Evaluate ADI-AUC."""
 
         distances, auc = self.auc(object_name, reference, signal, 'adi')
@@ -190,7 +189,7 @@ class Metric():
         return auc
 
 
-    def add(self, object_name, indexes, reference, signal):
+    def add(self, object_name, reference, signal):
         """Evaluate ADD-AUC."""
 
         distances, auc = self.auc(object_name, reference, signal, 'add')
@@ -198,7 +197,7 @@ class Metric():
         return auc
 
 
-    def add_distances(self, object_name, indexes, reference, signal):
+    def add_distances(self, object_name, reference, signal):
         """Evaluate sorted ADD distances."""
 
         distances, auc = self.auc(object_name, reference, signal, 'add')

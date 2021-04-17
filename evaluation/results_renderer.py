@@ -205,7 +205,16 @@ class ResultsMarkdownRenderer():
     def render(self, results_name, results, objects, experiments_data, subset_from):
         """Renderer."""
 
+        # Get dataset name
+        dataset_name = experiments_data(results_name)[0]['config']['dataset']
+
+        # Get objects
+        objects = objects[dataset_name]
+
+        # Get algorithm names
         algorithm_names = [name for name in results]
+
+        # Get metric names
         metric_names = [name for name in results[algorithm_names[0]][objects[0]]]
 
         # Construct table header
