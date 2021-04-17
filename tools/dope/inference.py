@@ -208,6 +208,9 @@ class DOPEInference():
                     Cuboid3d(self.params['dimensions'][self.object_info['name']]),
                     dist_coeffs = self.camera_distortion
                 )
+
+                self.process_sequence(path, output_path)
+
         elif self.dataset_name == 'ycbv_synthetic':
             # Compose input path
             path = os.path.join(self.dataset_path, self.object_name)
@@ -215,7 +218,7 @@ class DOPEInference():
             # Compose output path and create it
             output_path = os.path.join(self.output_path, self.object_name)
 
-        self.process_sequence(path, output_path)
+            self.process_sequence(path, output_path)
 
 
     def process_sequence(self, path, output_path):
