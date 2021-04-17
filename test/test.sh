@@ -23,7 +23,7 @@ EXECUTABLE=?
 YCBV_SYN_PATH=?
 CONFIG_ROOT_PATH=./config/
 OBJECT_ROOT_PATH=$YCBV_SYN_PATH/$OBJECT_NAME/
-OUTPUT_ROOT_PATH=./results/ours/
+OUTPUT_ROOT_PATH=./results/ours/ycbv_synthetic/
 
 # configuration matrix
 MASK_SET="mrcnn"

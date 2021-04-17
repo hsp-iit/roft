@@ -36,9 +36,9 @@ do
            --in_path $YCBV_SYN_PATH/$object_name/gt/poses.txt\
            --out_path $YCBV_SYN_PATH/$object_name/gt/poses_ycb.txt
 
-    for folder in `ls ./results/ours`; do
-        IN_FILE_PATH=./results/ours/$folder/$object_name/pose_estimate.txt
-        OUT_FILE_PATH=./results/ours/$folder/$object_name/pose_estimate_ycb.txt
+    for folder in `ls ./results/ours/ycbv_synthetic/`; do
+        IN_FILE_PATH=./results/ours/ycbv_synthetic/$folder/$object_name/pose_estimate.txt
+        OUT_FILE_PATH=./results/ours/ycbv_synthetic/$folder/$object_name/pose_estimate_ycb.txt
         echo "Processing  "$IN_FILE_PATH
         rm -f $OUT_FILE_PATH
         python $CONVERSION_TOOL\

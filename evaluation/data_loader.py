@@ -9,6 +9,7 @@
 
 import copy
 import numpy
+import os
 from objects import Objects
 
 
@@ -145,7 +146,7 @@ class DataLoader():
         }
 
         variant = self.algorithm['config']['variant']
-        path = self.paths['ours'] + variant
+        path = os.path.join(self.paths['ours'], dataset_name, variant)
         self.log('load_ours', 'loading data from ' + path, starter = True)
 
         self.data = {}
