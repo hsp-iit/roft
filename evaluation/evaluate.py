@@ -8,6 +8,7 @@
 #===============================================================================
 
 import argparse
+import numpy
 import os
 from data_loader import DataLoader
 from experiments import Experiments
