@@ -29,7 +29,6 @@ class DataLoader():
         root_path = './results/'
         self.paths =\
         {
-            'gt' : root_path + 'gt/',
             'ours' : root_path + 'ours/',
             'se3tracknet' : root_path + 'TrackNet_results/',
             'poserbpf' : root_path + 'PoseRBPF_results/'
@@ -88,16 +87,43 @@ class DataLoader():
             if object_name == 'ALL':
                 continue
 
-            object_path = self.paths['gt'] + '/ycbv_synthetic/' + object_name + '/'
-            self.data['ycbv_synthetic'][object_name] = [self.load_generic(object_path  + 'poses_ycb.txt')]
+            file_path = './synthetic-ycb-video-dataset/object_motion/' + object_name + '/gt/poses_ycb.txt'
+            self.data['ycbv_synthetic'][object_name] = [self.load_generic(file_path)]
+
+
+    def load_gt_ho3d(self):
+        """Load gt data using our format for dataset ho3d."""
+
+        self.data['ho3d'] = {}
+
+        video_ids =\
+        {
+            '003_cracker_box' : ['0', '1', '2'],
+            '004_sugar_box' : ['0', '1', '2', '3', '4'],
+            '006_mustard_bottle' : ['0', '1', '2', '3'],
+            '010_potted_meat_can' : ['100', '101', '102', '103', '104']
+        }
+
+        for object_name in self.objects['ho3d']:
+
+            if object_name == 'ALL':
+                continue
+
+            self.data['ho3d'][object_name] = []
+            for i, video_id in enumerate(video_ids[object_name]):
+                file_path = './HO3D/' + object_name + '_' + video_id + '/gt/poses.txt'
+
+                self.data['ho3d'][object_name].append(self.load_generic(file_path))
 
 
     def load_gt(self):
         """Load gt data using our format."""
 
-        self.log('load_gt', 'loading data from ' + self.paths['gt'], starter = True)
+        self.log('load_gt', 'loading ground truth data', starter = True)
 
         self.load_gt_ycbv_synthetic()
+
+        self.load_gt_ho3d()
 
         print('')
 
