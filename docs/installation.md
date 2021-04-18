@@ -4,7 +4,7 @@ We assume that `CUDA 10.1` is adopted.
 
 ### DOPE
 
-Just install the provided [requirements](/docs/dope_requirements.txt)
+Just install the provided [requirements](/docs/dope_requirements.txt).
 
 ### Detectron 2
 
