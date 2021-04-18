@@ -104,16 +104,16 @@ int main(int argc, char** argv)
     auto camera_measurement = std::make_shared<CameraMeasurement>(std::move(camera));
 
     /* Initialize optical flow source. */
-    ImageOpticalFlowNVOF flow_source(camera_measurement, ImageOpticalFlowNVOF::NVOFPerformance::Slow, true);
+    ImageOpticalFlowNVOF flow_source(camera_measurement, ImageOpticalFlowNVOF::NVOFPerformance_1_0::Slow, true);
 
     /* Process frames. */
     while(camera_measurement->freeze(CameraMeasurementType::RGB))
     {
-        std::cout << "Processing frame # " << camera_measurement->camera_frame_index() << std::endl;
-
         bool valid_flow = false;
         cv::Mat flow;
+
         flow_source.step_frame();
+
         std::tie(valid_flow, flow) = flow_source.flow(false);
 
         if (valid_flow)
