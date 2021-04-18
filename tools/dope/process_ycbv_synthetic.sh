@@ -7,9 +7,9 @@
 #
 #===============================================================================
 
-YCBVSYN_PATH=?
-DOPE_PATH=?
-DOPE_VENV_PATH=?
+YCBVSYN_PATH=`cat ./config/ycbv_synthetic_location`
+DOPE_PATH=`cat ./config/dope_location`
+DOPE_VENV_PATH=`cat ./config/dope_venv_location`
 GPU_ID=$1
 
 . $DOPE_VENV_PATH/bin/activate

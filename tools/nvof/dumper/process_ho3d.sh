@@ -7,7 +7,7 @@
 #
 #===============================================================================
 
-HO3D_PATH=?
+HO3D_PATH=`cat ./config/ho3d_location`
 
 for SEQ_NAME in `ls $HO3D_PATH`; do
     OUTPUT_PATH=$HO3D_PATH/$SEQ_NAME/optical_flow/nvof_1_slow

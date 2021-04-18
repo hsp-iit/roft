@@ -7,8 +7,8 @@
 #
 #===============================================================================
 
-CONVERSION_TOOL=?/synthetic_tracknet_poserbpf/Conversion/nvdu_poses_to_ycbv.py
-YCBV_SYN_PATH=?
+CONVERSION_TOOL=`ls ./config/conversion_tool_location`
+YCBV_SYN_PATH=`ls ./config/ycbv_synthetic_location`
 
 mkdir -p ./results/gt
 
