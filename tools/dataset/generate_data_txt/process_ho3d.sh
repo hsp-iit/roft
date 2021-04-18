@@ -7,7 +7,7 @@
 #
 #===============================================================================
 
-HO3D_PATH=/home/icub/dataset/HO3D/
+HO3D_PATH=?
 
 for SEQ_NAME in `ls $HO3D_PATH`; do
     python tools/dataset/generate_data_txt/generate_data_txt.py $HO3D_PATH/$SEQ_NAME
