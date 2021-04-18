@@ -1,14 +1,14 @@
-(WIP)
+We suggest having two seprate virtual environments for `DOPE` and `Detectron 2`.
 
-We assume `CUDA 10.1` and that you are using different `venvs` for `DOPE` and `Detectron 2`.
+We assume that `CUDA 10.1` is adopted.
 
 ### DOPE
 
-Just install `DOPE` [requirements](https://github.com/NVlabs/Deep_Object_Pose/blob/master/requirements.txt)
+Just install the provided [requirements](/docs/dope_requirements.txt)
 
 ### Detectron 2
 
-Install [requirements](https://github.com/robotology/optical-flow-6d-tracking-code/blob/main/requirements.txt) of this repository (which includes `torch 1.6`).
+Install the provided [requirements](/docs/detectron2_requirements.txt).
 
 Then proceed with `detectron 2` installation as follows:
 
