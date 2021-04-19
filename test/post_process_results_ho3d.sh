@@ -8,9 +8,9 @@
 #===============================================================================
 
 CONVERSION_TOOL=`cat ./config/conversion_tool_location`/Conversion/nvdu_poses_to_ycbv.py
-YCBV_SYN_PATH=`cat ./config/ycbv_synthetic_location`
+HO3D_PATH=`cat ./config/ho3d_location`
 
-for object_name in `cat config/classes.txt`
+for object_name in `cat config/classes_ho3d.txt`
 do
     OBJECT_ID=""
     if [ $object_name == "003_cracker_box" ]; then
@@ -27,22 +27,19 @@ do
         OBJECT_ID="9"
     fi
 
-    echo "Converting ground truth to YCB-Video format for object "$object_name
-    python $CONVERSION_TOOL\
-           --format gt\
-           --obj_id $OBJECT_ID\
-           --in_path $YCBV_SYN_PATH/object_motion/$object_name/gt/poses.txt\
-           --out_path $YCBV_SYN_PATH/object_motion/$object_name/gt/poses_ycb.txt
+    for sequence_name in `ls -d $HO3D_PATH/$object_name*`; do
+        sequence_number=`echo ${sequence_name##*_}`
 
-    for folder in `ls ./results/ours/ycbv_synthetic/`; do
-        IN_FILE_PATH=./results/ours/ycbv_synthetic/$folder/$object_name/pose_estimate.txt
-        OUT_FILE_PATH=./results/ours/ycbv_synthetic/$folder/$object_name/pose_estimate_ycb.txt
-        echo "Processing  "$IN_FILE_PATH
-        rm -f $OUT_FILE_PATH
-        python $CONVERSION_TOOL\
-               --format pred\
-               --obj_id $OBJECT_ID\
-               --in_path $IN_FILE_PATH\
-               --out_path $OUT_FILE_PATH
+        for folder in `ls ./results/ours/ho3d/`; do
+            IN_FILE_PATH=./results/ours/ho3d/$folder/"$object_name"_"$sequence_number"/pose_estimate.txt
+            OUT_FILE_PATH=./results/ours/ho3d/$folder/"$object_name"_"$sequence_number"/pose_estimate_ycb.txt
+            echo "Processing  "$IN_FILE_PATH
+            rm -f $OUT_FILE_PATH
+            python $CONVERSION_TOOL\
+                   --format pred\
+                   --obj_id $OBJECT_ID\
+                   --in_path $IN_FILE_PATH\
+                   --out_path $OUT_FILE_PATH
+        done
     done
 done

@@ -232,8 +232,8 @@ def main():
     parser.add_argument('--metric-name', dest = 'metric_name', type = str, required = True, help = "available metrics: ['ad', 'add-distances', 'error', 'rmse']")
     parser.add_argument('--experiment-name', dest = 'experiment_name', type = str, required = False, help = 'available experiments: ' + str(experiment_names))
     parser.add_argument('--use-subset', dest = 'use_subset', type = str, required = False, help = "name of the algorithm whose ground truth indexes should be used for the evaluation. available names are ['ours', 'se3tracknet, 'poserbpf']")
-    parser.add_argument('--output-head', dest = 'output_head', type = str, required = False, help = "available heads: ['latex', 'markdown', 'plot']")
-    parser.add_argument('--output-path', dest = 'output_path', type = str, required = False, help = "where to save results")
+    parser.add_argument('--output-head', dest = 'output_head', type = str, required = False, help = "available heads: ['latex', 'markdown', 'plot']", default = 'markdown')
+    parser.add_argument('--output-path', dest = 'output_path', type = str, required = False, help = "where to save results", default = './evaluation_output')
 
     options = parser.parse_args()
 

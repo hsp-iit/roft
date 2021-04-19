@@ -154,9 +154,28 @@ class DataLoader():
             'velocity_measurements' : 'vel_meas'
         }
 
-        variant = 'full_mrcnn_' + config['mrcnn_set'] + '_' + config['nvof_set']
+        variant = 'full_' + config['masks_set'] + '_' + config['nvof_set']
         path = os.path.join(self.paths['ours'], dataset_name, variant)
         self.log('load_ours', 'loading data from ' + path, starter = True)
+
+        # Video ids used in se3-tracknet
+        video_ids = {}
+        video_ids['ycbv_synthetic'] =\
+        {
+            '003_cracker_box' : [''],
+            '004_sugar_box' : [''],
+            '005_tomato_soup_can' : [''],
+            '006_mustard_bottle' : [''],
+            '009_gelatin_box' : [''],
+            '010_potted_meat_can' : ['']
+        }
+        video_ids['ho3d'] =\
+        {
+            '003_cracker_box' : ['_0', '_1', '_2'],
+            '004_sugar_box' : ['_0', '_1', '_2', '_3', '_4'],
+            '006_mustard_bottle' : ['_0', '_1', '_2', '_3'],
+            '010_potted_meat_can' : ['_100', '_101', '_102', '_103', '_104']
+        }
 
         self.data = {}
         for object_name in self.objects[dataset_name]:
@@ -166,22 +185,23 @@ class DataLoader():
 
             object_data = []
 
-            object_video_data = {}
+            for i, video_id in enumerate(video_ids[dataset_name][object_name]):
 
-            object_path = path + '/' + object_name + '/'
+                object_path = path + '/' + object_name + video_id + '/'
 
-            object_video_data = {}
-            # self.log('load_ours', 'processing object ' + object_name)
+                object_video_data = {}
 
-            for content in contents_map:
-                d = self.load_generic(object_path + content + '.txt')
-                # This channel contains also a heading 6-sized vector of object velocities
-                if content == 'pose_estimate_ycb':
-                    d = d[:, 6 : ]
+                # self.log('load_ours', 'processing object ' + object_name)
 
-                object_video_data[contents_map[content]] = d
+                for content in contents_map:
+                    d = self.load_generic(object_path + content + '.txt')
+                    # This channel contains also a heading 6-sized vector of object velocities
+                    if content == 'pose_estimate_ycb':
+                        d = d[:, 6 : ]
 
-            object_data.append(object_video_data)
+                    object_video_data[contents_map[content]] = d
+
+                object_data.append(object_video_data)
 
             self.data[object_name] = object_data
 
@@ -203,7 +223,7 @@ class DataLoader():
         if config['reinit_from'] == 'dope':
             contents_map['reinit_dope'] = 'pose_measurements'
 
-        # Video ids used in se3-tracknet dataset
+        # Video ids used in se3-tracknet
         video_ids = {}
         video_ids['ycbv_synthetic'] =\
         {
@@ -248,7 +268,6 @@ class DataLoader():
             for i, video_id in enumerate(video_ids[dataset_name][object_name]):
                 object_path = path + '/' + object_name + '/' + video_id + '/'
 
-                # self.data[object_name] = {}
                 object_video_data = {}
                 # self.log('load_ours', 'processing object ' + object_name)
 
@@ -291,7 +310,7 @@ class DataLoader():
         if config['reinit_from'] == 'dope':
             contents_map['reinit_dope'] = 'pose_measurements'
 
-        # Video ids used in se3-tracknet dataset
+        # Video ids used in poserbpf
         video_ids = {}
         video_ids['ycbv_synthetic'] =\
         {
