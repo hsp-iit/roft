@@ -52,7 +52,7 @@ class Experiments():
         # if a label is not provided, it is set equal to the algorithm name
         algorithm_label = algorithm_name
         if 'label' in algorithm_conf:
-            label = algorithm_conf['label']
+            algorithm_label = algorithm_conf['label']
 
         self._experiments[experiment_name].append\
         (
