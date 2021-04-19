@@ -154,7 +154,7 @@ class DataLoader():
             'velocity_measurements' : 'vel_meas'
         }
 
-        variant = self.algorithm['config']['variant']
+        variant = 'full_mrcnn_' + config['mrcnn_set'] + '_' + config['nvof_set']
         path = os.path.join(self.paths['ours'], dataset_name, variant)
         self.log('load_ours', 'loading data from ' + path, starter = True)
 
