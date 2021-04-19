@@ -77,6 +77,8 @@ class Evaluator():
 
             if output_path is not None:
 
+                os.makedirs(output_path, exist_ok = 'True')
+
                 if output_head == 'markdown' or output_head == 'latex':
 
                     print('Rendered results saved to:')
