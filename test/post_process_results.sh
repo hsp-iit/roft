@@ -7,8 +7,8 @@
 #
 #===============================================================================
 
-CONVERSION_TOOL=`ls ./config/conversion_tool_location`
-YCBV_SYN_PATH=`ls ./config/ycbv_synthetic_location`
+CONVERSION_TOOL=`cat ./config/conversion_tool_location`/Conversion/nvdu_poses_to_ycbv.py
+YCBV_SYN_PATH=`cat ./config/ycbv_synthetic_location`
 
 mkdir -p ./results/gt
 
@@ -33,8 +33,8 @@ do
     python $CONVERSION_TOOL\
            --format gt\
            --obj_id $OBJECT_ID\
-           --in_path $YCBV_SYN_PATH/$object_name/gt/poses.txt\
-           --out_path $YCBV_SYN_PATH/$object_name/gt/poses_ycb.txt
+           --in_path $YCBV_SYN_PATH/object_motion/$object_name/gt/poses.txt\
+           --out_path $YCBV_SYN_PATH/object_motion/$object_name/gt/poses_ycb.txt
 
     for folder in `ls ./results/ours/ycbv_synthetic/`; do
         IN_FILE_PATH=./results/ours/ycbv_synthetic/$folder/$object_name/pose_estimate.txt
