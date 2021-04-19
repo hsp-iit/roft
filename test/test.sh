@@ -22,12 +22,12 @@ ONLY_VEL=$9
 EXECUTABLE=robmo-misc-object-tracker-of
 YCBV_SYN_PATH=`cat ./config/ycbv_synthetic_location`
 CONFIG_ROOT_PATH=./config/
-OBJECT_ROOT_PATH=$YCBV_SYN_PATH/$OBJECT_NAME/
+OBJECT_ROOT_PATH=$YCBV_SYN_PATH/object_motion/$OBJECT_NAME/
 OUTPUT_ROOT_PATH=./results/ours/ycbv_synthetic/
 
 # configuration matrix
-MASK_SET="mrcnn"
-OF_SET="nvof/"
+MASK_SET="mrcnn_ycbv_bop_pbr"
+OF_SET="nvof_2_slow"
 POSE_SET="dope/"
 USE_OUTREJ="true"
 USE_POSE_RESYNC="true"
@@ -37,13 +37,13 @@ USE_VEL_MEASUREMENT="true"
 SIGMA_ANG_VEL="(1.0, 1.0, 1.0)"
 P_COV_Q="(0.0001, 0.0001, 0.0001)"
 
-LOG_POSTFIX="full"
+LOG_POSTFIX="full_"$MASK_SET"_"$OF_SET
 if [ "$GT_MASK" == "true" ]; then
     MASK_SET="gt"
     LOG_POSTFIX=${LOG_POSTFIX}"_gt_mask"
 fi
 if [ "$GT_OF" == "true" ]; then
-    OF_SET="gt/"
+    OF_SET="gt"
     LOG_POSTFIX=${LOG_POSTFIX}"_gt_of"
 fi
 if [ "$GT_POSE" == "true" ]; then
@@ -100,7 +100,7 @@ $EXECUTABLE --from $CONFIG_ROOT_PATH/config_ycbv_syn.ini\
             --MEASUREMENT_MODEL::use_pose_resync $USE_POSE_RESYNC\
             --MODEL::name $OBJECT_NAME\
             --OPTICAL_FLOW_DATASET::path $OBJECT_ROOT_PATH\
-            --OPTICAL_FLOW_DATASET::set $OF_SET\
+            --OPTICAL_FLOW_DATASET::set $OF_SET/\
             --POSE_DATASET::path $OBJECT_ROOT_PATH/$POSE_SET/poses.txt\
             --SEGMENTATION::flow_aided $USE_FLOW_AIDED\
             --SEGMENTATION_DATASET::path $OBJECT_ROOT_PATH\
