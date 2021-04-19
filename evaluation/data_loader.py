@@ -83,12 +83,17 @@ class DataLoader():
         """Load gt data using our format for dataset ycbv synthetic."""
 
         self.data['ycbv_synthetic'] = {}
+
+        dataset_location_file = open('./config/ycbv_synthetic_location', 'r')
+        dataset_location = dataset_location_file.read()
+        dataset_location_file.close()
+
         for object_name in self.objects['ycbv_synthetic']:
 
             if object_name == 'ALL':
                 continue
 
-            file_path = './synthetic-ycb-video-dataset/object_motion/' + object_name + '/gt/poses_ycb.txt'
+            file_path = os.path.join(dataset_location, 'object_motion', object_name, 'gt', 'poses_ycb.txt')
             self.data['ycbv_synthetic'][object_name] = [self.load_generic(file_path)]
 
 
@@ -96,6 +101,10 @@ class DataLoader():
         """Load gt data using our format for dataset ho3d."""
 
         self.data['ho3d'] = {}
+
+        dataset_location_file = open('./config/ho3d_location', 'r')
+        dataset_location = dataset_location_file.read()
+        dataset_location_file.close()
 
         video_ids =\
         {
@@ -112,7 +121,7 @@ class DataLoader():
 
             self.data['ho3d'][object_name] = []
             for i, video_id in enumerate(video_ids[object_name]):
-                file_path = './HO3D/' + object_name + '_' + video_id + '/gt/poses.txt'
+                file_path = os.path.join(dataset_location, object_name + '_' + video_id, 'gt', 'poses.txt')
 
                 self.data['ho3d'][object_name].append(self.load_generic(file_path))
 
