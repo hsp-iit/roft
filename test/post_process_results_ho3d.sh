@@ -40,6 +40,8 @@ do
                    --obj_id $OBJECT_ID\
                    --in_path $IN_FILE_PATH\
                    --out_path $OUT_FILE_PATH
+
+            python ./tools/dataset/results_padding/pad_results.py $OUT_FILE_PATH $object_name $sequence_number
         done
     done
 done
