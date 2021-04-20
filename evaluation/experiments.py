@@ -15,21 +15,24 @@ class Experiments():
 
         self._experiments = {}
 
-        self.add_algorithm_to_experiment('exp_ycbvs_DOPE', 'ours', masks_train_set = 'mrcnn_ycbv_bop_pbr', nvof_set = 'nvof_2_slow', gt_masks = False, dataset = 'ycbv_synthetic')
-        self.add_algorithm_to_experiment('exp_ycbvs_DOPE', 'poserbpf', particles = 200, fps = 7, reinit = True, reinit_from = 'dope', dataset = 'ycbv_synthetic')
-        self.add_algorithm_to_experiment('exp_ycbvs_DOPE', 'se3tracknet', reinit = True, reinit_from = 'dope', reinit_fps = 5, dataset = 'ycbv_synthetic')
-
-        self.add_algorithm_to_experiment('exp_ycbvs_real', 'ours', masks_train_set = 'mrcnn_ycbv_bop_pbr', nvof_set = 'nvof_2_slow', gt_masks = False, dataset = 'ycbv_synthetic')
-        self.add_algorithm_to_experiment('exp_ycbvs_real', 'poserbpf', particles = 200, fps = 7, reinit = False, reinit_from = '', dataset = 'ycbv_synthetic')
+        # synthetic YCB-Video
+        self.add_algorithm_to_experiment('exp_ycbvs_real', 'ours', masks_train_set = 'mrcnn_ycbv_bop_pbr', nvof_set = 'nvof_2_slow', gt_masks = False, gt_pose = False, dataset = 'ycbv_synthetic')
+        self.add_algorithm_to_experiment('exp_ycbvs_real', 'poserbpf', particles = 200, fps = 7, init_from = 'Dope', reinit = False, reinit_from = '', dataset = 'ycbv_synthetic')
         self.add_algorithm_to_experiment('exp_ycbvs_real', 'se3tracknet', reinit = True, reinit_from = 'dope', reinit_fps = 5, dataset = 'ycbv_synthetic')
 
-        self.add_algorithm_to_experiment('exp_ycbvs_real_rbpf50', 'ours', masks_train_set = 'mrcnn_ycbv_bop_pbr', nvof_set = 'nvof_2_slow', gt_masks = False, dataset = 'ycbv_synthetic')
-        self.add_algorithm_to_experiment('exp_ycbvs_real_rbpf50', 'poserbpf', particles = 50, fps = 15, reinit = False, reinit_from = '', dataset = 'ycbv_synthetic')
-        self.add_algorithm_to_experiment('exp_ycbvs_real_rbpf50', 'se3tracknet', reinit = True, reinit_from = 'dope', reinit_fps = 5, dataset = 'ycbv_synthetic')
+        self.add_algorithm_to_experiment('exp_ycbvs_real_50', 'ours', masks_train_set = 'mrcnn_ycbv_bop_pbr', nvof_set = 'nvof_2_slow', gt_masks = False, gt_pose = False, dataset = 'ycbv_synthetic')
+        self.add_algorithm_to_experiment('exp_ycbvs_real_50', 'poserbpf', particles = 50, fps = 15, init_from = 'Dope', reinit = False, reinit_from = '', dataset = 'ycbv_synthetic')
+        self.add_algorithm_to_experiment('exp_ycbvs_real_50', 'se3tracknet', reinit = True, reinit_from = 'dope', reinit_fps = 5, dataset = 'ycbv_synthetic')
 
-        self.add_algorithm_to_experiment('exp_ycbvs_ideal', 'ours', masks_train_set = 'mrcnn_ycbv_bop_pbr', nvof_set = 'nvof_2_slow', gt_masks = False, dataset = 'ycbv_synthetic')
-        self.add_algorithm_to_experiment('exp_ycbvs_ideal', 'poserbpf', particles = 200, fps = 30, reinit = True, reinit_from = 'rbpf', dataset = 'ycbv_synthetic')
-        self.add_algorithm_to_experiment('exp_ycbvs_ideal', 'se3tracknet', reinit = True, reinit_from = 'dope', reinit_fps = 5, dataset = 'ycbv_synthetic')
+        # HO-3D
+        self.add_algorithm_to_experiment('exp_ho3d_real', 'ours', masks_train_set = 'mrcnn_ycbv_bop_pbr', nvof_set = 'nvof_2_slow', gt_masks = False, gt_pose = False, dataset = 'ho3d')
+        self.add_algorithm_to_experiment('exp_ho3d_real', 'poserbpf', particles = 200, fps = 7, init_from = 'Dope', reinit = False, reinit_from = '', dataset = 'ho3d')
+        self.add_algorithm_to_experiment('exp_ho3d_real', 'se3tracknet', reinit = True, reinit_from = 'dope', reinit_fps = 5, dataset = 'ho3d')
+
+        self.add_algorithm_to_experiment('exp_ho3d_real_50', 'ours', masks_train_set = 'mrcnn_ycbv_bop_pbr', nvof_set = 'nvof_2_slow', gt_masks = False, gt_pose = False, dataset = 'ho3d')
+        self.add_algorithm_to_experiment('exp_ho3d_real_50', 'poserbpf', particles = 50, fps = 15, init_from = 'Dope', reinit = False, reinit_from = '', dataset = 'ho3d')
+        self.add_algorithm_to_experiment('exp_ho3d_real_50', 'se3tracknet', reinit = True, reinit_from = 'dope', reinit_fps = 5, dataset = 'ho3d')
+
 
     @property
     def experiments(self):
