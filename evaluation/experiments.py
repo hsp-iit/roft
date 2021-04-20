@@ -61,6 +61,9 @@ class Experiments():
         if 'label' in algorithm_conf:
             algorithm_label = algorithm_conf['label']
 
+        if 'excluded_objects' not in algorithm_conf:
+            algorithm_conf['excluded_objects'] = []
+
         self._experiments[experiment_name].append\
         (
             {
