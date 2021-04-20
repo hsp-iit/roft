@@ -41,6 +41,8 @@ do
                    --in_path $IN_FILE_PATH\
                    --out_path $OUT_FILE_PATH
 
+            # Pad results with invalid poses if we run from sequeunces, like HO-3D 006_mustard_bottle_2,
+            # where DOPE measurements are invalid from the first frame
             python ./tools/dataset/results_padding/pad_results.py $OUT_FILE_PATH $object_name $sequence_number
         done
     done

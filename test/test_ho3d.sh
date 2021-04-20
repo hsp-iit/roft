@@ -99,7 +99,7 @@ if [ "$ONLY_VEL" == "true" ]; then
     USE_POSE_RESYNC="false"
 fi
 
-INITIAL_POSE_STRING=`python ./tools/dataset/dope_pose_finder/pose_finder.py $OBJECT_ROOT_PATH/dope/poses.txt 5`
+INITIAL_POSE_STRING=`python ./tools/dataset/dope_pose_finder/pose_finder.py $OBJECT_ROOT_PATH/dope/poses.txt 5` # 5 is the FPS used for DOPE
 INITIAL_POSE_ARRAY=($INITIAL_POSE_STRING)
 INITIAL_INDEX="${INITIAL_POSE_ARRAY[@]:0:1}"
 INITIAL_POSITION="${INITIAL_POSE_ARRAY[@]:1:3}"
