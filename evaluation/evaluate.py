@@ -19,7 +19,7 @@ from results_renderer import ResultsMatplotlibRenderer, ResultsMarkdownRenderer,
 
 class Evaluator():
 
-    def __init__(self, metric_name, experiment_name, output_head, output_path, subset_from):
+    def __init__(self, metric_name, experiment_name, output_head, output_path, subset_from, disable_ho3d_padding):
         """Constructor.
 
            metric_name = the desired metric
@@ -27,6 +27,7 @@ class Evaluator():
            output_head = markdown or latex
            output_path = where to save results
            subset_from = name of the algorithm whose ground truth indexes should be used for the evaluation
+           disable_ho3d_padding = whether to handle that DOPE predictions for HO-3D in sequence 006_mustard_bottle_2 are missing starting from the first frame
         """
 
         self.data = {}
@@ -62,6 +63,14 @@ class Evaluator():
             self.metric_names.append('rmse_angular')
 
         self.metrics = { name : Metric(name) for name in self.metric_names }
+
+        # Take into account experiments with missing DOPE predictions at the beginning of the scene
+        self.ho3d_padding_list = {}
+        if not disable_ho3d_padding:
+            self.ho3d_padding_list=\
+            {
+                '006_mustard_bottle' : { 2 : { 'padding' : 72, 'target_size' : 880 } }
+            }
 
         # Process experiments
         if experiment_name is not None:
@@ -171,6 +180,15 @@ class Evaluator():
                         # and we might want to evaluate all the algorithms on that subset of frames
                         if subset_from is not None and algorithm['label'] != subset_from:
                             seq_pose_indexes = exp_data[subset_from][object_name][i]['indexes']
+
+                            # Take into account HO-3D experiments with missing DOPE predictions at the beginning of the scene
+                            if dataset_name == 'ho3d':
+                                if object_name in self.ho3d_padding_list:
+                                    padding_info = self.ho3d_padding_list[object_name]
+                                    if i in padding_info:
+                                        padding_info_i = padding_info[i]
+                                        seq_pose_indexes = seq_pose_indexes[seq_pose_indexes >= padding_info_i['padding']]
+
                             seq_gt_pose = seq_gt_pose_all[seq_pose_indexes, :]
                             seq_pose = seq_pose_all[seq_pose_indexes, :]
                         else:
@@ -182,12 +200,36 @@ class Evaluator():
                                           ' provides ' + str(seq_pose_all.shape) + ' matrix as pose while the ground truth has shape ' + \
                                           str(seq_gt_pose_all.shape) + '. However, a list of indexes for the poses has not been provided.' + \
                                           ' Cannot continue.')
+
                                 seq_pose_indexes = sequence_data['indexes']
                                 seq_pose = seq_pose_all
+
+                                # Take into account HO-3D experiments with missing DOPE predictions at the beginning of the scene
+                                if dataset_name == 'ho3d':
+                                    if object_name in self.ho3d_padding_list:
+                                        padding_info = self.ho3d_padding_list[object_name]
+                                        if i in padding_info:
+                                            padding_info_i = padding_info[i]
+                                            selection_vector = seq_pose_indexes >= padding_info_i['padding']
+                                            seq_pose_indexes = seq_pose_indexes[selection_vector]
+
+                                            skipped_indexes = numpy.array([index for index in range(seq_pose_all.shape[0])])
+                                            skipped_indexes = skipped_indexes[selection_vector]
+                                            seq_pose = seq_pose_all[skipped_indexes, :]
+
                                 seq_gt_pose = seq_gt_pose_all[seq_pose_indexes, :]
                             else:
                                 seq_pose = seq_pose_all
                                 seq_gt_pose = seq_gt_pose_all
+
+                                # Take into account HO-3D experiments with missing DOPE predictions at the beginning of the scene
+                                if dataset_name == 'ho3d':
+                                    if object_name in self.ho3d_padding_list:
+                                        padding_info = self.ho3d_padding_list[object_name]
+                                        if i in padding_info:
+                                            padding_info_i = padding_info[i]
+                                            seq_pose = seq_pose[padding_info_i['padding'] :, :]
+                                            seq_gt_pose = seq_gt_pose[padding_info_i['padding'] :, :]
 
                         # Concatenate data belonging to the same object
                         if i == 0:
@@ -234,10 +276,11 @@ def main():
     parser.add_argument('--use-subset', dest = 'use_subset', type = str, required = False, help = "name of the algorithm whose ground truth indexes should be used for the evaluation. available names are ['ours', 'se3tracknet, 'poserbpf']")
     parser.add_argument('--output-head', dest = 'output_head', type = str, required = False, help = "available heads: ['latex', 'markdown', 'plot']", default = 'markdown')
     parser.add_argument('--output-path', dest = 'output_path', type = str, required = False, help = "where to save results", default = './evaluation_output')
+    parser.add_argument('--disable-ho3d-padding', dest = 'disable_ho3d_padding', type = bool, default = False, help = "whether to handle that DOPE predictions for HO-3D in sequence 006_mustard_bottle_2 are missing starting from the first frame")
 
     options = parser.parse_args()
 
-    evaluator = Evaluator(options.metric_name, options.experiment_name, options.output_head, options.output_path, options.use_subset)
+    evaluator = Evaluator(options.metric_name, options.experiment_name, options.output_head, options.output_path, options.use_subset, options.disable_ho3d_padding)
 
 
 if __name__ == '__main__':
