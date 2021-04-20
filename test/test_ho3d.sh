@@ -106,7 +106,6 @@ INITIAL_POSITION="${INITIAL_POSE_ARRAY[@]:1:3}"
 INITIAL_ORIENTATION="${INITIAL_POSE_ARRAY[@]:4}"
 
 OUTPUT_PATH=$OUTPUT_ROOT_PATH"$LOG_POSTFIX"/"$OBJECT_NAME"_"$SEQ_NAME"/
-echo $OUTPUT_PATH
 mkdir -p $OUTPUT_PATH
 rm -f $OUTPUT_PATH/*.txt
 
@@ -135,3 +134,6 @@ $EXECUTABLE --from $CONFIG_ROOT_PATH/config_ho3d.ini\
             --SEGMENTATION_DATASET::path $OBJECT_ROOT_PATH\
             --SEGMENTATION_DATASET::set $MASK_SET\
             --SEGMENTATION_DATASET::index_offset $INITIAL_INDEX
+
+# Convert to YCB-V reference frame
+bash ./test/post_process_results_ho3d.sh $OBJECT_NAME $SEQ_NAME $OUTPUT_PATH

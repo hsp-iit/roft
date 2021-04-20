@@ -105,3 +105,6 @@ $EXECUTABLE --from $CONFIG_ROOT_PATH/config_ycbv_syn.ini\
             --SEGMENTATION::flow_aided $USE_FLOW_AIDED\
             --SEGMENTATION_DATASET::path $OBJECT_ROOT_PATH\
             --SEGMENTATION_DATASET::set $MASK_SET
+
+# Convert to YCB-V reference frame
+bash ./test/post_process_results.sh $OBJECT_NAME $OUTPUT_PATH
