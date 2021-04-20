@@ -27,12 +27,6 @@ elif [ $OBJECT_NAME == "010_potted_meat_can" ]; then
     OBJECT_ID="9"
 fi
 
-python $CONVERSION_TOOL\
-       --format gt\
-       --obj_id $OBJECT_ID\
-       --in_path $YCBV_SYN_PATH/object_motion/$OBJECT_NAME/gt/poses.txt\
-       --out_path $YCBV_SYN_PATH/object_motion/$OBJECT_NAME/gt/poses_ycb.txt
-
 rm -f $INPUT_PATH/pose_estimate_ycb.txt
 python $CONVERSION_TOOL\
        --format pred\
