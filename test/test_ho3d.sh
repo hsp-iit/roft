@@ -99,14 +99,12 @@ if [ "$ONLY_VEL" == "true" ]; then
     USE_POSE_RESYNC="false"
 fi
 
-INITIAL_POSE_STRING=`python ./tools/dataset/dope_pose_finder/pose_finder.py $OBJECT_ROOT_PATH/dope/poses.txt`
+INITIAL_POSE_STRING=`python ./tools/dataset/dope_pose_finder/pose_finder.py $OBJECT_ROOT_PATH/dope/poses.txt 5`
 INITIAL_POSE_ARRAY=($INITIAL_POSE_STRING)
-INITIAL_POSITION="${INITIAL_POSE_ARRAY[@]:0:3}"
-INITIAL_ORIENTATION="${INITIAL_POSE_ARRAY[@]:3:7}"
-echo $INITIAL_POSITION
-echo $INITIAL_ORIENTATION
+INITIAL_INDEX="${INITIAL_POSE_ARRAY[@]:0:1}"
+INITIAL_POSITION="${INITIAL_POSE_ARRAY[@]:1:3}"
+INITIAL_ORIENTATION="${INITIAL_POSE_ARRAY[@]:4}"
 
-# cd $HO3D_PATH/$OBJECT_NAME
 OUTPUT_PATH=$OUTPUT_ROOT_PATH"$LOG_POSTFIX"/"$OBJECT_NAME"_"$SEQ_NAME"/
 echo $OUTPUT_PATH
 mkdir -p $OUTPUT_PATH
@@ -118,6 +116,7 @@ $EXECUTABLE --from $CONFIG_ROOT_PATH/config_ho3d.ini\
             --CAMERA::cx $CX\
             --CAMERA::cy $CY\
             --CAMERA_DATASET::path $OBJECT_ROOT_PATH\
+            --CAMERA_DATASET::index_offset $INITIAL_INDEX\
             --INITIAL_CONDITION::p_x_0 "($INITIAL_POSITION)"\
             --INITIAL_CONDITION::p_axis_angle_0 "($INITIAL_ORIENTATION)"\
             --KINEMATIC_MODEL::sigma_ang_vel "$SIGMA_ANG_VEL"\
@@ -129,7 +128,10 @@ $EXECUTABLE --from $CONFIG_ROOT_PATH/config_ho3d.ini\
             --MODEL::name $OBJECT_NAME\
             --OPTICAL_FLOW_DATASET::path $OBJECT_ROOT_PATH\
             --OPTICAL_FLOW_DATASET::set $OF_SET/\
+            --OPTICAL_FLOW_DATASET::index_offset $INITIAL_INDEX\
             --POSE_DATASET::path $OBJECT_ROOT_PATH/$POSE_SET/poses.txt\
+            --POSE_DATASET::skip_rows $INITIAL_INDEX\
             --SEGMENTATION::flow_aided $USE_FLOW_AIDED\
             --SEGMENTATION_DATASET::path $OBJECT_ROOT_PATH\
-            --SEGMENTATION_DATASET::set $MASK_SET
+            --SEGMENTATION_DATASET::set $MASK_SET\
+            --SEGMENTATION_DATASET::index_offset $INITIAL_INDEX

@@ -11,6 +11,8 @@ import sys
 
 # Open file
 file_path = str(sys.argv[1])
+fps = int(sys.argv[2])
+fps_steps = (1.0 / fps) / (1 / 30.0)
 f = open(file_path, 'r')
 
 # Read all lines
@@ -20,8 +22,11 @@ f.close()
 # Find the firstp pose different from the invalid pose
 invalid_pose = ('0.0 ' * 7)[:-1]
 
-for line in lines:
+for i, line in enumerate(lines):
     line = line.rstrip()
-    if line != invalid_pose:
-        print(line)
+    if (line != invalid_pose) and (i % fps_steps == 0):
+        # The starting frame should be i + 6 if i is not 0
+        if i != 0:
+            i += 6
+        print(str(i) + ' ' + line)
         exit(0)
