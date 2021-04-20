@@ -306,7 +306,7 @@ class DataLoader():
         config = self.algorithm['config']
 
         contents_map = { 'Pose' : 'pose', 'Index' : 'indexes' }
-        dataset_map = { 'ycbv_synthetic' : 'synthetic' }
+        dataset_map = { 'ycbv_synthetic' : 'synthetic' , 'ho3d' : 'HO3D'}
 
         dataset_name = config['dataset']
         poserbpf_dataset_name = dataset_map[config['dataset']]
@@ -326,14 +326,24 @@ class DataLoader():
             '009_gelatin_box' : ['seq_10'],
             '010_potted_meat_can' : ['seq_10']
         }
+        video_ids['ho3d'] =\
+        {
+            '003_cracker_box' : ['seq_20', 'seq_21', 'seq_22'],
+            '004_sugar_box' : ['seq_20', 'seq_21', 'seq_22', 'seq_23', 'seq_24'],
+            '006_mustard_bottle' : ['seq_20', 'seq_21', 'seq_22', 'seq_23'],
+            '010_potted_meat_can' : ['seq_20', 'seq_21', 'seq_22', 'seq_23', 'seq_24']
+        }
 
         # Compose path to files according to the configuration
-        config_string = str(config['particles']) + '_particles' + '/' + poserbpf_dataset_name + '_' + str(config['fps']) + 'fps_reinit_'
+        config_string = str(config['particles']) + '/' + poserbpf_dataset_name + '_' + str(config['fps']) + 'fps_reinit_'
 
         if config['reinit']:
             config_string += config['reinit_from']
         else:
             config_string += 'None'
+
+        if config['init_from']:
+            config_string += config['init_from']
 
         path = self.paths['poserbpf'] + config_string
         self.log('load_poserbpf', 'loading data from ' + path, starter = True)
@@ -348,7 +358,11 @@ class DataLoader():
 
             for i, video_id in enumerate(video_ids[dataset_name][object_name]):
 
-                object_path = path + '/' + object_name + '/' + video_id + '/'
+                object_name_in_path = object_name
+                if dataset_name == 'ho3d':
+                    object_name_in_path += '_' + video_id.split('_')[1]
+
+                object_path = path + '/' + object_name_in_path + '/' + video_id + '/'
 
                 object_video_data = {}
                 # self.log('load_poserbpf', 'processing object ' + object_name)
