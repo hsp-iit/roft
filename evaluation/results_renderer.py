@@ -162,6 +162,7 @@ class ResultsMarkdownRenderer():
         self.alg_labels =\
         {
             'ours' : 'ours',
+            'ours_gt_mask' : 'gt mask',
             'se3tracknet' : 'se3',
             'poserbpf' : 'rbpf'
         }

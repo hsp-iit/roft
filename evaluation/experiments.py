@@ -33,6 +33,10 @@ class Experiments():
         self.add_algorithm_to_experiment('exp_ho3d_real_50', 'poserbpf', particles = 50, fps = 15, init_from = 'Dope', reinit = False, reinit_from = '', dataset = 'ho3d')
         self.add_algorithm_to_experiment('exp_ho3d_real_50', 'se3tracknet', reinit = True, reinit_from = 'dope', reinit_fps = 5, dataset = 'ho3d')
 
+        # HO-3D ablations
+        self.add_algorithm_to_experiment('exp_ho3d_ablation', 'ours', masks_train_set = 'mrcnn_ycbv_bop_pbr', nvof_set = 'nvof_2_slow', gt_masks = False, gt_pose = False, dataset = 'ho3d')
+        self.add_algorithm_to_experiment('exp_ho3d_ablation', 'ours', label = 'ours_gt_mask', masks_train_set = 'mrcnn_ycbv_bop_pbr', nvof_set = 'nvof_2_slow', gt_masks = True, gt_pose = False, dataset = 'ho3d')           # We don't have GT masks for 010_potted_meat_can
+        self.exclude_object_from_evaluation('exp_ho3d_ablation', '010_potted_meat_can')
 
     @property
     def experiments(self):
