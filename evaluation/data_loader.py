@@ -157,6 +157,9 @@ class DataLoader():
         variant = 'full_' + config['masks_train_set'] + '_' + config['nvof_set']
         if config['gt_masks']:
             variant += '_gt_mask'
+        if config['gt_pose']:
+            variant += '_gt_pose'
+
         path = os.path.join(self.paths['ours'], dataset_name, variant)
         self.log('load_ours', 'loading data from ' + path, starter = True)
 
