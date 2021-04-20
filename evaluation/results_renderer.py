@@ -208,6 +208,9 @@ class ResultsMarkdownRenderer():
         # Get dataset name
         dataset_name = experiments_data(results_name)[0]['config']['dataset']
 
+        # Get excluded objects
+        excluded_objects = experiments_data(results_name)[0]['config']['excluded_objects']
+
         # Get objects
         objects = objects[dataset_name]
 
@@ -227,6 +230,10 @@ class ResultsMarkdownRenderer():
         # Find best result for each row
         best = {}
         for object_name in objects:
+
+            if object_name in excluded_objects:
+                continue
+
             best[object_name] = {}
 
             for i, metric_name in enumerate(metric_names):
@@ -244,6 +251,10 @@ class ResultsMarkdownRenderer():
         data_matrix = []
 
         for object_name in objects:
+
+            if object_name in excluded_objects:
+                continue
+
             row = []
             row.append(object_name)
             for i, alg_name in enumerate(algorithm_names):

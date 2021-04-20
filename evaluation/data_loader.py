@@ -141,9 +141,10 @@ class DataLoader():
     def load_ours(self):
         """Load the data of our algorithm using our format."""
 
+        # Load useful information from the configuration
         config = self.algorithm['config']
-
         dataset_name = config['dataset']
+        excluded_objects = config['excluded_objects']
 
         contents_map =\
         {
@@ -186,6 +187,9 @@ class DataLoader():
         for object_name in self.objects[dataset_name]:
 
             if object_name == 'ALL':
+                continue
+
+            if object_name in excluded_objects:
                 continue
 
             object_data = []

@@ -154,6 +154,8 @@ class Evaluator():
 
             dataset_name = algorithm['config']['dataset']
 
+            excluded_objects = algorithm['config']['excluded_objects']
+
             # For each object
             for object_name in self.objects[dataset_name]:
 
@@ -163,6 +165,8 @@ class Evaluator():
                 if object_name == 'ALL':
                     gt_pose = gt_pose_ALL
                     pose = pose_ALL
+                elif object_name in excluded_objects:
+                    continue
                 else:
                     gt_pose = None
                     pose = None

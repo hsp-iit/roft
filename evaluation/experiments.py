@@ -67,6 +67,18 @@ class Experiments():
         )
 
 
+    def exclude_object_from_evaluation(self, experiment_name, object_name):
+        """Exclude object from the evaluation."""
+
+        experiment = self._experiments[experiment_name]
+
+        for algorithm in experiment:
+            if 'excluded_objects' not in algorithm['config']:
+                algorithm['config']['excluded_objects'] = []
+
+            algorithm['config']['excluded_objects'].append(object_name)
+
+
     def print_experiment(self, experiment_name):
         """Print experiment configuration."""
 
