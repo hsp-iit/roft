@@ -28,7 +28,7 @@ if video_name in padding_list:
 
     lines = f.readlines()
     if len(lines) == padding_list[video_name]['target_size']:
-        # nothing to do, the results have been already padded
+        # nothing to do, the results have been already padded or are already of the right size
         f.close()
         exit(0)
 
