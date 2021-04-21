@@ -36,16 +36,14 @@ class Experiments():
         # HO-3D ablations
         self.add_algorithm_to_experiment('exp_ho3d_ablation_0', 'ours', masks_train_set = 'mrcnn_ycbv_bop_pbr', nvof_set = 'nvof_2_slow', gt_masks = False, gt_pose = False, dataset = 'ho3d')
         self.add_algorithm_to_experiment('exp_ho3d_ablation_0', 'ours', label = 'ours_gt_mask', masks_train_set = 'mrcnn_ycbv_bop_pbr', nvof_set = 'nvof_2_slow', gt_masks = True, gt_pose = False, dataset = 'ho3d')
-        # We don't have GT masks for 010_potted_meat_can
-        self.exclude_object_from_evaluation('exp_ho3d_ablation_0', '010_potted_meat_can')
+        self.add_algorithm_to_experiment('exp_ho3d_ablation_0', 'poserbpf', particles = 50, fps = 15, init_from = 'Dope', reinit = False, reinit_from = '', dataset = 'ho3d')
+        self.add_algorithm_to_experiment('exp_ho3d_ablation_0', 'se3tracknet', reinit = True, reinit_from = 'dope', reinit_fps = 5, dataset = 'ho3d')
 
         self.add_algorithm_to_experiment('exp_ho3d_ablation_1', 'ours', masks_train_set = 'mrcnn_ycbv_bop_pbr', nvof_set = 'nvof_2_slow', gt_masks = False, gt_pose = False, dataset = 'ho3d')
         self.add_algorithm_to_experiment('exp_ho3d_ablation_1', 'ours', label = 'ours_gt_pose', masks_train_set = 'mrcnn_ycbv_bop_pbr', nvof_set = 'nvof_2_slow', gt_masks = False, gt_pose = True, dataset = 'ho3d')
 
         self.add_algorithm_to_experiment('exp_ho3d_ablation_2', 'ours', masks_train_set = 'mrcnn_ycbv_bop_pbr', nvof_set = 'nvof_2_slow', gt_masks = False, gt_pose = False, dataset = 'ho3d')
-        self.add_algorithm_to_experiment('exp_ho3d_ablation_2', 'ours', label = 'ours_gt_pose', masks_train_set = 'mrcnn_ycbv_bop_pbr', nvof_set = 'nvof_2_slow', gt_masks = True, gt_pose = True, dataset = 'ho3d')
-        # We don't have GT masks for 010_potted_meat_can
-        self.exclude_object_from_evaluation('exp_ho3d_ablation_2', '010_potted_meat_can')
+        self.add_algorithm_to_experiment('exp_ho3d_ablation_2', 'ours', label = 'ours_gt', masks_train_set = 'mrcnn_ycbv_bop_pbr', nvof_set = 'nvof_2_slow', gt_masks = True, gt_pose = True, dataset = 'ho3d')
 
 
     @property
