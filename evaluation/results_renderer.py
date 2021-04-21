@@ -163,6 +163,7 @@ class ResultsMarkdownRenderer():
         {
             'ours' : 'ours',
             'ours_gt_mask' : 'gt mask',
+            'ours_gt_pose' : 'gt pose',
             'se3tracknet' : 'se3',
             'poserbpf' : 'rbpf'
         }
