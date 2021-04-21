@@ -52,7 +52,8 @@ class Evaluator():
         self.metrics = {}
         self.metric_names = []
         if metric_name == 'ad':
-            self.metric_names = ['add', 'adi']
+            # self.metric_names = ['add', 'adi']
+            self.metric_names = ['add']
         elif metric_name == 'add-distances':
             self.metric_names = ['add-distances']
         elif metric_name == 'error':
