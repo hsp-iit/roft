@@ -164,6 +164,7 @@ class ResultsMarkdownRenderer():
             'ours' : 'ours',
             'ours_gt_mask' : 'gt mask',
             'ours_gt_pose' : 'gt pose',
+            'ours_gt' : 'gt',
             'se3tracknet' : 'se3',
             'poserbpf' : 'rbpf'
         }
@@ -225,8 +226,8 @@ class ResultsMarkdownRenderer():
         # Construct table header
         header_vector = ['obj']
 
-        for i, alg_name in enumerate(algorithm_names):
-            for j, metric_name in enumerate(metric_names):
+        for j, metric_name in enumerate(metric_names):
+            for i, alg_name in enumerate(algorithm_names):
                 header_vector.append(self.metric_labels[metric_name] + ' (' + self.alg_labels[alg_name] + ')')
 
         # Find best result for each row
@@ -259,8 +260,8 @@ class ResultsMarkdownRenderer():
 
             row = []
             row.append(object_name)
-            for i, alg_name in enumerate(algorithm_names):
-                for j, metric_name in enumerate(metric_names):
+            for j, metric_name in enumerate(metric_names):
+                for i, alg_name in enumerate(algorithm_names):
                     result = results[alg_name][object_name][metric_name]
                     result_str = str(Decimal(result).quantize(self.digits[metric_name]))
                     if alg_name == best[object_name][metric_name]:
