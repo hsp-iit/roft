@@ -114,7 +114,7 @@ class DatasetDescription:
     def save(self):
         """Save the dataset description."""
 
-        with open('./tools/detectron2/' + self.name + '_dataset_description.pickle.new', 'wb') as handle:
+        with open('./tools/detectron2/' + self.name + '_dataset_description.pickle', 'wb') as handle:
             pickle.dump(self.dataset_dicts, handle)
 
 
