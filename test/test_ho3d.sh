@@ -51,6 +51,7 @@ CY=${CY::-1}
 MASK_SET="mrcnn_ycbv_bop_pbr"
 OF_SET="nvof_2_slow"
 POSE_SET="dope/"
+POSE_POSTFIX=""
 USE_OUTREJ="true"
 USE_POSE_RESYNC="true"
 USE_FLOW_AIDED="true"
@@ -58,6 +59,12 @@ USE_POSE_MEASUREMENT="true"
 USE_VEL_MEASUREMENT="true"
 SIGMA_ANG_VEL="(1.0, 1.0, 1.0)"
 P_COV_Q="(0.0001, 0.0001, 0.0001)"
+
+INITIAL_POSE_STRING=`python ./tools/dataset/dope_pose_finder/pose_finder.py $OBJECT_ROOT_PATH/dope/poses.txt 5` # 5 is the FPS used for DOPE
+INITIAL_POSE_ARRAY=($INITIAL_POSE_STRING)
+INITIAL_INDEX="${INITIAL_POSE_ARRAY[@]:0:1}"
+INITIAL_POSITION="${INITIAL_POSE_ARRAY[@]:1:3}"
+INITIAL_ORIENTATION="${INITIAL_POSE_ARRAY[@]:4}"
 
 LOG_POSTFIX="full_"$MASK_SET"_"$OF_SET
 if [ "$GT_MASK" == "true" ]; then
@@ -70,6 +77,14 @@ if [ "$GT_OF" == "true" ]; then
 fi
 if [ "$GT_POSE" == "true" ]; then
     POSE_SET="gt/"
+    POSE_POSTIX="_nvdu"
+
+    INITIAL_POSE_STRING=`head $OBJECT_ROOT_PATH/gt/poses_nvdu.txt -n 1`
+    INITIAL_POSE_ARRAY=($INITIAL_POSE_STRING)
+    INITIAL_INDEX="0"
+    INITIAL_POSITION="${INITIAL_POSE_ARRAY[@]:0:3}"
+    INITIAL_ORIENTATION="${INITIAL_POSE_ARRAY[@]:3}"
+
     LOG_POSTFIX=${LOG_POSTFIX}"_gt_pose"
 fi
 if [ "$NO_OUT_REJ" == "true" ]; then
@@ -99,12 +114,6 @@ if [ "$ONLY_VEL" == "true" ]; then
     USE_POSE_RESYNC="false"
 fi
 
-INITIAL_POSE_STRING=`python ./tools/dataset/dope_pose_finder/pose_finder.py $OBJECT_ROOT_PATH/dope/poses.txt 5` # 5 is the FPS used for DOPE
-INITIAL_POSE_ARRAY=($INITIAL_POSE_STRING)
-INITIAL_INDEX="${INITIAL_POSE_ARRAY[@]:0:1}"
-INITIAL_POSITION="${INITIAL_POSE_ARRAY[@]:1:3}"
-INITIAL_ORIENTATION="${INITIAL_POSE_ARRAY[@]:4}"
-
 OUTPUT_PATH=$OUTPUT_ROOT_PATH"$LOG_POSTFIX"/"$OBJECT_NAME"_"$SEQ_NAME"/
 mkdir -p $OUTPUT_PATH
 rm -f $OUTPUT_PATH/*.txt
@@ -128,7 +137,7 @@ $EXECUTABLE --from $CONFIG_ROOT_PATH/config_ho3d.ini\
             --OPTICAL_FLOW_DATASET::path $OBJECT_ROOT_PATH\
             --OPTICAL_FLOW_DATASET::set $OF_SET/\
             --OPTICAL_FLOW_DATASET::index_offset $INITIAL_INDEX\
-            --POSE_DATASET::path $OBJECT_ROOT_PATH/$POSE_SET/poses.txt\
+            --POSE_DATASET::path $OBJECT_ROOT_PATH/$POSE_SET/poses$POSE_POSTIX.txt\
             --POSE_DATASET::skip_rows $INITIAL_INDEX\
             --SEGMENTATION::flow_aided $USE_FLOW_AIDED\
             --SEGMENTATION_DATASET::path $OBJECT_ROOT_PATH\
