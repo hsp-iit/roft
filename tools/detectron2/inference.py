@@ -49,8 +49,20 @@ class Detectron2Inference():
             '010_potted_meat_can' : [100, 101, 102, 103, 104],
         }
 
+        # Dataset description configuration matrix
+        self.dataset_description_names =\
+        {
+            'ycbv_bop_pbr' : 'ycbv_bop_pbr',
+        }
+
+        # Weights configuration matrix
+        self.weight_names =\
+        {
+            'ycbv_bop_pbr' : 'coco_mask_rcnn_R_50_FPN_3x_60k_ycbv_bop_pbr/model_0059999.pth',
+        }
+
         # Configure and load detectron2 predictor
-        self.dataset = DatasetDescription(options.training_dataset_name, './tools/detectron2/' + options.training_dataset_name + '_dataset_description.pickle', False)
+        self.dataset = DatasetDescription(options.training_dataset_name, './tools/detectron2/' + self.dataset_description_names[options.training_dataset_name] + '_dataset_description.pickle', False)
         DatasetCatalog.register(options.training_dataset_name, lambda : self.dataset.dataset())
         MetadataCatalog.get(options.training_dataset_name).set(thing_classes = self.dataset.class_list())
         self.metadata = MetadataCatalog.get(options.training_dataset_name)
@@ -61,10 +73,10 @@ class Detectron2Inference():
         cfg.DATASETS.TEST = ()
         cfg.DATALOADER.NUM_WORKERS = 1
         cfg.INPUT.MASK_FORMAT = 'bitmask'
-        cfg.MODEL.WEIGHTS = './tools/detectron2/coco_mask_rcnn_R_50_FPN_3x_120k_' + options.training_dataset_name + '/model_0059999.pth'
+        cfg.MODEL.WEIGHTS = './tools/detectron2/'+ self.weight_names[options.training_dataset_name]
         cfg.SOLVER.IMS_PER_BATCH = 2
         cfg.SOLVER.BASE_LR = 0.00025
-        cfg.SOLVER.MAX_ITER = 120000
+        cfg.SOLVER.MAX_ITER = 60000
         cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.6
         cfg.MODEL.ROI_HEADS.BATCH_SIZE_PER_IMAGE = 512
         cfg.MODEL.ROI_HEADS.NUM_CLASSES = len(self.dataset.class_list())
