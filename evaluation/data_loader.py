@@ -155,11 +155,7 @@ class DataLoader():
             'velocity_measurements' : 'vel_meas'
         }
 
-        variant = 'full_' + config['masks_train_set'] + '_' + config['nvof_set']
-        if config['gt_masks']:
-            variant += '_gt_mask'
-        if config['gt_pose']:
-            variant += '_gt_pose'
+        variant = 'full_mask_' + config['masks_set'] + '_of_' + config['of_set'] + '_pose_' + config['pose_set']
 
         path = os.path.join(self.paths['ours'], dataset_name, variant)
         self.log('load_ours', 'loading data from ' + path, starter = True)

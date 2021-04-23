@@ -18,6 +18,7 @@ NO_POSE_SYNC=$7
 NO_FLOW_AID=$8
 ONLY_POSE=$9
 ONLY_VEL=$10
+HO3D_MASK=${11}
 
 # paths and names
 EXECUTABLE=robmo-misc-object-tracker-of
@@ -50,7 +51,7 @@ CY=${CY::-1}
 # configuration matrix
 MASK_SET="mrcnn_ycbv_bop_pbr"
 OF_SET="nvof_2_slow"
-POSE_SET="dope/"
+POSE_SET="dope"
 POSE_POSTFIX=""
 USE_OUTREJ="true"
 USE_POSE_RESYNC="true"
@@ -66,17 +67,22 @@ INITIAL_INDEX="${INITIAL_POSE_ARRAY[@]:0:1}"
 INITIAL_POSITION="${INITIAL_POSE_ARRAY[@]:1:3}"
 INITIAL_ORIENTATION="${INITIAL_POSE_ARRAY[@]:4}"
 
-LOG_POSTFIX="full_"$MASK_SET"_"$OF_SET
+LOG_POSTFIX="full"
 if [ "$GT_MASK" == "true" ]; then
     MASK_SET="gt"
-    LOG_POSTFIX=${LOG_POSTFIX}"_gt_mask"
 fi
+if [ "$HO3D_MASK" == "true" ]; then
+    MASK_SET="mrcnn_ho3d"
+fi
+LOG_POSTFIX=${LOG_POSTFIX}"_mask_"${MASK_SET}
+
 if [ "$GT_OF" == "true" ]; then
     OF_SET="gt"
-    LOG_POSTFIX=${LOG_POSTFIX}"_gt_of"
 fi
+    LOG_POSTFIX=${LOG_POSTFIX}"_of_"${OF_SET}
+
 if [ "$GT_POSE" == "true" ]; then
-    POSE_SET="gt/"
+    POSE_SET="gt"
     POSE_POSTIX="_nvdu"
 
     INITIAL_POSE_STRING=`head $OBJECT_ROOT_PATH/gt/poses_nvdu.txt -n 1`
@@ -84,9 +90,9 @@ if [ "$GT_POSE" == "true" ]; then
     INITIAL_INDEX="0"
     INITIAL_POSITION="${INITIAL_POSE_ARRAY[@]:0:3}"
     INITIAL_ORIENTATION="${INITIAL_POSE_ARRAY[@]:3}"
-
-    LOG_POSTFIX=${LOG_POSTFIX}"_gt_pose"
 fi
+LOG_POSTFIX=${LOG_POSTFIX}"_pose_"${POSE_SET}
+
 if [ "$NO_OUT_REJ" == "true" ]; then
     LOG_POSTFIX=${LOG_POSTFIX}"_no_outrej"
     USE_OUTREJ="false"
