@@ -5,3 +5,4 @@ pytransform3d
 pyquaternion
 pyrender
 opencv-python
+tqdm
