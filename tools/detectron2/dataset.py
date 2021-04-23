@@ -29,13 +29,17 @@ class DatasetDescription:
 
         self.dataset_dicts = []
 
+        self.classes = ['003', '004', '005', '006', '009', '010']
+
+        self.all_classes = ['002', '003', '004', '005', '006', '007', '008', '009', '010', '011', '019', '021', '024', '025', '035', '036', '037', '040', '051', '052', '061']
+        self.allowed_classes_idx = [self.all_classes.index(cl) for cl in self.classes]
+        self.actual_classes_idx = { self.allowed_classes_idx[i]: i for i in range(len(self.classes)) }
+
         if self.do_generate:
             self.generate()
             self.save()
         else:
             self.load(self.path)
-
-        self.classes = ['002', '003', '004', '005', '006', '007', '008', '009', '010', '011', '019', '021', '024', '025', '035', '036', '037', '040', '051', '052', '061']
 
 
     def class_list(self):
@@ -90,6 +94,8 @@ class DatasetDescription:
                     bbox = gt_info_container[j]['bbox_visib']
 
                     object_id = gt_container[j]['obj_id'] - 1
+                    if object_id not in self.allowed_classes_idx:
+                        continue
 
                     mask_path = os.path.abspath(sub + '/mask_visib/' + str(i).zfill(6) + '_' + str(j).zfill(6) +  '.png')
                     mask = cv2.imread(mask_path, cv2.IMREAD_GRAYSCALE) / 255
@@ -100,7 +106,7 @@ class DatasetDescription:
                         'bbox' : [bbox[0], bbox[1], bbox[2], bbox[3]],
                         'bbox_mode': BoxMode.XYWH_ABS,
                         'segmentation' : pycocotools.mask.encode(numpy.asarray(mask, order='F')),
-                        'category_id' : object_id
+                        'category_id' : self.actual_classes_idx[object_id]
                     }
 
                     annotations.append(obj)
