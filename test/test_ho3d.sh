@@ -79,7 +79,7 @@ LOG_POSTFIX=${LOG_POSTFIX}"_mask_"${MASK_SET}
 if [ "$GT_OF" == "true" ]; then
     OF_SET="gt"
 fi
-    LOG_POSTFIX=${LOG_POSTFIX}"_of_"${OF_SET}
+LOG_POSTFIX=${LOG_POSTFIX}"_of_"${OF_SET}
 
 if [ "$GT_POSE" == "true" ]; then
     POSE_SET="gt"
@@ -97,14 +97,17 @@ if [ "$NO_OUT_REJ" == "true" ]; then
     LOG_POSTFIX=${LOG_POSTFIX}"_no_outrej"
     USE_OUTREJ="false"
 fi
+
 if [ "$NO_POSE_SYNC" == "true" ]; then
     LOG_POSTFIX=${LOG_POSTFIX}"_no_posesync"
     USE_POSE_RESYNC="false"
 fi
+
 if [ "$NO_FLOW_AID" == "true" ]; then
     LOG_POSTFIX=${LOG_POSTFIX}"_no_flowaid"
     USE_FLOW_AIDED="false"
 fi
+
 if [ "$ONLY_POSE" == "true" ]; then
     LOG_POSTFIX=${LOG_POSTFIX}"_only_pose"
     USE_VEL_MEASUREMENT="false"
@@ -113,6 +116,7 @@ if [ "$ONLY_POSE" == "true" ]; then
     SIGMA_ANG_VEL="(0.01, 0.01, 0.01)"
     P_COV_Q="(0.01, 0.01, 0.01)"
 fi
+
 if [ "$ONLY_VEL" == "true" ]; then
     LOG_POSTFIX=${LOG_POSTFIX}"_only_vel"
     USE_POSE_MEASUREMENT="false"
