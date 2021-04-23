@@ -41,7 +41,7 @@ def main():
     training_dataset = DatasetDescription(training_dataset_name, training_dataset_paths[training_dataset_name], False)
     DatasetCatalog.register(training_dataset_name, lambda : training_dataset.dataset())
 
-    testing_dataset = DatasetDescription(options.dataset_name, './tools/detectron2/test_dataset.pickle', False)
+    testing_dataset = DatasetDescription(options.dataset_name, './tools/detectron2/' + options.dataset_name +  '_dataset_description.pickle', False)
     DatasetCatalog.register(options.dataset_name, lambda : testing_dataset.dataset())
     MetadataCatalog.get(options.dataset_name).set(thing_classes = testing_dataset.class_list())
 
