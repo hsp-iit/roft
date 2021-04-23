@@ -43,15 +43,12 @@ def main():
     cfg.DATALOADER.NUM_WORKERS = 1
     cfg.INPUT.MASK_FORMAT = 'bitmask'
     cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url('COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml')
-    cfg.OUTPUT_DIR = './tools/detectron2/coco_mask_rcnn_R_50_FPN_3x_120k_' + options.dataset_name
+    cfg.OUTPUT_DIR = './tools/detectron2/coco_mask_rcnn_R_50_FPN_3x_60k_' + options.dataset_name
     cfg.SOLVER.IMS_PER_BATCH = 2
     cfg.SOLVER.BASE_LR = 0.00025
-    cfg.SOLVER.MAX_ITER= 120000
+    cfg.SOLVER.MAX_ITER= 60000
     cfg.MODEL.ROI_HEADS.BATCH_SIZE_PER_IMAGE = 512
     cfg.MODEL.ROI_HEADS.NUM_CLASSES = len(dataset.class_list())
-
-    if options.dataset_name == 'ycbv_bop_pbr':
-        cfg.MODEL.BACKBONE.FREEZE_AT = 0
 
     os.makedirs(cfg.OUTPUT_DIR, exist_ok = True)
 
