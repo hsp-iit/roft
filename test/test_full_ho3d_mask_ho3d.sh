@@ -9,14 +9,14 @@
 
 OBJECT_NAME=$1
 SEQ_NAME=$2
-GT_MASK="true"
+GT_MASK="false"
 GT_OF="false"
-GT_POSE="true"
+GT_POSE="false"
 NO_OUT_REJ="false"
 NO_POSE_SYNC="false"
 NO_FLOW_AID="false"
 ONLY_POSE="false"
 ONLY_VEL="false"
-HO3D_MASK="false"
+HO3D_MASK="true"
 
 bash test/test_ho3d.sh $OBJECT_NAME $SEQ_NAME $GT_MASK $GT_OF $GT_POSE $NO_OUT_REJ $NO_POSE_SYNC $NO_FLOW_AID $ONLY_POSE $ONLY_VEL $HO3D_MASK

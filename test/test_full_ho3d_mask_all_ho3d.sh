@@ -7,16 +7,12 @@
 #
 #===============================================================================
 
-OBJECT_NAME=$1
-SEQ_NAME=$2
-GT_MASK="true"
-GT_OF="false"
-GT_POSE="true"
-NO_OUT_REJ="false"
-NO_POSE_SYNC="false"
-NO_FLOW_AID="false"
-ONLY_POSE="false"
-ONLY_VEL="false"
-HO3D_MASK="false"
+HO3D_PATH=`cat ./config/ho3d_location`
 
-bash test/test_ho3d.sh $OBJECT_NAME $SEQ_NAME $GT_MASK $GT_OF $GT_POSE $NO_OUT_REJ $NO_POSE_SYNC $NO_FLOW_AID $ONLY_POSE $ONLY_VEL $HO3D_MASK
+for object_name in `cat config/classes_ho3d.txt`
+do
+    for sequence_name in `ls -d $HO3D_PATH/$object_name*`; do
+        sequence_number=`echo ${sequence_name##*_}`
+        bash test/test_full_ho3d_mask_ho3d.sh $object_name $sequence_number
+    done
+done
