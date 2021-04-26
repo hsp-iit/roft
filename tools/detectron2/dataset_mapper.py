@@ -79,7 +79,8 @@ class Mapper:
         logger = logging.getLogger(__name__)
         logger.info("Augmentations used in training: " + str(augmentations))
 
-        self.blur = iaa.GaussianBlur(sigma=(0, 4.0))
+        self.blur = iaa.GaussianBlur(sigma = (0.0, 2.0))
+        self.agn = iaa.AdditiveGaussianNoise(scale = (0, 7.0), per_channel = 0.5)
 
     @classmethod
     def from_config(cls, cfg, is_train: bool = True):
@@ -135,6 +136,7 @@ class Mapper:
 
         # Apply augmentations
         image = self.blur.augment_image(image)
+        image = self.agn.augment_image(image)
 
         image_shape = image.shape[:2]  # h, w
         # Pytorch's dataloader is efficient on torch.Tensor due to shared-memory,
