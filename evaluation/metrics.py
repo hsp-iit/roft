@@ -25,6 +25,7 @@ class Metric():
         self.name = name
         self.mapping =\
         {
+            'rmse_cartesian_3d' : self.rmse_cartesian_3d,
             'rmse_cartesian_x' : self.rmse_cartesian_x,
             'rmse_cartesian_y' : self.rmse_cartesian_y,
             'rmse_cartesian_z' : self.rmse_cartesian_z,
@@ -96,6 +97,18 @@ class Metric():
         return (reference[:, index] - signal[:, index]) * 100.0
 
 
+    def error_cartesian_3d(self, object_name, reference, signal):
+        """Evaluate the 3D Cartesian error."""
+
+        if object_name == 'ALL':
+            reference = self.make_union_objects(reference)
+            signal = self.make_union_objects(signal)
+
+        error = (reference[:, 0:3] - signal[:, 0:3]) * 100.0
+
+        return numpy.linalg.norm(error, axis = 1)
+
+
     def error_angular(self, object_name, reference, signal):
         """Evaluate the angular error for the orientation.
 
@@ -151,6 +164,14 @@ class Metric():
         """Evaluate the RMSE Cartesian error for the specified coordinate."""
 
         error = self.error_cartesian(object_name, reference, signal, coordinate_name)
+
+        return numpy.linalg.norm(error) / numpy.sqrt(error.shape[0])
+
+
+    def rmse_cartesian_3d(self, object_name, reference, signal):
+        """Evaluate the RMSE 3D Cartesian error."""
+
+        error = self.error_cartesian_3d(object_name, reference, signal)
 
         return numpy.linalg.norm(error) / numpy.sqrt(error.shape[0])
 
