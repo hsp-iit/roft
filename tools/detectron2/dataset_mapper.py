@@ -2,18 +2,14 @@
 import copy
 import logging
 import numpy as np
-from typing import List, Optional, Union
+import detectron2.data.detection_utils as utils
 import torch
 
 from detectron2.config import configurable
 from detectron2.data import transforms as T
-import detectron2.data.detection_utils as utils
-
 from imgaug import augmenters as iaa
+from typing import List, Optional, Union
 
-"""
-This file contains the default mapping that's applied to "dataset dicts".
-"""
 
 class Mapper:
     """
@@ -37,7 +33,7 @@ class Mapper:
         self,
         is_train: bool,
         *,
-        augmentations: List[Union[T.Augmentation, T.Transform]],
+        augmentations: [],
         image_format: str,
         use_instance_mask: bool = False,
         use_keypoint: bool = False,
@@ -52,7 +48,7 @@ class Mapper:
         Args:
             is_train: whether it's used in training or inference
             augmentations: a list of augmentations or deterministic transforms to apply
-            image_format: an image format supported by :func:`detection_utils.read_image`.
+            pimage_format: an image format supported by :func:`detection_utils.read_image`.
             use_instance_mask: whether to process instance segmentation annotations, if available
             use_keypoint: whether to process keypoint annotations if available
             instance_mask_format: one of "polygon" or "bitmask". Process instance segmentation
@@ -82,18 +78,27 @@ class Mapper:
         self.blur = iaa.GaussianBlur(sigma = (0.0, 2.0))
         self.agn = iaa.AdditiveGaussianNoise(scale = (0, 7.0), per_channel = 0.5)
 
+
     @classmethod
     def from_config(cls, cfg, is_train: bool = True):
-        augs = utils.build_augmentation(cfg, is_train)
+        # augs = utils.build_augmentation(cfg, is_train)
         if cfg.INPUT.CROP.ENABLED and is_train:
             augs.insert(0, T.RandomCrop(cfg.INPUT.CROP.TYPE, cfg.INPUT.CROP.SIZE))
             recompute_boxes = cfg.MODEL.MASK_ON
         else:
             recompute_boxes = False
 
+        augs =\
+        [
+            T.RandomApply(T.RandomRotation((-45.0, 45.0), expand = False), prob = 0.5),
+            T.RandomApply(T.ResizeScale(min_scale = 0.8, max_scale = 1.2, target_height = 480, target_width = 640), prob = 0.5),
+            T.RandomApply(T.RandomBrightness(intensity_min = 0.8, intensity_max = 1.2), prob = 0.5),
+            T.RandomApply(T.RandomContrast(intensity_min = 0.8, intensity_max = 1.2), prob = 0.5)
+        ]
+
         ret = {
             "is_train": is_train,
-            "augmentations": augs,
+            'augmentations': augs,
             "image_format": cfg.INPUT.FORMAT,
             "use_instance_mask": cfg.MODEL.MASK_ON,
             "instance_mask_format": cfg.INPUT.MASK_FORMAT,
