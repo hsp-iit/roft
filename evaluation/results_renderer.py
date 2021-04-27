@@ -172,6 +172,7 @@ class ResultsMarkdownRenderer():
 
         self.metric_labels =\
         {
+            'rmse_cartesian_3d' : '3d',
             'rmse_cartesian_x' : 'x',
             'rmse_cartesian_y' : 'y',
             'rmse_cartesian_z' : 'z',
@@ -182,6 +183,7 @@ class ResultsMarkdownRenderer():
 
         self.digits =\
         {
+            'rmse_cartesian_3d' : Decimal('.1'),
             'rmse_cartesian_x' : Decimal('.1'),
             'rmse_cartesian_y' : Decimal('.1'),
             'rmse_cartesian_z' : Decimal('.1'),
@@ -195,6 +197,7 @@ class ResultsMarkdownRenderer():
 
         self.best_evaluator=\
         {
+            'rmse_cartesian_3d' : less_than,
             'rmse_cartesian_x' : less_than,
             'rmse_cartesian_y' : less_than,
             'rmse_cartesian_z' : less_than,
