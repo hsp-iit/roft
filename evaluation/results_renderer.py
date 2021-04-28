@@ -169,6 +169,8 @@ class ResultsMarkdownRenderer():
             'ours_no_outrej' : 'w/o outrej',
             'ours_no_posesync' : 'w/o pose sync',
             'ours_no_flowaid' : 'w/o flow',
+            'ours_no_pose' : 'w/o pose',
+            'ours_no_velocity' : 'w/o vel',
             'se3tracknet' : 'se3',
             'poserbpf' : 'rbpf'
         }
