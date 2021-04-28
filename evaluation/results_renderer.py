@@ -166,6 +166,7 @@ class ResultsMarkdownRenderer():
             'ours_ho3d_mask' : 'ho3d mask',
             'ours_gt_pose' : 'gt pose',
             'ours_gt' : 'gt',
+            'ours_no_outrej' : 'w/o outrej',
             'se3tracknet' : 'se3',
             'poserbpf' : 'rbpf'
         }

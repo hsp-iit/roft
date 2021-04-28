@@ -108,6 +108,7 @@ $EXECUTABLE --from $CONFIG_ROOT_PATH/config_ycbv_syn.ini\
             --MODEL::name $OBJECT_NAME\
             --OPTICAL_FLOW_DATASET::path $OBJECT_ROOT_PATH\
             --OPTICAL_FLOW_DATASET::set $OF_SET/\
+            --OUTLIER_REJECTION::enable $USE_OUTREJ\
             --POSE_DATASET::path $OBJECT_ROOT_PATH/$POSE_SET/poses.txt\
             --SEGMENTATION::flow_aided $USE_FLOW_AIDED\
             --SEGMENTATION_DATASET::path $OBJECT_ROOT_PATH\

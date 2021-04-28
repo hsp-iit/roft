@@ -156,6 +156,9 @@ class DataLoader():
         }
 
         variant = 'full_mask_' + config['masks_set'] + '_of_' + config['of_set'] + '_pose_' + config['pose_set']
+        for variant_name in ['no_outrej']:
+            if (variant_name in config) and config[variant_name]:
+                variant += ('_' + variant_name)
 
         path = os.path.join(self.paths['ours'], dataset_name, variant)
         self.log('load_ours', 'loading data from ' + path, starter = True)
