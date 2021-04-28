@@ -167,6 +167,8 @@ class ResultsMarkdownRenderer():
             'ours_gt_pose' : 'gt pose',
             'ours_gt' : 'gt',
             'ours_no_outrej' : 'w/o outrej',
+            'ours_no_posesync' : 'w/o pose sync',
+            'ours_no_flowaid' : 'w/o flow',
             'se3tracknet' : 'se3',
             'poserbpf' : 'rbpf'
         }

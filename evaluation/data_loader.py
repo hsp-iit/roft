@@ -156,7 +156,7 @@ class DataLoader():
         }
 
         variant = 'full_mask_' + config['masks_set'] + '_of_' + config['of_set'] + '_pose_' + config['pose_set']
-        for variant_name in ['no_outrej']:
+        for variant_name in ['no_outrej', 'no_posesync', 'no_flowaid']:
             if (variant_name in config) and config[variant_name]:
                 variant += ('_' + variant_name)
 
