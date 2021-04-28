@@ -62,6 +62,10 @@ class Evaluator():
         elif metric_name == 'rmse':
             self.metric_names = ['rmse_cartesian_' + coord for coord in ['x', 'y', 'z']]
             self.metric_names.append('rmse_angular')
+        elif metric_name == 'rmse_3d':
+            self.metric_names = ['rmse_cartesian_3d']
+        elif metric_name == 'rmse_angular':
+            self.metric_names = ['rmse_angular']
         elif metric_name == 'mix':
             self.metric_names = ['rmse_cartesian_3d', 'rmse_angular', 'add']
 
