@@ -24,6 +24,9 @@ class Experiments():
         self.add_algorithm_to_experiment('exp_ycbvs_real_50', 'poserbpf', particles = 50, fps = 15, init_from = 'Dope', reinit = False, reinit_from = '', dataset = 'ycbv_synthetic')
         self.add_algorithm_to_experiment('exp_ycbvs_real_50', 'se3tracknet', reinit = True, reinit_from = 'dope', reinit_fps = 5, dataset = 'ycbv_synthetic')
 
+        self.add_algorithm_to_experiment('exp_ycbvs_ablation', 'ours', label = 'ours_gt', masks_set = 'gt', of_set = 'nvof_2_slow', pose_set = 'gt', dataset = 'ycbv_synthetic')
+        self.add_algorithm_to_experiment('exp_ycbvs_ablation', 'ours', label = 'ours_gt_pose', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_2_slow', pose_set = 'gt', dataset = 'ycbv_synthetic')
+        self.add_algorithm_to_experiment('exp_ycbvs_ablation', 'ours', label = 'ours_gt_mask', masks_set = 'gt', of_set = 'nvof_2_slow', pose_set = 'dope', dataset = 'ycbv_synthetic')
         self.add_algorithm_to_experiment('exp_ycbvs_ablation', 'ours', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_2_slow', pose_set = 'dope', dataset = 'ycbv_synthetic')
         self.add_algorithm_to_experiment('exp_ycbvs_ablation', 'ours', label = 'ours_no_outrej', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_2_slow', pose_set = 'dope', dataset = 'ycbv_synthetic', no_outrej = True)
         self.add_algorithm_to_experiment('exp_ycbvs_ablation', 'ours', label = 'ours_no_posesync', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_2_slow', pose_set = 'dope', dataset = 'ycbv_synthetic', no_posesync = True)
