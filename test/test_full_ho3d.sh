@@ -15,7 +15,7 @@ GT_POSE="false"
 NO_OUT_REJ="false"
 NO_POSE_SYNC="false"
 NO_FLOW_AID="false"
-ONLY_POSE="false"
-ONLY_VEL="false"
+NO_POSE="false"
+NO_VEL="false"
 
-bash test/test_ho3d.sh $OBJECT_NAME $SEQ_NAME $GT_MASK $GT_OF $GT_POSE $NO_OUT_REJ $NO_POSE_SYNC $NO_FLOW_AID $ONLY_POSE $ONLY_VEL
+bash test/test_ho3d.sh $OBJECT_NAME $SEQ_NAME $GT_MASK $GT_OF $GT_POSE $NO_OUT_REJ $NO_POSE_SYNC $NO_FLOW_AID $NO_POSE $NO_VEL

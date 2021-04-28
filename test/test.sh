@@ -15,8 +15,8 @@ GT_POSE=$4
 NO_OUT_REJ=$5
 NO_POSE_SYNC=$6
 NO_FLOW_AID=$7
-ONLY_POSE=$8
-ONLY_VEL=$9
+NO_POSE=$8
+NO_VEL=$9
 
 # paths and names
 EXECUTABLE=robmo-misc-object-tracker-of
@@ -68,8 +68,8 @@ if [ "$NO_FLOW_AID" == "true" ]; then
     USE_FLOW_AIDED="false"
 fi
 
-if [ "$ONLY_POSE" == "true" ]; then
-    LOG_POSTFIX=${LOG_POSTFIX}"_only_pose"
+if [ "$NO_VEL" == "true" ]; then
+    LOG_POSTFIX=${LOG_POSTFIX}"_no_velocity"
     USE_VEL_MEASUREMENT="false"
     USE_OUTREJ="false"
     USE_POSE_RESYNC="false"
@@ -77,8 +77,8 @@ if [ "$ONLY_POSE" == "true" ]; then
     P_COV_Q="(0.01, 0.01, 0.01)"
 fi
 
-if [ "$ONLY_VEL" == "true" ]; then
-    LOG_POSTFIX=${LOG_POSTFIX}"_only_vel"
+if [ "$NO_POSE" == "true" ]; then
+    LOG_POSTFIX=${LOG_POSTFIX}"_no_pose"
     USE_POSE_MEASUREMENT="false"
     USE_OUTREJ="false"
     USE_POSE_RESYNC="false"

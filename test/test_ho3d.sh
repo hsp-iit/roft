@@ -16,8 +16,8 @@ GT_POSE=$5
 NO_OUT_REJ=$6
 NO_POSE_SYNC=$7
 NO_FLOW_AID=$8
-ONLY_POSE=$9
-ONLY_VEL=$10
+NO_POSE=$9
+NO_VEL=$10
 HO3D_MASK=${11}
 
 # paths and names
@@ -108,8 +108,8 @@ if [ "$NO_FLOW_AID" == "true" ]; then
     USE_FLOW_AIDED="false"
 fi
 
-if [ "$ONLY_POSE" == "true" ]; then
-    LOG_POSTFIX=${LOG_POSTFIX}"_only_pose"
+if [ "$NO_VEL" == "true" ]; then
+    LOG_POSTFIX=${LOG_POSTFIX}"_no_velocity"
     USE_VEL_MEASUREMENT="false"
     USE_OUTREJ="false"
     USE_POSE_RESYNC="false"
@@ -117,8 +117,8 @@ if [ "$ONLY_POSE" == "true" ]; then
     P_COV_Q="(0.01, 0.01, 0.01)"
 fi
 
-if [ "$ONLY_VEL" == "true" ]; then
-    LOG_POSTFIX=${LOG_POSTFIX}"_only_vel"
+if [ "$NO_POSE" == "true" ]; then
+    LOG_POSTFIX=${LOG_POSTFIX}"_no_pose"
     USE_POSE_MEASUREMENT="false"
     USE_OUTREJ="false"
     USE_POSE_RESYNC="false"
