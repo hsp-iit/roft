@@ -24,7 +24,8 @@ class DataLoader():
             'gt' : self.load_gt,
             'ours' : self.load_ours,
             'se3tracknet' : self.load_se3_tracknet,
-            'poserbpf' : self.load_poserbpf
+            'poserbpf' : self.load_poserbpf,
+            'dope' : self.load_dope
         }
 
         root_path = './results/'
@@ -34,6 +35,12 @@ class DataLoader():
             'se3tracknet' : root_path + 'TrackNet_results/',
             'poserbpf' : root_path + 'PoseRBPF_results/'
         }
+
+        self.dataset_paths =\
+        {
+            name : open(os.path.join('./config/', name + '_location'), 'r').readline() for name in ['ho3d', 'ycbv_synthetic']
+        }
+        self.dataset_paths['ycbv_synthetic'] = os.path.join(self.dataset_paths['ycbv_synthetic'], 'object_motion')
 
         self.objects = Objects().objects
 
@@ -163,7 +170,7 @@ class DataLoader():
         path = os.path.join(self.paths['ours'], dataset_name, variant)
         self.log('load_ours', 'loading data from ' + path, starter = True)
 
-        # Video ids used in se3-tracknet
+        # Video ids used in ours
         video_ids = {}
         video_ids['ycbv_synthetic'] =\
         {
@@ -399,6 +406,103 @@ class DataLoader():
                         d = numpy.array(d)
 
                     object_video_data[contents_map[content]] = d
+
+                object_data.append(object_video_data)
+
+            self.data[object_name] = object_data
+
+        print('')
+
+
+    def load_dope(self):
+        """Load the data using our format for PoseRBPF."""
+
+        config = self.algorithm['config']
+
+        dataset_name = config['dataset']
+
+        # Video ids used in datasets
+        video_ids = {}
+        video_ids['ycbv_synthetic'] =\
+        {
+            '003_cracker_box' : [''],
+            '004_sugar_box' : [''],
+            '005_tomato_soup_can' : [''],
+            '006_mustard_bottle' : [''],
+            '009_gelatin_box' : [''],
+            '010_potted_meat_can' : ['']
+        }
+        video_ids['ho3d'] =\
+        {
+            '003_cracker_box' : ['_0', '_1', '_2'],
+            '004_sugar_box' : ['_0', '_1', '_2', '_3', '_4'],
+            '006_mustard_bottle' : ['_0', '_1', '_2', '_3'],
+            '010_potted_meat_can' : ['_100', '_101', '_102', '_103', '_104']
+        }
+
+        # Load data for each object
+        for object_name in self.objects[dataset_name]:
+
+            if object_name == 'ALL':
+                continue
+
+            object_data = []
+
+            for i, video_id in enumerate(video_ids[dataset_name][object_name]):
+
+                object_video_data = {}
+
+                file_path = os.path.join(self.dataset_paths[dataset_name], object_name + video_id, 'dope', 'poses_ycb.txt')
+                self.log('load_dope', 'loading data from ' + file_path, starter = True)
+
+                d = self.load_generic(file_path)
+                data = []
+                indexes = []
+
+                if config['simulate_inference']:
+                    # In this case we simulate inference at 5 fps with 200 ms delay for each frame (i.e a 30 fps stream)
+                    # If a pose is missing because the detection was missing (coded with all zeros) the most recent is taken instead
+                    # This corresponds to a practical robotic scenario where we run DOPE at 5 fps and we need an answer for each frame at 30 fps
+
+                    fps = 5
+                    skip_steps = int((1.0 / fps) / (1 / 30.0))
+
+                    # Apply delay
+                    data = numpy.pad(d, ((skip_steps, 0), (0, 0)), 'edge')
+                    data = data[:d.shape[0], :]
+
+                    # Sample at 5 fps and hold
+                    data = data[::skip_steps, :]
+                    data = numpy.repeat(data, skip_steps, axis = 0)
+                    data = data[: d.shape[0], :]
+
+                    # DOPE frames might be missing from the very beginning
+                    i_0 = 0
+                    for i in range(data.shape[0]):
+                        if (data[i, 0] != 0.0) and (data[i, 1] != 0.0) and (data[i, 2] != 0.0):
+                            i_0 = i
+                            break
+                    indexes = numpy.array(list(range(i_0, data.shape[0])))
+                    data = data[i_0:, :]
+
+                    # Substitute missing detections with the latest available value
+                    for i in range(1, data.shape[0]):
+                        if (data[i, 0] == 0.0) and (data[i, 1] == 0.0) and (data[i, 2] == 0.0):
+                            data[i, :] = data[i-1, :]
+                else:
+                    # In this case we take all the frames discarding those that correspond to missing detection
+                    # A list of valid indexes is provides, such that the batch validation machinery can align
+                    # the provided data with the ground truth
+                    for i in range(d.shape[0]):
+                        if (d[i, 0] == 0.0) and (d[i, 1] == 0.0) and (d[i, 2] == 0.0):
+                            continue
+                        data.append(d[i, :])
+                        indexes.append(i)
+                    data = numpy.array(data)
+                    indexes = numpy.array(indexes)
+
+                object_video_data['pose'] = data
+                object_video_data['indexes'] = indexes
 
                 object_data.append(object_video_data)
 
