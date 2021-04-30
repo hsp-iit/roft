@@ -26,10 +26,12 @@ class Experiments():
 
         self.add_algorithm_to_experiment('exp_ycbvs_ablation', 'ours', label = 'ours_gt', masks_set = 'gt', of_set = 'nvof_2_slow', pose_set = 'gt', dataset = 'ycbv_synthetic')
         self.add_algorithm_to_experiment('exp_ycbvs_ablation', 'ours', label = 'ours_gt_pose', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_2_slow', pose_set = 'gt', dataset = 'ycbv_synthetic')
+        self.add_algorithm_to_experiment('exp_ycbvs_ablation', 'dope', label = 'dope_ideal', dataset = 'ycbv_synthetic', simulate_inference = False)
         self.add_algorithm_to_experiment('exp_ycbvs_ablation', 'ours', label = 'ours_gt_mask', masks_set = 'gt', of_set = 'nvof_2_slow', pose_set = 'dope', dataset = 'ycbv_synthetic')
         self.add_algorithm_to_experiment('exp_ycbvs_ablation', 'ours', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_2_slow', pose_set = 'dope', dataset = 'ycbv_synthetic')
         self.add_algorithm_to_experiment('exp_ycbvs_ablation', 'ours', label = 'ours_no_outrej', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_2_slow', pose_set = 'dope', dataset = 'ycbv_synthetic', no_outrej = True)
         self.add_algorithm_to_experiment('exp_ycbvs_ablation', 'ours', label = 'ours_no_posesync', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_2_slow', pose_set = 'dope', dataset = 'ycbv_synthetic', no_posesync = True)
+        self.add_algorithm_to_experiment('exp_ycbvs_ablation', 'dope', label = 'dope_real', dataset = 'ycbv_synthetic', simulate_inference = True)
         self.add_algorithm_to_experiment('exp_ycbvs_ablation', 'ours', label = 'ours_no_flowaid', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_2_slow', pose_set = 'dope', dataset = 'ycbv_synthetic', no_flowaid = True)
         self.add_algorithm_to_experiment('exp_ycbvs_ablation', 'ours', label = 'ours_no_velocity', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_2_slow', pose_set = 'dope', dataset = 'ycbv_synthetic', no_velocity = True)
         self.add_algorithm_to_experiment('exp_ycbvs_ablation', 'ours', label = 'ours_no_pose', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_2_slow', pose_set = 'dope', dataset = 'ycbv_synthetic', no_pose = True)
