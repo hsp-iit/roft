@@ -34,6 +34,13 @@ do
            --obj_id $OBJECT_ID\
            --in_path $YCBV_SYN_PATH/object_motion/$object_name/gt/poses.txt\
            --out_path $YCBV_SYN_PATH/object_motion/$object_name/gt/poses_ycb.txt
+
+    echo "[ycbv_synthetic] Converting DOPE poses to YCB-Video format for sequence "$object_name
+    python $CONVERSION_TOOL_PATH/nvdu_poses_to_ycbv.py\
+           --format gt\
+           --obj_id $OBJECT_ID\
+           --in_path $YCBV_SYN_PATH/object_motion/$object_name/dope/poses.txt\
+           --out_path $YCBV_SYN_PATH/object_motion/$object_name/dope/poses_ycb.txt
 done
 
 for object_name in `cat config/classes_ho3d.txt`
@@ -60,5 +67,12 @@ do
                --obj_id $OBJECT_ID\
                --in_path $sequence/gt/poses.txt\
                --out_path $sequence/gt/poses_nvdu.txt
+
+        echo "[ho3d] Converting DOPE poses to YCB-Video format for sequence "$sequence
+        python $CONVERSION_TOOL_PATH/nvdu_poses_to_ycbv.py\
+               --format gt\
+               --obj_id $OBJECT_ID\
+               --in_path $sequence/dope/poses.txt\
+               --out_path $sequence/dope/poses_ycb.txt
     done
 done
