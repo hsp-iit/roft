@@ -172,7 +172,9 @@ class ResultsMarkdownRenderer():
             'ours_no_pose' : 'w/o pose',
             'ours_no_velocity' : 'w/o vel',
             'se3tracknet' : 'se3',
-            'poserbpf' : 'rbpf'
+            'poserbpf' : 'rbpf',
+            'dope_ideal' : 'dope ideal',
+            'dope_real' : 'dope real'
         }
 
         self.metric_labels =\
