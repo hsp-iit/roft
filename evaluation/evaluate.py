@@ -33,6 +33,9 @@ class Evaluator():
         self.data = {}
         self.results = {}
         self.subset_from = subset_from
+        self.metric_name = metric_name
+        self.output_head = output_head
+        self.output_path = output_path
 
         # Load object names
         self.objects = Objects().objects
@@ -51,14 +54,8 @@ class Evaluator():
         # Initialize metrics
         self.metrics = {}
         self.metric_names = []
-        if metric_name == 'ad':
-            # self.metric_names = ['add', 'adi']
+        if metric_name == 'add':
             self.metric_names = ['add']
-        elif metric_name == 'add-distances':
-            self.metric_names = ['add-distances']
-        elif metric_name == 'error':
-            self.metric_names = ['error_cartesian_' + coord for coord in ['x', 'y', 'z']]
-            self.metric_names.append('error_angular')
         elif metric_name == 'rmse':
             self.metric_names = ['rmse_cartesian_' + coord for coord in ['x', 'y', 'z']]
             self.metric_names.append('rmse_angular')
@@ -68,6 +65,11 @@ class Evaluator():
             self.metric_names = ['rmse_angular']
         elif metric_name == 'mix':
             self.metric_names = ['rmse_cartesian_3d', 'rmse_angular', 'add']
+        # elif metric_name == 'add-distances':
+        #     self.metric_names = ['add-distances']
+        # elif metric_name == 'error':
+        #     self.metric_names = ['error_cartesian_' + coord for coord in ['x', 'y', 'z']]
+        #     self.metric_names.append('error_angular')
 
         self.metrics = { name : Metric(name) for name in self.metric_names }
 
@@ -81,54 +83,20 @@ class Evaluator():
 
         # Process experiments
         if experiment_name is not None:
-            self.evaluate_experiment(experiment_name, self.subset_from)
+            self.process_experiment(experiment_name)
         else:
             # Process all the experiments if the user does not specify a specific experiment
             for experiment in self.experiments.experiments:
-                self.evaluate_experiment(experiment, self.subset_from)
+                self.process_experiment(experiment)
 
         # Render results
-        if output_head is not None:
-            extension, renders = self.render(output_head)
+        extension, renders = self.render()
 
-            if output_path is not None:
-
-                os.makedirs(output_path, exist_ok = 'True')
-
-                if output_head == 'markdown' or output_head == 'latex':
-
-                    print('Rendered results saved to:')
-
-                    for render_name in renders:
-                        file_path = os.path.join(output_path, render_name)
-                        file_path += '_' + metric_name
-                        if self.subset_from is not None:
-                            file_path += '_subset_' + self.subset_from
-                        file_path +=  '.' + extension
-                        file_path = "_".join(file_path.split(' '))
-
-                        print('"' + render_name + '" in ' + file_path)
-
-                        with open(file_path, 'w') as f:
-                            f.write(renders[render_name])
-
-                elif output_head == 'plot':
-                    for render_name in renders:
-                        file_path = os.path.join(output_path, render_name)
-                        file_path += '_' + metric_name
-                        if self.subset_from is not None:
-                            file_path += '_subset_' + self.subset_from
-
-                        for i, figure in enumerate(renders[render_name]):
-                            file_path_i = file_path + '_' + str(i) + '.' + extension
-                            file_path_i = "_".join(file_path_i.split(' '))
-
-                            print('"' + render_name + '" in ' + file_path_i)
-
-                            figure.savefig(file_path_i, bbox_inches='tight', dpi = 150)
+        # Save results
+        self.save(renders, extension)
 
 
-    def evaluate_experiment(self, experiment_name, subset_from = None):
+    def process_experiment(self, experiment_name):
         """Process a single experiment."""
 
         print('Processing experiment: ' + experiment_name)
@@ -189,8 +157,8 @@ class Evaluator():
                         # and use them for all algorithms different from the one whose indexes are considered
                         # e.g. PoseRBPF running at 7fps will produce less frames than the ground truth
                         # and we might want to evaluate all the algorithms on that subset of frames
-                        if subset_from is not None and algorithm['label'] != subset_from:
-                            seq_pose_indexes = exp_data[subset_from][object_name][i]['indexes']
+                        if self.subset_from is not None and algorithm['label'] != self.subset_from:
+                            seq_pose_indexes = exp_data[self.subset_from][object_name][i]['indexes']
 
                             # Take into account HO-3D experiments with missing DOPE predictions at the beginning of the scene
                             if dataset_name == 'ho3d':
@@ -259,22 +227,59 @@ class Evaluator():
         print('')
 
 
-    def render(self, head):
-        """Render results using head 'head'."""
+    def render(self):
+        """Render results."""
 
         renders = {}
 
-        if head == 'markdown':
+        if self.output_head == 'markdown':
             renderer = ResultsMarkdownRenderer()
-        elif head == 'latex':
+        elif self.output_head == 'latex':
             renderer = ResultsLaTeXRenderer()
-        elif head == 'plot':
-            renderer = ResultsMatplotlibRenderer()
+        # elif self.output_head == 'plot':
+        #     renderer = ResultsMatplotlibRenderer()
 
         for result_name in self.results:
             renders[result_name] = renderer.render(result_name, self.results[result_name], self.objects, self.experiments, self.subset_from)
 
         return renderer.extension, renders
+
+
+    def save(self, renders, extension):
+        """Save results."""
+
+        os.makedirs(self.output_path, exist_ok = 'True')
+        if self.output_head == 'markdown' or self.output_head == 'latex':
+
+            print('Rendered results saved to:')
+
+            for render_name in renders:
+                file_path = os.path.join(self.output_path, render_name)
+                file_path += '_' + self.metric_name
+                if self.subset_from is not None:
+                    file_path += '_subset_' + self.subset_from
+                file_path +=  '.' + extension
+                file_path = "_".join(file_path.split(' '))
+
+                print('"' + render_name + '" in ' + file_path)
+
+                with open(file_path, 'w') as f:
+                    f.write(renders[render_name])
+
+        # elif self.output_head == 'plot':
+        #     for render_name in renders:
+        #         file_path = os.path.join(self.output_path, render_name)
+        #         file_path += '_' + self.metric_name
+        #         if self.subset_from is not None:
+        #             file_path += '_subset_' + self.subset_from
+
+        #         for i, figure in enumerate(renders[render_name]):
+        #             file_path_i = file_path + '_' + str(i) + '.' + extension
+        #             file_path_i = "_".join(file_path_i.split(' '))
+
+        #             print('"' + render_name + '" in ' + file_path_i)
+
+        #             figure.savefig(file_path_i, bbox_inches='tight', dpi = 150)
 
 
 def main():
@@ -285,7 +290,7 @@ def main():
     parser.add_argument('--metric-name', dest = 'metric_name', type = str, required = True, help = "available metrics: ['ad', 'add-distances', 'error', 'rmse']")
     parser.add_argument('--experiment-name', dest = 'experiment_name', type = str, required = False, help = 'available experiments: ' + str(experiment_names))
     parser.add_argument('--use-subset', dest = 'use_subset', type = str, required = False, help = "name of the algorithm whose ground truth indexes should be used for the evaluation. available names are ['ours', 'se3tracknet, 'poserbpf']")
-    parser.add_argument('--output-head', dest = 'output_head', type = str, required = False, help = "available heads: ['latex', 'markdown', 'plot']", default = 'markdown')
+    parser.add_argument('--output-head', dest = 'output_head', type = str, required = False, help = "available heads: ['latex', 'markdown', 'plot', 'video']", default = 'markdown')
     parser.add_argument('--output-path', dest = 'output_path', type = str, required = False, help = "where to save results", default = './evaluation_output')
     parser.add_argument('--disable-ho3d-padding', dest = 'disable_ho3d_padding', type = bool, default = False, help = "whether to handle that DOPE predictions for HO-3D in sequence 006_mustard_bottle_2 are missing starting from the first frame")
 
