@@ -1,8 +1,10 @@
+ffmpeg-python
 markdown-table
 matplotlib
 numpy
+opencv-python
+pybind11
 pytransform3d
 pyquaternion
 pyrender
-opencv-python
 tqdm

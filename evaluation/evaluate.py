@@ -10,11 +10,12 @@
 import argparse
 import numpy
 import os
+import sys
 from data_loader import DataLoader
 from experiments import Experiments
 from objects import Objects
 from metrics import Metric
-from results_renderer import ResultsMatplotlibRenderer, ResultsMarkdownRenderer, ResultsLaTeXRenderer
+from results_renderer import ResultsLaTeXRenderer, ResultsMarkdownRenderer, ResultsMatplotlibRenderer, ResultsVideoRenderer
 
 
 class Evaluator():
@@ -98,6 +99,96 @@ class Evaluator():
 
     def process_experiment(self, experiment_name):
         """Process a single experiment."""
+
+        if self.output_head == 'video':
+            self.prepare_experiment_for_video(experiment_name)
+        else:
+            self.evaluate_experiment(experiment_name)
+
+
+    def prepare_experiment_for_video(self, experiment_name):
+        """Process a single experiment for video production."""
+
+        print('Processing experiment: ' + experiment_name)
+        print('')
+
+        self.data[experiment_name] = {}
+        exp_data = self.data[experiment_name]
+
+        self.results[experiment_name] = {}
+        exp_results = self.results[experiment_name]
+
+        # Load experiment
+        experiment = self.experiments(experiment_name)
+
+        # Load data for all the algorithms
+        for algorithm in experiment:
+            loader = DataLoader(algorithm)
+            exp_data[algorithm['label']] = loader.load()
+
+        # Process data for each algorithm
+        for algorithm in experiment:
+            print('Preparing data for  algorithm with label ' + algorithm['label'] + '.')
+            exp_results[algorithm['label']] = {}
+
+            dataset_name = algorithm['config']['dataset']
+
+            excluded_objects = algorithm['config']['excluded_objects']
+
+            # For each object
+            for object_name in self.objects[dataset_name]:
+
+                print('    processing object ' + object_name)
+                exp_results[algorithm['label']][object_name] = []
+
+                if (object_name in excluded_objects) or (object_name == 'ALL'):
+                    continue
+
+                # For each sequence belonging to the object
+                for i, sequence_data in enumerate(exp_data[algorithm['label']][object_name]):
+
+                    output_sequence_data = {}
+
+                    seq_gt = self.data['gt'][dataset_name][object_name][i]
+                    seq_pose_available = sequence_data['pose']
+                    seq_pose = None
+
+                    # Check if the length of ground truth and pose is the same
+                    if seq_gt.shape != seq_pose_available.shape:
+                        # if not check if a list of indexes is provided
+                        if not 'indexes' in sequence_data:
+                            print('Algorithm ' + algorithm['name'] + ' (label ' + algorithm['label'] + ')' +\
+                                  ' provides ' + str(seq_pose_all.shape) + ' matrix as pose while the ground truth has shape ' + \
+                                  str(seq_gt_pose_all.shape) + '. However, a list of indexes for the poses has not been provided.' + \
+                                  ' Cannot continue.')
+
+                        # expand available poses with invalid poses such that the renderer can skip them
+                        seq_pose = []
+                        indexes = sequence_data['indexes']
+                        for j in range(seq_gt.shape[0]):
+                            if j in indexes:
+                                seq_pose.append(seq_pose_available[list(indexes).index(j), :])
+                            else:
+                                seq_pose.append([0] * 7)
+
+                        seq_pose = numpy.array(seq_pose)
+                    else:
+                        seq_pose = seq_pose_available
+
+                    # copy some information from sequence data
+                    output_sequence_data['cam_intrinsics'] = sequence_data['cam_intrinsics']
+                    output_sequence_data['mesh_path'] = sequence_data['mesh_path']
+                    output_sequence_data['rgb_path'] = sequence_data['rgb_path']
+
+                    # compose output path and assing post-processed poses
+                    output_sequence_data['output_path'] = os.path.join(self.output_path, experiment_name, algorithm['label'], object_name, 'sequence_' + str(i))
+                    output_sequence_data['pose'] = seq_pose
+
+                    exp_results[algorithm['label']][object_name].append(output_sequence_data)
+
+
+    def evaluate_experiment(self, experiment_name):
+        """Evaluate a single experiment."""
 
         print('Processing experiment: ' + experiment_name)
         print('')
@@ -236,8 +327,11 @@ class Evaluator():
             renderer = ResultsMarkdownRenderer()
         elif self.output_head == 'latex':
             renderer = ResultsLaTeXRenderer()
-        # elif self.output_head == 'plot':
-        #     renderer = ResultsMatplotlibRenderer()
+        elif self.output_head == 'video':
+            renderer = ResultsVideoRenderer()
+        elif self.output_head == 'plot':
+            # not implemented
+            pass
 
         for result_name in self.results:
             renders[result_name] = renderer.render(result_name, self.results[result_name], self.objects, self.experiments, self.subset_from)
@@ -266,20 +360,12 @@ class Evaluator():
                 with open(file_path, 'w') as f:
                     f.write(renders[render_name])
 
-        # elif self.output_head == 'plot':
-        #     for render_name in renders:
-        #         file_path = os.path.join(self.output_path, render_name)
-        #         file_path += '_' + self.metric_name
-        #         if self.subset_from is not None:
-        #             file_path += '_subset_' + self.subset_from
-
-        #         for i, figure in enumerate(renders[render_name]):
-        #             file_path_i = file_path + '_' + str(i) + '.' + extension
-        #             file_path_i = "_".join(file_path_i.split(' '))
-
-        #             print('"' + render_name + '" in ' + file_path_i)
-
-        #             figure.savefig(file_path_i, bbox_inches='tight', dpi = 150)
+        elif self.output_head == 'video':
+            # nothing to do there as the video renderer directly saves on disk
+            pass
+        elif self.output_head == 'plot':
+            # not implemented
+            pass
 
 
 def main():
@@ -287,7 +373,7 @@ def main():
     experiment_names = [name for name in experiments]
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--metric-name', dest = 'metric_name', type = str, required = True, help = "available metrics: ['ad', 'add-distances', 'error', 'rmse']")
+    parser.add_argument('--metric-name', dest = 'metric_name', type = str, required = ('video' not in sys.argv), help = "available metrics: ['ad', 'add-distances', 'error', 'rmse']")
     parser.add_argument('--experiment-name', dest = 'experiment_name', type = str, required = False, help = 'available experiments: ' + str(experiment_names))
     parser.add_argument('--use-subset', dest = 'use_subset', type = str, required = False, help = "name of the algorithm whose ground truth indexes should be used for the evaluation. available names are ['ours', 'se3tracknet, 'poserbpf']")
     parser.add_argument('--output-head', dest = 'output_head', type = str, required = False, help = "available heads: ['latex', 'markdown', 'plot', 'video']", default = 'markdown')

@@ -7,4 +7,10 @@
 #
 #===============================================================================
 
-add_subdirectory(nvof)
+option(BUILD_NVOF "Build NVIDIA NVOF-based optical flow dumper" OFF)
+
+if (BUILD_NVOF)
+   add_subdirectory(nvof)
+endif()
+
+add_subdirectory(object_renderer)
