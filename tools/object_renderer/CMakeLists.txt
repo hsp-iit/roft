@@ -20,4 +20,4 @@ find_package(SuperimposeMesh 0.11.100 REQUIRED)
 set(${LIBRARY_NAME}_SRC src/renderer.cpp)
 
 pybind11_add_module(${LIBRARY_NAME} ${${LIBRARY_NAME}_SRC})
-target_link_libraries(${LIBRARY_NAME} PRIVATE SI::SuperimposeMesh ${OpenCV_LIBS} pybind11::headers)
+target_link_libraries(${LIBRARY_NAME} PRIVATE SI::SuperimposeMesh ${OpenCV_LIBS})
