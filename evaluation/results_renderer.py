@@ -322,13 +322,13 @@ class ResultsVideoRenderer():
             'crf': 25,
             'pix_fmt': 'yuv420p',
             'vcodec' : 'libx264',
-            's' : str(cam_intrinsics['width']) + 'x' + str(cam_intrinsics['height']),
+            's' : str(cam_intrinsics['width']) + 'x' + str(cam_intrinsics['height'])
         }
 
         ffmpeg\
         .input(os.path.join(input_path, '%d.png'), **input_options)\
         .output(os.path.join(input_path, 'output.mp4'), **output_options)\
-        .run()
+        .run(overwrite_output = True)
 
 
     def render(self, results_name, results, objects, experiments_data, subset_from):
