@@ -7,10 +7,13 @@
 #
 #===============================================================================
 
-option(BUILD_NVOF "Build NVIDIA NVOF-based optical flow dumper" OFF)
+option(BUILD_NVOF     "Build NVIDIA NVOF-based optical flow dumper" OFF)
+option(BUILD_RENDERER "Build OpenGL-based object renderer" OFF)
 
 if (BUILD_NVOF)
    add_subdirectory(nvof)
 endif()
 
-add_subdirectory(object_renderer)
+if (BUILD_RENDERER)
+  add_subdirectory(object_renderer)
+endif()
