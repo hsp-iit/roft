@@ -56,6 +56,7 @@ class ResultsMarkdownRenderer():
             'ours_no_flowaid' : 'w/o flow',
             'ours_no_pose' : 'w/o pose',
             'ours_no_velocity' : 'w/o vel',
+            'ours_test' : 'test',
             'se3tracknet' : 'se3',
             'poserbpf' : 'rbpf',
             'dope_ideal' : 'dope ideal',
