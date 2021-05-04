@@ -149,12 +149,14 @@ class Evaluator():
 
                     output_sequence_data = {}
 
-                    seq_gt = self.data['gt'][dataset_name][object_name][i]
+                    seq_gt = None
+                    if dataset_name in self.data['gt']:
+                        seq_gt = self.data['gt'][dataset_name][object_name][i]
                     seq_pose_available = sequence_data['pose']
                     seq_pose = None
 
                     # Check if the length of ground truth and pose is the same
-                    if seq_gt.shape != seq_pose_available.shape:
+                    if (seq_gt is not None) and (seq_gt.shape != seq_pose_available.shape):
                         # if not check if a list of indexes is provided
                         if not 'indexes' in sequence_data:
                             print('Algorithm ' + algorithm['name'] + ' (label ' + algorithm['label'] + ')' +\
