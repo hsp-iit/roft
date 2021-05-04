@@ -35,6 +35,12 @@ class Objects():
             'ALL'
         ]
 
+        self.objects['ycbv_real'] =\
+        [
+            '003_cracker_box',
+            '006_mustard_bottle'
+        ]
+
         self.objects['ho3d'] =\
         [
             '003_cracker_box',
