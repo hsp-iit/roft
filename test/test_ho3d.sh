@@ -46,7 +46,7 @@ CX=${CX::-1}
 CY=`cat $OBJECT_ROOT_PATH/cam_K.json | head -n 8 | tail -n 1`
 CY=`echo $CY | xargs`
 CY=`echo ${CY##*:}`
-CY=${CY::-1}
+#CY=${CY::-1}
 
 # configuration matrix
 MASK_SET="mrcnn_ycbv_bop_pbr"
