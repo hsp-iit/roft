@@ -42,9 +42,11 @@ class DataLoader():
             name : open(os.path.join('./config/', name + '_location'), 'r').readline() for name in ['ho3d', 'ycbv_synthetic']
         }
         self.dataset_paths['ycbv_synthetic'] = os.path.join(self.dataset_paths['ycbv_synthetic'], 'object_motion')
+        self.dataset_paths['ycbv_real'] = self.dataset_paths['ycbv_synthetic']
         self.dataset_mesh_paths =\
         {
             'ycbv_synthetic' : open(os.path.join('./config/ycbv_models_location')).readline(),
+            'ycbv_real' : open(os.path.join('./config/ycbv_models_location')).readline(),
             'ho3d' : open(os.path.join('./config/ycbv_models_location')).readline()
         }
 
@@ -57,6 +59,11 @@ class DataLoader():
             '006_mustard_bottle' : [''],
             '009_gelatin_box' : [''],
             '010_potted_meat_can' : ['']
+        }
+        self.dataset_video_ids['ycbv_real'] =\
+        {
+            '003_cracker_box' : ['_real'],
+            '006_mustard_bottle' : ['_real'],
         }
         self.dataset_video_ids['ho3d'] =\
         {
