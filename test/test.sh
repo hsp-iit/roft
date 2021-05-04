@@ -25,6 +25,35 @@ CONFIG_ROOT_PATH=./config/
 OBJECT_ROOT_PATH=$YCBV_SYN_PATH/object_motion/$OBJECT_NAME/
 OUTPUT_ROOT_PATH=./results/ours/ycbv_synthetic/
 
+MODEL_NAME=$OBJECT_NAME
+if [ "$MODEL_NAME" == "003_cracker_box_real" ]; then
+    MODEL_NAME=003_cracker_box
+    OUTPUT_ROOT_PATH=./results/ours/ycbv_real/
+elif [ "$MODEL_NAME" == "006_mustard_bottle_real" ]; then
+    MODEL_NAME=006_mustard_bottle
+    OUTPUT_ROOT_PATH=./results/ours/ycbv_real/
+fi
+
+# camera intrinsics
+FX=`cat $OBJECT_ROOT_PATH/cam_K.json | head -n 5 | tail -n 1`
+FX=`echo $FX | xargs`
+FX=`echo ${FX##*:}`
+FX=${FX::-1}
+
+FY=`cat $OBJECT_ROOT_PATH/cam_K.json | head -n 6 | tail -n 1`
+FY=`echo $FY | xargs`
+FY=`echo ${FY##*:}`
+FY=${FY::-1}
+
+CX=`cat $OBJECT_ROOT_PATH/cam_K.json | head -n 7 | tail -n 1`
+CX=`echo $CX | xargs`
+CX=`echo ${CX##*:}`
+CX=${CX::-1}
+
+CY=`cat $OBJECT_ROOT_PATH/cam_K.json | head -n 8 | tail -n 1`
+CY=`echo $CY | xargs`
+CY=`echo ${CY##*:}`
+
 # configuration matrix
 MASK_SET="mrcnn_ycbv_bop_pbr"
 OF_SET="nvof_2_slow"
@@ -96,6 +125,10 @@ mkdir -p $OUTPUT_PATH
 rm -f $OUTPUT_PATH/*.txt
 
 $EXECUTABLE --from $CONFIG_ROOT_PATH/config_ycbv_syn.ini\
+            --CAMERA::fx $FX\
+            --CAMERA::fy $FY\
+            --CAMERA::cx $CX\
+            --CAMERA::cy $CY\
             --CAMERA_DATASET::path $OBJECT_ROOT_PATH\
             --INITIAL_CONDITION::p_x_0 "($INITIAL_POSITION)"\
             --INITIAL_CONDITION::p_axis_angle_0 "($INITIAL_ORIENTATION)"\
@@ -105,7 +138,7 @@ $EXECUTABLE --from $CONFIG_ROOT_PATH/config_ycbv_syn.ini\
             --MEASUREMENT_MODEL::use_pose_measurement $USE_POSE_MEASUREMENT\
             --MEASUREMENT_MODEL::use_vel_measurement $USE_VEL_MEASUREMENT\
             --MEASUREMENT_MODEL::use_pose_resync $USE_POSE_RESYNC\
-            --MODEL::name $OBJECT_NAME\
+            --MODEL::name $MODEL_NAME\
             --OPTICAL_FLOW_DATASET::path $OBJECT_ROOT_PATH\
             --OPTICAL_FLOW_DATASET::set $OF_SET/\
             --OUTLIER_REJECTION::enable $USE_OUTREJ\
@@ -115,4 +148,4 @@ $EXECUTABLE --from $CONFIG_ROOT_PATH/config_ycbv_syn.ini\
             --SEGMENTATION_DATASET::set $MASK_SET
 
 # Convert to YCB-V reference frame
-bash ./test/post_process_results.sh $OBJECT_NAME $OUTPUT_PATH
+bash ./test/post_process_results.sh $MODEL_NAME $OUTPUT_PATH
