@@ -56,7 +56,7 @@ CY=`echo ${CY##*:}`
 
 # configuration matrix
 MASK_SET="mrcnn_ycbv_bop_pbr"
-OF_SET="nvof_2_slow"
+OF_SET="nvof_1_slow"
 POSE_SET="dope"
 USE_OUTREJ="true"
 USE_POSE_RESYNC="true"
