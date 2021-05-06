@@ -218,11 +218,16 @@ class Evaluator():
         # For each algorithm
         for algorithm in experiment:
             print('Processing metrics' + str(self.metric_names) + ' for algorithm with label ' + algorithm['label'] + '.')
-            exp_results[algorithm['label']] = {}
 
             dataset_name = algorithm['config']['dataset']
 
             excluded_objects = algorithm['config']['excluded_objects']
+
+            # Check if ground truth data is available and stop evaluation otherwise
+            if dataset_name not in self.data['gt'] :
+                continue
+
+            exp_results[algorithm['label']] = {}
 
             # For each object
             for object_name in self.objects[dataset_name]:
@@ -317,6 +322,10 @@ class Evaluator():
                 for metric_name in self.metrics:
                     exp_results[algorithm['label']][object_name][metric_name] = self.metrics[metric_name].evaluate(object_name, gt_pose, pose)
 
+        # Remove the experiment if there are no results for that experiment
+        if len(exp_results) == 0:
+            del(self.results[experiment_name])
+
         print('')
 
 
@@ -343,6 +352,9 @@ class Evaluator():
 
     def save(self, renders, extension):
         """Save results."""
+
+        if len(renders) == 0:
+            return
 
         os.makedirs(self.output_path, exist_ok = 'True')
         if self.output_head == 'markdown' or self.output_head == 'latex':
