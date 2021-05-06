@@ -57,6 +57,8 @@ class ResultsMarkdownRenderer():
             'ours_no_pose' : 'w/o pose',
             'ours_no_velocity' : 'w/o vel',
             'ours_test' : 'test',
+            'ours_nvof_1' : 'nvof 1',
+            'ours_nvof_2' : 'nvof 2',
             'se3tracknet' : 'se3',
             'poserbpf' : 'rbpf',
             'dope_ideal' : 'dope ideal',
