@@ -30,13 +30,8 @@ class Metric():
             'rmse_cartesian_y' : self.rmse_cartesian_y,
             'rmse_cartesian_z' : self.rmse_cartesian_z,
             'rmse_angular' : self.rmse_angular,
-            'error_cartesian_x' : self.error_cartesian_x,
-            'error_cartesian_y' : self.error_cartesian_y,
-            'error_cartesian_z' : self.error_cartesian_z,
-            'error_angular' : self.error_angular,
             'add' : self.add,
-            'adi' : self.adi,
-            'add-distances' : self.add_distances
+            'adi' : self.adi
         }
 
         if name not in self.mapping:
