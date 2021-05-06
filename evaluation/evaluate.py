@@ -320,7 +320,8 @@ class Evaluator():
                     pose_ALL[object_name] = pose
 
                 for metric_name in self.metrics:
-                    exp_results[algorithm['label']][object_name][metric_name] = self.metrics[metric_name].evaluate(object_name, gt_pose, pose)
+                    time = None
+                    exp_results[algorithm['label']][object_name][metric_name] = self.metrics[metric_name].evaluate(object_name, gt_pose, pose, time)
 
         # Remove the experiment if there are no results for that experiment
         if len(exp_results) == 0:

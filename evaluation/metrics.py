@@ -77,10 +77,10 @@ class Metric():
         return signal
 
 
-    def evaluate(self, object_name, reference, signal):
+    def evaluate(self, object_name, reference, signal, time):
         """Evaluate the metric on the signal according to its name."""
 
-        return self.mapping[self.name](object_name, reference, signal)
+        return self.mapping[self.name](object_name, reference, signal, time)
 
 
     def error_cartesian(self, object_name, reference, signal, coordinate_name):
@@ -168,7 +168,7 @@ class Metric():
         return numpy.linalg.norm(error) / numpy.sqrt(error.shape[0])
 
 
-    def rmse_cartesian_3d(self, object_name, reference, signal):
+    def rmse_cartesian_3d(self, object_name, reference, signal, time):
         """Evaluate the RMSE 3D Cartesian error."""
 
         error = self.error_cartesian_3d(object_name, reference, signal)
@@ -176,25 +176,25 @@ class Metric():
         return numpy.linalg.norm(error) / numpy.sqrt(error.shape[0])
 
 
-    def rmse_cartesian_x(self, object_name, reference, signal):
+    def rmse_cartesian_x(self, object_name, reference, signal, time):
         """Evaluate the RMSE Cartesian error for the x coordinate."""
 
         return self.rmse_cartesian(object_name, reference, signal, 'x')
 
 
-    def rmse_cartesian_y(self, object_name, reference, signal):
+    def rmse_cartesian_y(self, object_name, reference, signal, time):
         """Evaluate the RMSE Cartesian error for the y coordinate."""
 
         return self.rmse_cartesian(object_name, reference, signal, 'y')
 
 
-    def rmse_cartesian_z(self, object_name, reference, signal):
+    def rmse_cartesian_z(self, object_name, reference, signal, time):
         """Evaluate the RMSE Cartesian error for the y coordinate."""
 
         return self.rmse_cartesian(object_name, reference, signal, 'z')
 
 
-    def rmse_angular(self, object_name, reference, signal):
+    def rmse_angular(self, object_name, reference, signal, time):
         """Evaluate the RMSE angular error for the orientation."""
 
         error = self.error_angular(object_name, reference, signal)
@@ -202,7 +202,7 @@ class Metric():
         return numpy.linalg.norm(error) / numpy.sqrt(error.shape[0])
 
 
-    def adi(self, object_name, reference, signal):
+    def adi(self, object_name, reference, signal, time):
         """Evaluate ADI-AUC."""
 
         distances, auc = self.auc(object_name, reference, signal, 'adi')
@@ -210,7 +210,7 @@ class Metric():
         return auc
 
 
-    def add(self, object_name, reference, signal):
+    def add(self, object_name, reference, signal, time):
         """Evaluate ADD-AUC."""
 
         distances, auc = self.auc(object_name, reference, signal, 'add')
@@ -218,7 +218,7 @@ class Metric():
         return auc
 
 
-    def add_distances(self, object_name, reference, signal):
+    def add_distances(self, object_name, reference, signal, time):
         """Evaluate sorted ADD distances."""
 
         distances, auc = self.auc(object_name, reference, signal, 'add')
