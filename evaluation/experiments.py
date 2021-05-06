@@ -36,6 +36,8 @@ class Experiments():
         self.add_algorithm_to_experiment('exp_ycbvs_ablation', 'ours', label = 'ours_no_velocity', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_1_slow', pose_set = 'dope', dataset = 'ycbv_synthetic', no_velocity = True)
         self.add_algorithm_to_experiment('exp_ycbvs_ablation', 'ours', label = 'ours_no_pose', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_1_slow', pose_set = 'dope', dataset = 'ycbv_synthetic', no_pose = True)
 
+        # real YCB-Video
+        self.add_algorithm_to_experiment('exp_ycbvr_real', 'ours', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_1_slow', pose_set = 'dope', dataset = 'ycbv_real')
 
         # HO-3D
         self.add_algorithm_to_experiment('exp_ho3d_real', 'ours', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_2_slow', pose_set = 'dope', dataset = 'ho3d')
