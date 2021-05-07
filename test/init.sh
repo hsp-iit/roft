@@ -43,6 +43,23 @@ do
            --out_path $YCBV_SYN_PATH/object_motion/$object_name/dope/poses_ycb.txt
 done
 
+for object_name in 003_cracker_box 006_mustard_bottle;
+do
+    OBJECT_ID=""
+    if [ $object_name == "003_cracker_box" ]; then
+        OBJECT_ID="2";
+    elif [ $object_name == "006_mustard_bottle" ]; then
+        OBJECT_ID="9"
+    fi
+
+    echo "[ycbv_real] Converting DOPE poses to YCB-Video format for sequence "$object_name
+    python $CONVERSION_TOOL_PATH/nvdu_poses_to_ycbv.py\
+           --format gt\
+           --obj_id $OBJECT_ID\
+           --in_path $YCBV_SYN_PATH/object_motion/${object_name}_real/dope/poses.txt\
+           --out_path $YCBV_SYN_PATH/object_motion/${object_name}_real/dope/poses_ycb.txt
+done
+
 for object_name in `cat config/classes_ho3d.txt`
 do
     OBJECT_ID=""
