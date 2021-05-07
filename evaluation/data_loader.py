@@ -468,24 +468,8 @@ class DataLoader():
 
         dataset_name = config['dataset']
 
-        # Video ids used in datasets
-        video_ids = {}
-        video_ids['ycbv_synthetic'] =\
-        {
-            '003_cracker_box' : [''],
-            '004_sugar_box' : [''],
-            '005_tomato_soup_can' : [''],
-            '006_mustard_bottle' : [''],
-            '009_gelatin_box' : [''],
-            '010_potted_meat_can' : ['']
-        }
-        video_ids['ho3d'] =\
-        {
-            '003_cracker_box' : ['_0', '_1', '_2'],
-            '004_sugar_box' : ['_0', '_1', '_2', '_3', '_4'],
-            '006_mustard_bottle' : ['_0', '_1', '_2', '_3'],
-            '010_potted_meat_can' : ['_100', '_101', '_102', '_103', '_104']
-        }
+        # Load datasets video ids
+        video_ids = self.dataset_video_ids
 
         # Load data for each object
         for object_name in self.objects[dataset_name]:
@@ -500,6 +484,10 @@ class DataLoader():
                 object_video_data = {}
 
                 file_path = os.path.join(self.dataset_paths[dataset_name], object_name + video_id, 'dope', 'poses_ycb.txt')
+                rgb_path = os.path.join(self.dataset_paths[dataset_name], object_name + video_id, 'rgb')
+                cam_path = os.path.join(self.dataset_paths[dataset_name], object_name + video_id, 'cam_K.json')
+                mesh_path = os.path.join(self.dataset_mesh_paths[dataset_name], object_name, 'textured.obj')
+
                 self.log('load_dope', 'loading data from ' + file_path, starter = True)
 
                 d = self.load_generic(file_path)
@@ -550,6 +538,9 @@ class DataLoader():
 
                 object_video_data['pose'] = data
                 object_video_data['indexes'] = indexes
+                object_video_data['rgb_path'] = rgb_path
+                object_video_data['cam_intrinsics'] = self.load_camera_intrinsics(cam_path)
+                object_video_data['mesh_path'] = mesh_path
 
                 object_data.append(object_video_data)
 
