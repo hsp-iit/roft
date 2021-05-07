@@ -197,7 +197,7 @@ class DataLoader():
 
         contents_map =\
         {
-            'execution_times' : 'times',
+            'execution_times' : 'time',
             'pose_estimate_ycb' : 'pose',
             'velocity_estimate' : 'velocity',
             'pose_measurements' : 'pose_meas',

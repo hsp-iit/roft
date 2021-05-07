@@ -66,6 +66,8 @@ class Evaluator():
             self.metric_names = ['rmse_angular']
         elif metric_name == 'mix':
             self.metric_names = ['rmse_cartesian_3d', 'rmse_angular', 'add']
+        elif metric_name == 'time':
+            self.metric_names = ['time', 'excess_33_ms', 'time_of', 'excess_33_ms_of']
         # elif metric_name == 'add-distances':
         #     self.metric_names = ['add-distances']
         # elif metric_name == 'error':
@@ -205,6 +207,7 @@ class Evaluator():
         # (representing a unique sequence given by the union of all the sequences)
         gt_pose_ALL = {}
         pose_ALL = {}
+        time_ALL = {}
 
         # Load experiment
         experiment = self.experiments(experiment_name)
@@ -238,11 +241,13 @@ class Evaluator():
                 if object_name == 'ALL':
                     gt_pose = gt_pose_ALL
                     pose = pose_ALL
+                    time = time_ALL
                 elif object_name in excluded_objects:
                     continue
                 else:
                     gt_pose = None
                     pose = None
+                    time = None
                     # For each sequence belonging to the object
                     for i, sequence_data in enumerate(exp_data[algorithm['label']][object_name]):
 
@@ -250,6 +255,10 @@ class Evaluator():
                         seq_gt_pose = None
                         seq_pose_all = sequence_data['pose']
                         seq_pose = None
+
+                        if 'time' in sequence_data:
+                            seq_time_all = sequence_data['time']
+                            seq_time = None
 
                         # Check if the user required a specific subset of indexes for the evaluation
                         # and use them for all algorithms different from the one whose indexes are considered
@@ -268,6 +277,8 @@ class Evaluator():
 
                             seq_gt_pose = seq_gt_pose_all[seq_pose_indexes, :]
                             seq_pose = seq_pose_all[seq_pose_indexes, :]
+                            if seq_time_all is not None:
+                                seq_time = seq_time_all[seq_pose_indexes, :]
                         else:
                             # Check if the length of ground truth and pose is the same
                             if seq_gt_pose_all.shape != seq_pose_all.shape:
@@ -280,6 +291,7 @@ class Evaluator():
 
                                 seq_pose_indexes = sequence_data['indexes']
                                 seq_pose = seq_pose_all
+                                seq_time = seq_time_all
 
                                 # Take into account HO-3D experiments with missing DOPE predictions at the beginning of the scene
                                 if dataset_name == 'ho3d':
@@ -294,9 +306,13 @@ class Evaluator():
                                             skipped_indexes = skipped_indexes[selection_vector]
                                             seq_pose = seq_pose_all[skipped_indexes, :]
 
+                                            if  seq_time_all is not None:
+                                                seq_time = seq_time_all[skipped_indexes, :]
+
                                 seq_gt_pose = seq_gt_pose_all[seq_pose_indexes, :]
                             else:
                                 seq_pose = seq_pose_all
+                                seq_time = seq_time_all
                                 seq_gt_pose = seq_gt_pose_all
 
                                 # Take into account HO-3D experiments with missing DOPE predictions at the beginning of the scene
@@ -308,19 +324,24 @@ class Evaluator():
                                             seq_pose = seq_pose[padding_info_i['padding'] :, :]
                                             seq_gt_pose = seq_gt_pose[padding_info_i['padding'] :, :]
 
+                                            if seq_time is not None:
+                                                seq_time = seq_time[padding_info_i['padding'] :, :]
+
                         # Concatenate data belonging to the same object
                         if i == 0:
                             gt_pose = seq_gt_pose
                             pose = seq_pose
+                            time = seq_time
                         else:
                             gt_pose = numpy.concatenate((gt_pose, seq_gt_pose), axis = 0)
                             pose = numpy.concatenate((pose, seq_pose), axis = 0)
+                            time = numpy.concatenate((time, seq_time), axis = 0)
 
                     gt_pose_ALL[object_name] = gt_pose
                     pose_ALL[object_name] = pose
+                    time_ALL[object_name] = time
 
                 for metric_name in self.metrics:
-                    time = None
                     exp_results[algorithm['label']][object_name][metric_name] = self.metrics[metric_name].evaluate(object_name, gt_pose, pose, time)
 
         # Remove the experiment if there are no results for that experiment

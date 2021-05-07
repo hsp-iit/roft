@@ -31,7 +31,11 @@ class Metric():
             'rmse_cartesian_z' : self.rmse_cartesian_z,
             'rmse_angular' : self.rmse_angular,
             'add' : self.add,
-            'adi' : self.adi
+            'adi' : self.adi,
+            'time' : self.time,
+            'excess_33_ms' : self.time_excess_33_ms,
+            'time_of' : self.time_of,
+            'excess_33_ms_of' : self.time_excess_33_ms_of
         }
 
         if name not in self.mapping:
@@ -263,3 +267,67 @@ class Metric():
         accuracy = numpy.cumsum(numpy.ones((n, ), numpy.float32)) / n
 
         return distances_copy, VOCap(sorted_distances, accuracy) * 100.0
+
+
+    def time(self, object_name, reference, signal, time):
+        """Evaluate mean time."""
+
+        execution_time = time
+        if object_name == 'ALL':
+            execution_time = self.make_union_objects(time)
+
+        return numpy.mean(execution_time[:, 0])
+
+
+    def time_excess_33_ms(self, object_name, reference, signal, time):
+        """Eveluate % of frames taking more than 33 ms to be processed."""
+
+        execution_time = time
+        if object_name == 'ALL':
+            execution_time = self.make_union_objects(time)
+
+        number_exceeding = numpy.zeros(shape = len(execution_time[:, 0]))
+        number_exceeding[execution_time[:, 0] > 33.0] = 1
+
+        excess = (sum(number_exceeding) / execution_time.shape[0]) * 100.0
+
+        return excess
+
+
+    def time_of(self, object_name, reference, signal, time):
+        """Evaluate mean time."""
+
+        execution_time = copy.deepcopy(time)
+        if object_name == 'ALL':
+            execution_time = self.make_union_objects(execution_time)
+
+        execution_time = execution_time[:, 0]
+
+        # 6 ms are required for optical flow evaluation for
+        # both nvof 1.0 at 1280p (used for ycbs_synthetic) and
+        # nvof 2.0 at 640p (used for ho-3d)
+        execution_time += 6
+
+        return numpy.mean(execution_time)
+
+
+    def time_excess_33_ms_of(self, object_name, reference, signal, time):
+        """Eveluate % of frames taking more than 33 ms to be processed."""
+
+        execution_time = copy.deepcopy(time)
+        if object_name == 'ALL':
+            execution_time = self.make_union_objects(execution_time)
+
+        execution_time = execution_time[:, 0]
+
+        # 6 ms are required for optical flow evaluation for
+        # both nvof 1.0 at 1280p (used for ycbs_synthetic) and
+        # nvof 2.0 at 640p (used for ho-3d)
+        execution_time += 6
+
+        number_exceeding = numpy.zeros(shape = len(execution_time))
+        number_exceeding[execution_time > 33.0] = 1
+
+        excess = (sum(number_exceeding) / execution_time.shape[0]) * 100.0
+
+        return excess
