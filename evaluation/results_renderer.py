@@ -75,9 +75,7 @@ class ResultsMarkdownRenderer():
             'add' : 'ADD',
             'adi' : 'ADI',
             'time' : 'time',
-            'excess_33_ms' : '% > 33 ms',
-            'time_of' : 'time w/ OF',
-            'excess_33_ms_of' : '% > 33 ms w/ OF'
+            'excess_33_ms' : '# > 33 ms',
         }
 
         self.digits =\
@@ -90,9 +88,7 @@ class ResultsMarkdownRenderer():
             'add' : Decimal('.01'),
             'adi' : Decimal('.01'),
             'time' : Decimal('.1'),
-            'excess_33_ms' : Decimal('.001'),
-            'time_of' : Decimal('.1'),
-            'excess_33_ms_of' : Decimal('.001')
+            'excess_33_ms' : Decimal('0')
         }
 
         less_than = lambda x, y : x < y
@@ -108,9 +104,7 @@ class ResultsMarkdownRenderer():
             'add' : greater_than,
             'adi' : greater_than,
             'time' : less_than,
-            'excess_33_ms' : less_than,
-            'time_of' : less_than,
-            'excess_33_ms_of' : less_than
+            'excess_33_ms' : less_than
         }
 
         self.extension = 'md'
