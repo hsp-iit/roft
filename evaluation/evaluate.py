@@ -67,7 +67,7 @@ class Evaluator():
         elif metric_name == 'mix':
             self.metric_names = ['rmse_cartesian_3d', 'rmse_angular', 'add']
         elif metric_name == 'time':
-            self.metric_names = ['time', 'excess_33_ms', 'time_of', 'excess_33_ms_of']
+            self.metric_names = ['time', 'excess_33_ms']
         # elif metric_name == 'add-distances':
         #     self.metric_names = ['add-distances']
         # elif metric_name == 'error':
@@ -326,6 +326,19 @@ class Evaluator():
 
                                             if seq_time is not None:
                                                 seq_time = seq_time[padding_info_i['padding'] :, :]
+
+                        # Add computation time for optical flow if necessary
+                        if 'of_set' in algorithm['config']:
+                            of_set = algorithm['config']['of_set']
+
+                            if 'nvof_1' in of_set:
+                                # 3 ms are required for optical flow NVOF_1_0 @ 1280p
+                                # Warning this will be wrong if you use NVOF_1_0 at different resolution
+                                seq_time += 3
+                            elif 'nvof_2' in of_set:
+                                # 6 ms are required for optical flow NVOF_2_0 @ 640p
+                                # Warning this will be wrong if you use NVOF_2_0 at different resolution
+                                seq_time += 6
 
                         # Concatenate data belonging to the same object
                         if i == 0:
