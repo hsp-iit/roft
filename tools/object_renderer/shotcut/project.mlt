@@ -105,7 +105,7 @@
     </filter>
     <filter id="filter2" out="00:00:51.600">
       <property name="argument">DOPE</property>
-      <property name="geometry">1430 450 597 68 1</property>
+      <property name="geometry">1500 450 597 68 1</property>
       <property name="family">Sans</property>
       <property name="size">1080</property>
       <property name="weight">500</property>
@@ -163,7 +163,7 @@
     </filter>
     <filter id="filter9" out="00:00:51.600">
       <property name="argument">se3-TrackNet</property>
-      <property name="geometry">420 1000 597 68 1</property>
+      <property name="geometry">440 1000 597 68 1</property>
       <property name="family">Sans</property>
       <property name="size">1080</property>
       <property name="weight">500</property>
@@ -220,7 +220,7 @@
     </filter>
     <filter id="filter3" out="00:00:51.600">
       <property name="argument">PoseRBPF</property>
-      <property name="geometry">1440 1000 597 68 1</property>
+      <property name="geometry">1450 1000 597 68 1</property>
       <property name="family">Sans</property>
       <property name="size">1080</property>
       <property name="weight">500</property>
