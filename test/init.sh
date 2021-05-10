@@ -49,7 +49,7 @@ do
     if [ $object_name == "003_cracker_box" ]; then
         OBJECT_ID="2";
     elif [ $object_name == "006_mustard_bottle" ]; then
-        OBJECT_ID="9"
+        OBJECT_ID="5"
     fi
 
     echo "[ycbv_real] Converting DOPE poses to YCB-Video format for sequence "$object_name
