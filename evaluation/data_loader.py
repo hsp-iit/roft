@@ -258,7 +258,7 @@ class DataLoader():
         config = self.algorithm['config']
 
         contents_map = { 'pred' : 'pose' }
-        dataset_map = { 'ycbv_synthetic' : 'Synthetic', 'ho3d' : 'HO3D' }
+        dataset_map = { 'ycbv_synthetic' : 'Synthetic', 'ho3d' : 'HO3D', 'ycbv_real' : 'real'}
 
         dataset_name = config['dataset']
         se3_dataset_name = dataset_map[config['dataset']]
@@ -269,6 +269,11 @@ class DataLoader():
 
         # Video ids used in se3-tracknet
         video_ids = {}
+        video_ids['ycbv_real'] =\
+        {
+            '003_cracker_box' : ['0001'],
+            '006_mustard_bottle' : ['0002']
+        }
         video_ids['ycbv_synthetic'] =\
         {
             '003_cracker_box' : ['0001'],
@@ -361,7 +366,7 @@ class DataLoader():
         config = self.algorithm['config']
 
         contents_map = { 'Pose' : 'pose', 'Index' : 'indexes' }
-        dataset_map = { 'ycbv_synthetic' : 'synthetic' , 'ho3d' : 'HO3D'}
+        dataset_map = { 'ycbv_synthetic' : 'synthetic' , 'ho3d' : 'HO3D', 'ycbv_real' : 'real'}
 
         dataset_name = config['dataset']
         poserbpf_dataset_name = dataset_map[config['dataset']]
@@ -372,6 +377,11 @@ class DataLoader():
 
         # Video ids used in poserbpf
         video_ids = {}
+        video_ids['ycbv_real'] =\
+        {
+            '003_cracker_box' : ['seq_30'],
+            '006_mustard_bottle' : ['seq_30']
+        }
         video_ids['ycbv_synthetic'] =\
         {
             '003_cracker_box' : ['seq_10'],
