@@ -13,6 +13,7 @@ import detectron2
 import numpy
 import os
 from dataset import DatasetDescription
+from predictor import CustomPredictor
 from detectron2 import model_zoo
 from detectron2.config import get_cfg
 from detectron2.data import MetadataCatalog, DatasetCatalog
@@ -33,8 +34,7 @@ class Detectron2Inference():
         self.object_name = options.object_name
         self.output_path = options.output_path
         self.rgb_format = options.rgb_format
-        self.training_dataset_name = options.training_dataset_name
-
+        
         # Set the desired GPU id
         os.environ['CUDA_DEVICE_ORDER'] = 'PCI_BUS_ID'
         os.environ['CUDA_VISIBLE_DEVICES'] = str(options.gpu_id)
@@ -49,39 +49,35 @@ class Detectron2Inference():
             '010_potted_meat_can' : [100, 101, 102, 103, 104],
         }
 
-        # Dataset description configuration matrix
+        # # Dataset description configuration matrix
         self.dataset_description_names =\
         {
             'ycbv_bop_pbr' : 'ycbv_bop_pbr',
+            'ho3d' : 'ho3d',
+            'ycbv_synthetic' : 'ycbv_synthetic',
+            'pbr_combo' : 'pbr_combo',
         }
 
-        # Weights configuration matrix
-        self.weight_names =\
-        {
-            'ycbv_bop_pbr' : 'coco_mask_rcnn_R_50_FPN_3x_60k_ycbv_bop_pbr/model_0059999.pth',
-        }
-
-        # Configure and load detectron2 predictor
-        self.dataset = DatasetDescription(options.training_dataset_name, './tools/detectron2/' + self.dataset_description_names[options.training_dataset_name] + '_dataset_description.pickle', False)
-        DatasetCatalog.register(options.training_dataset_name, lambda : self.dataset.dataset())
-        MetadataCatalog.get(options.training_dataset_name).set(thing_classes = self.dataset.class_list())
-        self.metadata = MetadataCatalog.get(options.training_dataset_name)
+        # # Configure and load detectron2 predictor
+        self.dataset = DatasetDescription(options.dataset_name, './tools/detectron2/' + self.dataset_description_names[options.dataset_name] + '_dataset_description.pickle', False)
+        DatasetCatalog.register(options.dataset_name, lambda : self.dataset.dataset())
+        MetadataCatalog.get(options.dataset_name).set(thing_classes = self.dataset.class_list())
+        self.metadata = MetadataCatalog.get(options.dataset_name)
 
         cfg = get_cfg()
         cfg.merge_from_file(model_zoo.get_config_file('COCO-InstanceSegmentation/mask_rcnn_R_50_FPN_3x.yaml'))
-        cfg.DATASETS.TRAIN = (options.training_dataset_name,)
         cfg.DATASETS.TEST = ()
         cfg.DATALOADER.NUM_WORKERS = 1
         cfg.INPUT.MASK_FORMAT = 'bitmask'
-        cfg.MODEL.WEIGHTS = './tools/detectron2/'+ self.weight_names[options.training_dataset_name]
+        cfg.MODEL.WEIGHTS = './tools/detectron2/' + self.weight_names[options.dataset_name]
         cfg.SOLVER.IMS_PER_BATCH = 2
         cfg.SOLVER.BASE_LR = 0.00025
-        cfg.SOLVER.MAX_ITER = 60000
+        cfg.SOLVER.MAX_ITER = 8000
         cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.6
         cfg.MODEL.ROI_HEADS.BATCH_SIZE_PER_IMAGE = 512
         cfg.MODEL.ROI_HEADS.NUM_CLASSES = len(self.dataset.class_list())
 
-        self.predictor = DefaultPredictor(cfg)
+        self.predictor = CustomPredictor(cfg)
 
 
     def process(self):
@@ -101,6 +97,7 @@ class Detectron2Inference():
 
                 # Compose output path and create it
                 output_path = os.path.join(self.output_path, video_name)
+                print('Output path: ', output_path)
 
                 self.process_sequence(path, output_path)
 
@@ -118,8 +115,8 @@ class Detectron2Inference():
         """Process one sequence and save to output path."""
 
         path = os.path.join(path, 'rgb')
-        output_path = os.path.join(out_path, 'masks', 'mrcnn_' + self.training_dataset_name)
-        debugging_path = os.path.join(out_path, 'masks', 'mrcnn_' + self.training_dataset_name, 'debugging')
+        output_path = os.path.join(out_path, 'masks', 'mrcnn_' + self.dataset_name)
+        debugging_path = os.path.join(out_path, 'masks', 'debugging')
 
         name = self.object_name
         name_short = self.object_name.split('_')[0]
@@ -177,7 +174,6 @@ def main():
     parser.add_argument('--gpu-id', dest = 'gpu_id', type = int, required = True)
     parser.add_argument('--object-name', dest = 'object_name', type = str, required = True)
     parser.add_argument('--output-path', dest = 'output_path', type = str, required = True)
-    parser.add_argument('--training-dataset-name', dest = 'training_dataset_name', type = str, required = True)
     parser.add_argument('--rgb-format', dest = 'rgb_format', type = str, required = True)
 
     options = parser.parse_args()

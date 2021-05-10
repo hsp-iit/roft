@@ -80,21 +80,24 @@ class Mapper:
 
 
     @classmethod
-    def from_config(cls, cfg, is_train: bool = True):
-        # augs = utils.build_augmentation(cfg, is_train)
+    def from_config(cls, cfg, is_train: bool = True, use_augmentation: bool = True):
+        augs = utils.build_augmentation(cfg, is_train)
         if cfg.INPUT.CROP.ENABLED and is_train:
             augs.insert(0, T.RandomCrop(cfg.INPUT.CROP.TYPE, cfg.INPUT.CROP.SIZE))
             recompute_boxes = cfg.MODEL.MASK_ON
         else:
             recompute_boxes = False
-
-        augs =\
-        [
-            T.RandomApply(T.RandomRotation((-45.0, 45.0), expand = False), prob = 0.5),
-            T.RandomApply(T.ResizeScale(min_scale = 0.8, max_scale = 1.2, target_height = 480, target_width = 640), prob = 0.5),
-            T.RandomApply(T.RandomBrightness(intensity_min = 0.8, intensity_max = 1.2), prob = 0.5),
-            T.RandomApply(T.RandomContrast(intensity_min = 0.8, intensity_max = 1.2), prob = 0.5)
-        ]
+        
+        if use_augmentation:
+            augs =\
+            [
+                T.RandomApply(T.RandomRotation((-45.0, 45.0), expand = False), prob = 0.5),
+                T.RandomApply(T.ResizeScale(min_scale = 0.8, max_scale = 1.2, target_height = 480, target_width = 640), prob = 0.5),
+                T.RandomApply(T.RandomBrightness(intensity_min = 0.8, intensity_max = 1.2), prob = 0.5),
+                T.RandomApply(T.RandomContrast(intensity_min = 0.8, intensity_max = 1.2), prob = 0.5)
+            ]
+        else:
+            augs = []
 
         ret = {
             "is_train": is_train,
@@ -139,9 +142,10 @@ class Mapper:
         transforms = aug_input.apply_augmentations(self.augmentations)
         image, sem_seg_gt = aug_input.image, aug_input.sem_seg
 
-        # Apply augmentations
-        image = self.blur.augment_image(image)
-        image = self.agn.augment_image(image)
+        # # Apply augmentations
+        if self.augmentations:
+            image = self.blur.augment_image(image)
+            image = self.agn.augment_image(image)
 
         image_shape = image.shape[:2]  # h, w
         # Pytorch's dataloader is efficient on torch.Tensor due to shared-memory,

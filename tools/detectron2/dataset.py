@@ -38,14 +38,19 @@ class DatasetDescription:
         self.bop_pbr_actual_classes_idx = { self.allowed_classes_idx[i]: i for i in range(len(self.classes)) }
 
         # synthetic YCB-Video configuration
+        self.synthetic_classes = ['003_cracker_box', '004_sugar_box', '005_tomato_soup_can', '006_mustard_bottle', '009_gelatin_box', '010_potted_meat_can']
+        self.synthetic_actual_classes_idx = { name : self.classes.index(name.split('_')[0]) for name in self.synthetic_classes }
+
 
         # HO-3D configuration
-        self.ho3d_classes = ['003_cracker_box', '004_sugar_box', '006_mustard_bottle', '010_potted_meat_can']
+        self.ho3d_classes = ['003_cracker_box', '004_sugar_box', '005_tomato_soup_can', '006_mustard_bottle', '009_gelatin_box', '010_potted_meat_can']
         self.ho3d_video_ids =\
         {
             '003_cracker_box' : [0, 1, 2],
             '004_sugar_box' : [0, 1, 2, 3, 4],
+            '005_tomato_soup_can' : [],
             '006_mustard_bottle' : [0, 1, 2, 3],
+            '009_gelatin_box' : [],
             '010_potted_meat_can' : [100, 101, 102, 103, 104],
         }
         self.ho3d_actual_classes_idx = { name : self.classes.index(name.split('_')[0]) for name in self.ho3d_classes }
@@ -72,10 +77,10 @@ class DatasetDescription:
     def generate(self):
         """Generate the dataset description."""
 
-        if self.name == 'ycbv_bop_pbr':
+        if self.name == 'ycbv_bop_pbr' or self.name =='pbr_combo':
             self.generate_ycbv_bop_pbr()
         elif self.name == 'ycbv_synthetic':
-            pass
+            self.generate_synthetic()
         elif self.name == 'ho3d':
             self.generate_ho3d()
 
@@ -195,6 +200,55 @@ class DatasetDescription:
                     self.dataset_dicts.append(record)
 
                     idx += 1
+                    
+    def generate_synthetic(self):
+        """Generate the Synthetic dataset description."""
+
+        idx = 0
+
+        for object_name in self.synthetic_classes:
+            short_name = object_name.split('_')[0]
+            
+            # Compose input path
+            path = os.path.join(self.path, object_name)
+            rgb_path = os.path.join(path, 'rgb')
+            masks_path = os.path.join(path, 'masks', 'gt')
+
+            for i in tqdm(range(len(glob(os.path.join(rgb_path, '*.png'))))):
+
+                frame_path = os.path.join(rgb_path, str(i) + '.png')
+                mask_path = os.path.join(masks_path, object_name + '_' + str(i) + '.png')
+
+                mask = cv2.imread(mask_path, cv2.IMREAD_GRAYSCALE)
+
+                _, thresh = cv2.threshold(mask, 127, 255, cv2.THRESH_BINARY)
+                contours, _ = cv2.findContours(thresh, 1, 2)
+                contours = contours[0]
+                bbox = cv2.boundingRect(contours)
+
+                mask = mask / 255
+                mask = numpy.uint8(mask)
+
+                record = {}
+
+                record['file_name'] = frame_path
+                record['image_id'] = idx
+                record['height'] = 720
+                record['width'] = 1280
+
+                obj =\
+                {
+                    'bbox' : [bbox[0], bbox[1], bbox[2], bbox[3]],
+                    'bbox_mode': BoxMode.XYWH_ABS,
+                    'segmentation' : pycocotools.mask.encode(numpy.asarray(mask, order='F')),
+                    'category_id' : self.synthetic_actual_classes_idx[object_name]
+                }
+
+                record['annotations'] = [obj]
+
+                self.dataset_dicts.append(record)
+
+                idx += 1
 
 
     def save(self):
