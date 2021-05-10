@@ -17,12 +17,12 @@ class Experiments():
 
         # synthetic YCB-Video
         self.add_algorithm_to_experiment('exp_ycbvs_real', 'ours', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_1_slow', pose_set = 'dope', dataset = 'ycbv_synthetic')
-        self.add_algorithm_to_experiment('exp_ycbvs_real', 'poserbpf', particles = 200, fps = 7, init_from = 'Dope', reinit = False, reinit_from = '', dataset = 'ycbv_synthetic')
-        self.add_algorithm_to_experiment('exp_ycbvs_real', 'se3tracknet', reinit = True, reinit_from = 'dope', reinit_fps = 5, dataset = 'ycbv_synthetic')
+        self.add_algorithm_to_experiment('exp_ycbvs_real', 'poserbpf', particles = 200, fps = 7, init_from = 'dope', reinit = False, reinit_from = '', dataset = 'ycbv_synthetic')
+        self.add_algorithm_to_experiment('exp_ycbvs_real', 'se3tracknet', init_from = 'dope', reinit = True, reinit_from = 'dope', reinit_fps = 5, dataset = 'ycbv_synthetic')
 
         self.add_algorithm_to_experiment('exp_ycbvs_real_50', 'ours', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_1_slow', pose_set = 'dope', dataset = 'ycbv_synthetic')
-        self.add_algorithm_to_experiment('exp_ycbvs_real_50', 'poserbpf', particles = 50, fps = 15, init_from = 'Dope', reinit = False, reinit_from = '', dataset = 'ycbv_synthetic')
-        self.add_algorithm_to_experiment('exp_ycbvs_real_50', 'se3tracknet', reinit = True, reinit_from = 'dope', reinit_fps = 5, dataset = 'ycbv_synthetic')
+        self.add_algorithm_to_experiment('exp_ycbvs_real_50', 'poserbpf', particles = 50, fps = 15, init_from = 'dope', reinit = False, reinit_from = '', dataset = 'ycbv_synthetic')
+        self.add_algorithm_to_experiment('exp_ycbvs_real_50', 'se3tracknet', init_from = 'dope', reinit = True, reinit_from = 'dope', reinit_fps = 5, dataset = 'ycbv_synthetic')
 
         self.add_algorithm_to_experiment('exp_ycbvs_ablation', 'ours', label = 'ours_gt', masks_set = 'gt', of_set = 'nvof_1_slow', pose_set = 'gt', dataset = 'ycbv_synthetic')
         self.add_algorithm_to_experiment('exp_ycbvs_ablation', 'ours', label = 'ours_gt_pose', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_1_slow', pose_set = 'gt', dataset = 'ycbv_synthetic')
@@ -45,16 +45,12 @@ class Experiments():
         self.add_algorithm_to_experiment('exp_ho3d', 'ours', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_2_slow', pose_set = 'dope', dataset = 'ho3d')
 
         self.add_algorithm_to_experiment('exp_ho3d_real', 'ours', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_2_slow', pose_set = 'dope', dataset = 'ho3d')
-        self.add_algorithm_to_experiment('exp_ho3d_real', 'poserbpf', particles = 200, fps = 7, init_from = 'Dope', reinit = False, reinit_from = '', dataset = 'ho3d')
-        self.add_algorithm_to_experiment('exp_ho3d_real', 'se3tracknet', reinit = True, reinit_from = 'dope', reinit_fps = 5, dataset = 'ho3d')
+        self.add_algorithm_to_experiment('exp_ho3d_real', 'poserbpf', particles = 200, fps = 7, init_from = 'dope', reinit = False, reinit_from = '', dataset = 'ho3d')
+        self.add_algorithm_to_experiment('exp_ho3d_real', 'se3tracknet', init_from = 'dope', reinit = True, reinit_from = 'dope', reinit_fps = 5, dataset = 'ho3d')
 
         self.add_algorithm_to_experiment('exp_ho3d_real_50', 'ours', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_2_slow', pose_set = 'dope', dataset = 'ho3d')
-        self.add_algorithm_to_experiment('exp_ho3d_real_50', 'poserbpf', particles = 50, fps = 15, init_from = 'Dope', reinit = False, reinit_from = '', dataset = 'ho3d')
-        self.add_algorithm_to_experiment('exp_ho3d_real_50', 'se3tracknet', reinit = True, reinit_from = 'dope', reinit_fps = 5, dataset = 'ho3d')
-
-        # HO-3D comparison
-        self.add_algorithm_to_experiment('exp_ho3d_nvof_comparison', 'ours', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_2_slow', pose_set = 'dope', dataset = 'ho3d')
-        self.add_algorithm_to_experiment('exp_ho3d_nvof_comparison', 'ours', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_1_slow', pose_set = 'dope', dataset = 'ho3d', label = 'ours_nvof_1')
+        self.add_algorithm_to_experiment('exp_ho3d_real_50', 'poserbpf', particles = 50, fps = 15, init_from = 'dope', reinit = False, reinit_from = '', dataset = 'ho3d')
+        self.add_algorithm_to_experiment('exp_ho3d_real_50', 'se3tracknet', init_from = 'dope', reinit = True, reinit_from = 'dope', reinit_fps = 5, dataset = 'ho3d')
 
         # HO-3D ablations
         self.add_algorithm_to_experiment('exp_ho3d_ablation_0', 'ours', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_2_slow', pose_set = 'dope', dataset = 'ho3d')
@@ -63,8 +59,8 @@ class Experiments():
         self.add_algorithm_to_experiment('exp_ho3d_ablation_0_soa', 'ours', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_2_slow', pose_set = 'dope', dataset = 'ho3d')
         self.add_algorithm_to_experiment('exp_ho3d_ablation_0_soa', 'ours', label = 'ours_gt_mask', masks_set = 'gt', of_set = 'nvof_2_slow', pose_set = 'dope', dataset = 'ho3d')
         self.add_algorithm_to_experiment('exp_ho3d_ablation_0_soa', 'ours', label = 'ours_ho3d_mask', masks_set = 'mrcnn_ho3d', of_set = 'nvof_2_slow', pose_set = 'dope', dataset = 'ho3d')
-        self.add_algorithm_to_experiment('exp_ho3d_ablation_0_soa', 'poserbpf', particles = 50, fps = 15, init_from = 'Dope', reinit = False, reinit_from = '', dataset = 'ho3d')
-        self.add_algorithm_to_experiment('exp_ho3d_ablation_0_soa', 'se3tracknet', reinit = True, reinit_from = 'dope', reinit_fps = 5, dataset = 'ho3d')
+        self.add_algorithm_to_experiment('exp_ho3d_ablation_0_soa', 'poserbpf', particles = 50, fps = 15, init_from = 'dope', reinit = False, reinit_from = '', dataset = 'ho3d')
+        self.add_algorithm_to_experiment('exp_ho3d_ablation_0_soa', 'se3tracknet', init_frome = 'dope', reinit = True, reinit_from = 'dope', reinit_fps = 5, dataset = 'ho3d')
 
         self.add_algorithm_to_experiment('exp_ho3d_ablation_1', 'ours', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_2_slow', pose_set = 'dope', dataset = 'ho3d')
         self.add_algorithm_to_experiment('exp_ho3d_ablation_1', 'ours', label = 'ours_gt_pose', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_2_slow', pose_set = 'gt', dataset = 'ho3d')

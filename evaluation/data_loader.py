@@ -287,16 +287,23 @@ class DataLoader():
         }
 
         # Compose path to files according to the configuration
-        config_string = se3_dataset_name + '_init_'
-        if config['reinit']:
-            config_string += config['reinit_from'] + '_'
+        config_string = se3_dataset_name + '_'
 
-            if config['reinit_from'] == 'gt':
-                config_string += '0_'
-
-            config_string += str(config['reinit_fps']) + '_fps'
+        config_string += 'init_'
+        if config['init_from']:
+            config_string += config['init_from']
         else:
-            config_string += 'gt_reinit_None'
+            config_string += 'none'
+        config_string += '_'
+
+        config_string += 'reinit_'
+        if config['reinit']:
+            config_string += config['reinit_from']
+        else:
+            config_string += 'none'
+
+        if config['reinit']:
+            config_string += '_' + str(config['reinit_fps']) + '_fps'
 
         path = self.paths['se3tracknet'] + config_string
         self.log('load_se3_tracknet', 'loading data from ' + path, starter = True)
@@ -383,15 +390,22 @@ class DataLoader():
         }
 
         # Compose path to files according to the configuration
-        config_string = str(config['particles']) + '/' + poserbpf_dataset_name + '_' + str(config['fps']) + 'fps_reinit_'
+        config_string = str(config['particles']) + '_particles/' + poserbpf_dataset_name + '_'
 
+        config_string += 'init_'
+        if config['init_from']:
+            config_string += config['init_from']
+        else:
+            config_string += 'none'
+        config_string += '_'
+
+        config_string += 'reinit_'
         if config['reinit']:
             config_string += config['reinit_from']
         else:
-            config_string += 'None'
+            config_string += 'none'
 
-        if config['init_from']:
-            config_string += config['init_from']
+        config_string += '_' + str(config['fps']) + '_fps'
 
         path = self.paths['poserbpf'] + config_string
         self.log('load_poserbpf', 'loading data from ' + path, starter = True)
