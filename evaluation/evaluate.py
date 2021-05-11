@@ -277,7 +277,7 @@ class Evaluator():
 
                             seq_gt_pose = seq_gt_pose_all[seq_pose_indexes, :]
                             seq_pose = seq_pose_all[seq_pose_indexes, :]
-                            if seq_time_all is not None:
+                            if 'time' in sequence_data:
                                 seq_time = seq_time_all[seq_pose_indexes, :]
                         else:
                             # Check if the length of ground truth and pose is the same
@@ -291,7 +291,8 @@ class Evaluator():
 
                                 seq_pose_indexes = sequence_data['indexes']
                                 seq_pose = seq_pose_all
-                                seq_time = seq_time_all
+                                if 'time' in sequence_data:
+                                    seq_time = seq_time_all
 
                                 # Take into account HO-3D experiments with missing DOPE predictions at the beginning of the scene
                                 if dataset_name == 'ho3d':
@@ -312,8 +313,9 @@ class Evaluator():
                                 seq_gt_pose = seq_gt_pose_all[seq_pose_indexes, :]
                             else:
                                 seq_pose = seq_pose_all
-                                seq_time = seq_time_all
                                 seq_gt_pose = seq_gt_pose_all
+                                if 'time' in sequence_data:
+                                    seq_time = seq_time_all
 
                                 # Take into account HO-3D experiments with missing DOPE predictions at the beginning of the scene
                                 if dataset_name == 'ho3d':
@@ -324,7 +326,7 @@ class Evaluator():
                                             seq_pose = seq_pose[padding_info_i['padding'] :, :]
                                             seq_gt_pose = seq_gt_pose[padding_info_i['padding'] :, :]
 
-                                            if seq_time is not None:
+                                            if 'time' in sequence_data:
                                                 seq_time = seq_time[padding_info_i['padding'] :, :]
 
                         # Add computation time for optical flow if necessary
@@ -344,15 +346,18 @@ class Evaluator():
                         if i == 0:
                             gt_pose = seq_gt_pose
                             pose = seq_pose
-                            time = seq_time
+                            if 'time' in sequence_data:
+                                time = seq_time
                         else:
                             gt_pose = numpy.concatenate((gt_pose, seq_gt_pose), axis = 0)
                             pose = numpy.concatenate((pose, seq_pose), axis = 0)
-                            time = numpy.concatenate((time, seq_time), axis = 0)
+                            if 'time' in sequence_data:
+                                time = numpy.concatenate((time, seq_time), axis = 0)
 
                     gt_pose_ALL[object_name] = gt_pose
                     pose_ALL[object_name] = pose
-                    time_ALL[object_name] = time
+                    if 'time' in sequence_data:
+                        time_ALL[object_name] = time
 
                 for metric_name in self.metrics:
                     exp_results[algorithm['label']][object_name][metric_name] = self.metrics[metric_name].evaluate(object_name, gt_pose, pose, time)
