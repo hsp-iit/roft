@@ -20,6 +20,7 @@ class Experiments():
         self.add_algorithm_to_experiment('exp_ycbvs_real', 'poserbpf', particles = 200, fps = 7, init_from = 'dope', reinit = False, reinit_from = '', dataset = 'ycbv_synthetic')
         self.add_algorithm_to_experiment('exp_ycbvs_real', 'se3tracknet', init_from = 'dope', reinit = True, reinit_from = 'dope', reinit_fps = 5, dataset = 'ycbv_synthetic')
 
+        self.add_algorithm_to_experiment('exp_ycbvs_real_50', 'dope', dataset = 'ycbv_synthetic', simulate_inference = True)
         self.add_algorithm_to_experiment('exp_ycbvs_real_50', 'ours', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_1_slow', pose_set = 'dope', dataset = 'ycbv_synthetic')
         self.add_algorithm_to_experiment('exp_ycbvs_real_50', 'poserbpf', particles = 50, fps = 15, init_from = 'dope', reinit = False, reinit_from = '', dataset = 'ycbv_synthetic')
         self.add_algorithm_to_experiment('exp_ycbvs_real_50', 'se3tracknet', init_from = 'dope', reinit = True, reinit_from = 'dope', reinit_fps = 5, dataset = 'ycbv_synthetic')
@@ -51,6 +52,7 @@ class Experiments():
         self.add_algorithm_to_experiment('exp_ho3d_real', 'poserbpf', particles = 200, fps = 7, init_from = 'dope', reinit = False, reinit_from = '', dataset = 'ho3d')
         self.add_algorithm_to_experiment('exp_ho3d_real', 'se3tracknet', init_from = 'dope', reinit = True, reinit_from = 'dope', reinit_fps = 5, dataset = 'ho3d')
 
+        self.add_algorithm_to_experiment('exp_ho3d_real_50', 'dope', dataset = 'ho3d', simulate_inference = True)
         self.add_algorithm_to_experiment('exp_ho3d_real_50', 'ours', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_2_slow', pose_set = 'dope', dataset = 'ho3d')
         self.add_algorithm_to_experiment('exp_ho3d_real_50', 'poserbpf', particles = 50, fps = 15, init_from = 'dope', reinit = False, reinit_from = '', dataset = 'ho3d')
         self.add_algorithm_to_experiment('exp_ho3d_real_50', 'se3tracknet', init_from = 'dope', reinit = True, reinit_from = 'dope', reinit_fps = 5, dataset = 'ho3d')
