@@ -61,6 +61,7 @@ class ResultsMarkdownRenderer():
             'ours_nvof_2' : 'nvof 2',
             'se3tracknet' : 'se3',
             'poserbpf' : 'rbpf',
+            'dope' : 'dope',
             'dope_ideal' : 'dope ideal',
             'dope_real' : 'dope real'
         }
