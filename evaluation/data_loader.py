@@ -258,7 +258,7 @@ class DataLoader():
         config = self.algorithm['config']
 
         contents_map = { 'pred' : 'pose' }
-        dataset_map = { 'ycbv_synthetic' : 'Synthetic', 'ho3d' : 'HO3D', 'ycbv_real' : 'real'}
+        dataset_map = { 'ycbv_synthetic' : 'synthetic', 'ho3d' : 'ho3d', 'ycbv_real' : 'real'}
 
         dataset_name = config['dataset']
         se3_dataset_name = dataset_map[config['dataset']]
