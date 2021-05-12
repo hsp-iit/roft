@@ -2,6 +2,7 @@ python evaluation/evaluate.py --experiment-name exp_ho3d_real_50 --metric-name a
 python evaluation/evaluate.py --experiment-name exp_ho3d_real_50 --metric-name rmse_3d
 python evaluation/evaluate.py --experiment-name exp_ho3d_real_50 --metric-name rmse_angular
 python evaluation/evaluate.py --experiment-name exp_ho3d --metric-name time
+python evaluation/evaluate.py --experiment-name exp_ho3d_se3_plain --metric-name add
 python evaluation/evaluate.py --experiment-name exp_ho3d_ablation --metric-name add
 python evaluation/evaluate.py --experiment-name exp_ho3d_ablation --metric-name rmse_3d
 python evaluation/evaluate.py --experiment-name exp_ho3d_ablation --metric-name rmse_angular
@@ -9,6 +10,7 @@ python evaluation/evaluate.py --experiment-name exp_ycbvs_real_50 --metric-name 
 python evaluation/evaluate.py --experiment-name exp_ycbvs_real_50 --metric-name rmse_3d
 python evaluation/evaluate.py --experiment-name exp_ycbvs_real_50 --metric-name rmse_angular
 python evaluation/evaluate.py --experiment-name exp_ycbvs --metric-name time
+python evaluation/evaluate.py --experiment-name exp_ycbvs_se3_plain --metric-name add
 python evaluation/evaluate.py --experiment-name exp_ycbvs_ablation --metric-name add
 python evaluation/evaluate.py --experiment-name exp_ycbvs_ablation --metric-name rmse_3d
 python evaluation/evaluate.py --experiment-name exp_ycbvs_ablation --metric-name rmse_angular
