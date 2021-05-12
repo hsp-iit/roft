@@ -76,7 +76,7 @@
   <producer id="producer1" title="Anonymous Submission" in="00:00:00.000" out="00:01:09.967">
     <property name="length">00:01:10.000</property>
     <property name="eof">pause</property>
-    <property name="resource">tmp/dope_real.mp4</property>
+    <property name="resource">tmp/dope.mp4</property>
     <property name="audio_index">-1</property>
     <property name="video_index">0</property>
     <property name="mute_on_pause">0</property>
@@ -86,7 +86,7 @@
     <property name="creation_time">2020-10-12T20:59:03</property>
     <property name="shotcut:hash">e6cfbaa2afadd82e32296a4153153266</property>
     <property name="ignore_points">0</property>
-    <property name="shotcut:caption">dope</property>
+    <property name="shotcut:caption">dope (5 fps)</property>
     <property name="shotcut:skipConvert">1</property>
     <property name="global_feed">1</property>
     <property name="xml">was here</property>
@@ -143,7 +143,7 @@
     <property name="creation_time">2020-10-12T20:52:04</property>
     <property name="shotcut:hash">941cc8dc30eeac4dd63626ad326f79b2</property>
     <property name="ignore_points">0</property>
-    <property name="shotcut:caption">se3</property>
+    <property name="shotcut:caption">se3 (dope 5 fps)</property>
     <property name="shotcut:skipConvert">1</property>
     <property name="global_feed">1</property>
     <property name="xml">was here</property>
@@ -191,7 +191,7 @@
   <producer id="producer3" in="00:00:00.000" out="00:00:51.600">
     <property name="length">00:00:51.633</property>
     <property name="eof">pause</property>
-    <property name="resource">tmp/poserbpf.mp4</property>
+    <property name="resource">tmp/poserbpf_50_15.mp4</property>
     <property name="audio_index">-1</property>
     <property name="video_index">0</property>
     <property name="mute_on_pause">0</property>
@@ -201,7 +201,7 @@
     <property name="creation_time">2021-04-13T00:03:17</property>
     <property name="shotcut:hash">c0d55b01a1a5d7caab9d3b88d4c6ea88</property>
     <property name="ignore_points">0</property>
-    <property name="shotcut:caption">rbpf</property>
+    <property name="shotcut:caption">rbpf (50/15)</property>
     <property name="global_feed">1</property>
     <property name="xml">was here</property>
     <filter id="filter0" out="00:00:51.600">

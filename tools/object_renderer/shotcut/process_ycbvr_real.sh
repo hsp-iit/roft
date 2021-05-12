@@ -11,7 +11,7 @@ REPOSITORY_PATH=`cat config/this_location`
 mkdir -p tools/object_renderer/shotcut/tmp
 
 for object_name in 003_cracker_box 006_mustard_bottle; do
-    for name in dope_real poserbpf se3tracknet ours; do
+    for name in dope poserbpf_50_15 se3tracknet ours; do
         ln -sfT $REPOSITORY_PATH/evaluation_output/exp_ycbvr_real/$name/$object_name/sequence_0/output.mp4 $REPOSITORY_PATH/tools/object_renderer/shotcut/tmp/$name.mp4;
     done
     shotcut tools/object_renderer/shotcut/project.mlt
