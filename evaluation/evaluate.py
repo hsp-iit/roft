@@ -65,15 +65,8 @@ class Evaluator():
             self.metric_names = ['rmse_cartesian_3d']
         elif metric_name == 'rmse_angular':
             self.metric_names = ['rmse_angular']
-        elif metric_name == 'mix':
-            self.metric_names = ['rmse_cartesian_3d', 'rmse_angular', 'add']
         elif metric_name == 'time':
             self.metric_names = ['time', 'excess_33_ms']
-        # elif metric_name == 'add-distances':
-        #     self.metric_names = ['add-distances']
-        # elif metric_name == 'error':
-        #     self.metric_names = ['error_cartesian_' + coord for coord in ['x', 'y', 'z']]
-        #     self.metric_names.append('error_angular')
 
         self.metrics = { name : Metric(name) for name in self.metric_names }
 
