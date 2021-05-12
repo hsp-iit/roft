@@ -366,7 +366,7 @@ class DataLoader():
         config = self.algorithm['config']
 
         contents_map = { 'Pose' : 'pose', 'Index' : 'indexes' }
-        dataset_map = { 'ycbv_synthetic' : 'synthetic' , 'ho3d' : 'HO3D', 'ycbv_real' : 'real'}
+        dataset_map = { 'ycbv_synthetic' : 'synthetic' , 'ho3d' : 'ho3d', 'ycbv_real' : 'real'}
 
         dataset_name = config['dataset']
         poserbpf_dataset_name = dataset_map[config['dataset']]
