@@ -307,7 +307,7 @@ class Evaluator():
                                             skipped_indexes = skipped_indexes[selection_vector]
                                             seq_pose = seq_pose_all[skipped_indexes, :]
 
-                                            if  seq_time_all is not None:
+                                            if 'time' in sequence_data:
                                                 seq_time = seq_time_all[skipped_indexes, :]
 
                                 seq_gt_pose = seq_gt_pose_all[seq_pose_indexes, :]
