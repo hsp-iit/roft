@@ -8,6 +8,7 @@
 #===============================================================================
 
 import argparse
+import glob
 import numpy
 import os
 import sys
@@ -157,19 +158,28 @@ class Evaluator():
                     seq_pose_available = sequence_data['pose']
                     seq_pose = None
 
-                    # Check if the length of ground truth and pose is the same
-                    if (seq_gt is not None) and (seq_gt.shape != seq_pose_available.shape):
+                    expand_data = False
+                    sequence_length = None
+
+                    if seq_gt is not None:
+                        sequence_length = seq_gt.shape[0]
+                    # Ground truth data is not available for these datasets
+                    elif dataset_name in ['ycbv_real']:
+                        sequence_length = len(glob.glob(os.path.join(sequence_data['rgb_path'], '*')))
+
+                    # Check if the length of sequence and that of the pose array is the same
+                    if sequence_length != seq_pose_available.shape[0]:
+                        # expand available poses with invalid poses such that the renderer can skip them
                         # if not check if a list of indexes is provided
                         if not 'indexes' in sequence_data:
                             print('Algorithm ' + algorithm['name'] + ' (label ' + algorithm['label'] + ')' +\
-                                  ' provides ' + str(seq_pose_all.shape) + ' matrix as pose while the ground truth has shape ' + \
-                                  str(seq_gt_pose_all.shape) + '. However, a list of indexes for the poses has not been provided.' + \
+                                  ' provides ' + str(seq_pose_all.shape) + ' matrix as pose while the actual sequence has shape ' + \
+                                  str(sequence_length) + '. However, a list of indexes for the poses has not been provided.' + \
                                   ' Cannot continue.')
 
-                        # expand available poses with invalid poses such that the renderer can skip them
                         seq_pose = []
                         indexes = sequence_data['indexes']
-                        for j in range(seq_gt.shape[0]):
+                        for j in range(sequence_length):
                             if j in indexes:
                                 seq_pose.append(seq_pose_available[list(indexes).index(j), :])
                             else:
