@@ -12,3 +12,10 @@ python evaluation/evaluate.py --experiment-name exp_ycbvs --metric-name time
 python evaluation/evaluate.py --experiment-name exp_ycbvs_ablation --metric-name add
 python evaluation/evaluate.py --experiment-name exp_ycbvs_ablation --metric-name rmse_3d
 python evaluation/evaluate.py --experiment-name exp_ycbvs_ablation --metric-name rmse_angular
+python evaluation/evaluate.py --experiment-name exp_ycbvs_rbpf_comparison --metric-name add
+python evaluation/evaluate.py --experiment-name exp_ycbvs_rbpf_comparison --metric-name rmse_3d
+python evaluation/evaluate.py --experiment-name exp_ycbvs_rbpf_comparison --metric-name rmse_angular
+python evaluation/evaluate.py --experiment-name exp_ho3d_rbpf_comparison --metric-name add
+python evaluation/evaluate.py --experiment-name exp_ho3d_rbpf_comparison --metric-name rmse_3d
+python evaluation/evaluate.py --experiment-name exp_ho3d_rbpf_comparison --metric-name rmse_angular
+python evaluation/evaluate.py --experiment-name exp_ycbvr_real --output-head video

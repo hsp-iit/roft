@@ -69,6 +69,15 @@ class Experiments():
         self.add_algorithm_to_experiment('exp_ho3d_ablation_soa', 'poserbpf', particles = 50, fps = 15, init_from = 'dope', reinit = False, reinit_from = '', dataset = 'ho3d')
         self.add_algorithm_to_experiment('exp_ho3d_ablation_soa', 'se3tracknet', init_frome = 'dope', reinit = True, reinit_from = 'dope', reinit_fps = 5, dataset = 'ho3d')
 
+        # PoseRBPF comparison
+        self.add_algorithm_to_experiment('exp_ycbvs_rbpf_comparison', 'poserbpf', particles = 50, fps = 15, init_from = 'dope', reinit = False, reinit_from = '', dataset = 'ycbv_synthetic', label = 'poserbpf_50')
+        self.add_algorithm_to_experiment('exp_ycbvs_rbpf_comparison', 'poserbpf', particles = 100, fps = 15, init_from = 'dope', reinit = False, reinit_from = '', dataset = 'ycbv_synthetic', label = 'poserbpf_100')
+        self.add_algorithm_to_experiment('exp_ycbvs_rbpf_comparison', 'poserbpf', particles = 200, fps = 7, init_from = 'dope', reinit = False, reinit_from = '', dataset = 'ycbv_synthetic', label = 'poserbpf_200')
+
+        self.add_algorithm_to_experiment('exp_ho3d_rbpf_comparison', 'poserbpf', particles = 50, fps = 15, init_from = 'dope', reinit = False, reinit_from = '', dataset = 'ho3d', label = 'poserbpf_50')
+        self.add_algorithm_to_experiment('exp_ho3d_rbpf_comparison', 'poserbpf', particles = 100, fps = 15, init_from = 'dope', reinit = False, reinit_from = '', dataset = 'ho3d', label = 'poserbpf_100')
+        self.add_algorithm_to_experiment('exp_ho3d_rbpf_comparison', 'poserbpf', particles = 200, fps = 7, init_from = 'dope', reinit = False, reinit_from = '', dataset = 'ho3d', label = 'poserbpf_200')
+
 
     @property
     def experiments(self):
