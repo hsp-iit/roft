@@ -76,6 +76,10 @@ class ResultsMarkdownRenderer():
             'rmse_cartesian_y' : 'y',
             'rmse_cartesian_z' : 'z',
             'rmse_angular' : 'ang',
+            'rmse_linear_velocity' : 'v',
+            'rmse_angular_velocity' : 'w',
+            'max_linear_velocity' : 'max v',
+            'max_angular_velocity' : 'max w',
             'add' : 'ADD',
             'adi' : 'ADI',
             'time' : 'time',
@@ -89,6 +93,10 @@ class ResultsMarkdownRenderer():
             'rmse_cartesian_y' : Decimal('.1'),
             'rmse_cartesian_z' : Decimal('.1'),
             'rmse_angular' : Decimal('.001'),
+            'rmse_linear_velocity' : Decimal('.001'),
+            'rmse_angular_velocity' : Decimal('.001'),
+            'max_linear_velocity' : Decimal('.001'),
+            'max_angular_velocity' : Decimal('.001'),
             'add' : Decimal('.01'),
             'adi' : Decimal('.01'),
             'time' : Decimal('.1'),
@@ -97,6 +105,7 @@ class ResultsMarkdownRenderer():
 
         less_than = lambda x, y : x < y
         greater_than = lambda x, y : x > y
+        nothing = lambda x, y : False
 
         self.best_evaluator=\
         {
@@ -105,6 +114,10 @@ class ResultsMarkdownRenderer():
             'rmse_cartesian_y' : less_than,
             'rmse_cartesian_z' : less_than,
             'rmse_angular' : less_than,
+            'rmse_linear_velocity' : less_than,
+            'rmse_angular_velocity' : less_than,
+            'max_linear_velocity' : nothing,
+            'max_angular_velocity' : nothing,
             'add' : greater_than,
             'adi' : greater_than,
             'time' : less_than,
