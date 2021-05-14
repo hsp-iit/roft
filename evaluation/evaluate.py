@@ -65,6 +65,10 @@ class Evaluator():
             self.metric_names = ['rmse_cartesian_3d']
         elif metric_name == 'rmse_angular':
             self.metric_names = ['rmse_angular']
+        elif metric_name == 'rmse_velocity':
+            self.metric_names = ['rmse_linear_velocity', 'rmse_angular_velocity']
+        elif metric_name == 'max_velocity':
+            self.metric_names = ['max_linear_velocity', 'max_angular_velocity']
         elif metric_name == 'time':
             self.metric_names = ['time', 'excess_33_ms']
 
@@ -210,6 +214,10 @@ class Evaluator():
         # (representing a unique sequence given by the union of all the sequences)
         gt_pose_ALL = {}
         pose_ALL = {}
+
+        gt_vel_ALL = {}
+        vel_ALL = {}
+
         time_ALL = {}
 
         # Load experiment
@@ -244,20 +252,40 @@ class Evaluator():
                 if object_name == 'ALL':
                     gt_pose = gt_pose_ALL
                     pose = pose_ALL
+
+                    gt_vel = gt_vel_ALL
+                    vel = vel_ALL
+
                     time = time_ALL
+
                 elif object_name in excluded_objects:
                     continue
+
                 else:
                     gt_pose = None
                     pose = None
+
+                    gt_vel = None
+                    vel = None
+
                     time = None
+
                     # For each sequence belonging to the object
                     for i, sequence_data in enumerate(exp_data[algorithm['label']][object_name]):
 
                         seq_gt_pose_all = self.data['gt'][dataset_name][object_name][i]
                         seq_gt_pose = None
+
+                        if dataset_name + '_velocity' in self.data['gt']:
+                            seq_gt_vel_all = self.data['gt'][dataset_name + '_velocity'][object_name][i]
+                            seq_gt_vel = None
+
                         seq_pose_all = sequence_data['pose']
                         seq_pose = None
+
+                        if 'velocity' in sequence_data:
+                            seq_vel_all = sequence_data['velocity']
+                            seq_vel = None
 
                         if 'time' in sequence_data:
                             seq_time_all = sequence_data['time']
@@ -279,7 +307,13 @@ class Evaluator():
                                         seq_pose_indexes = seq_pose_indexes[seq_pose_indexes >= padding_info_i['padding']]
 
                             seq_gt_pose = seq_gt_pose_all[seq_pose_indexes, :]
+
                             seq_pose = seq_pose_all[seq_pose_indexes, :]
+
+                            if 'velocity' in sequence_data:
+                                seq_gt_vel = seq_gt_vel_all[seq_pose_indexes, :]
+                                seq_vel = seq_vel_all[seq_pose_indexes, :]
+
                             if 'time' in sequence_data:
                                 seq_time = seq_time_all[seq_pose_indexes, :]
                         else:
@@ -293,7 +327,12 @@ class Evaluator():
                                           ' Cannot continue.')
 
                                 seq_pose_indexes = sequence_data['indexes']
+
                                 seq_pose = seq_pose_all
+
+                                if 'velocity' in sequence_data:
+                                    seq_vel = seq_vel_all
+
                                 if 'time' in sequence_data:
                                     seq_time = seq_time_all
 
@@ -310,13 +349,26 @@ class Evaluator():
                                             skipped_indexes = skipped_indexes[selection_vector]
                                             seq_pose = seq_pose_all[skipped_indexes, :]
 
+                                            if 'velocity' in sequence_data:
+                                                seq_vel = seq_vel_all[skipped_indexes, :]
+
                                             if 'time' in sequence_data:
                                                 seq_time = seq_time_all[skipped_indexes, :]
 
                                 seq_gt_pose = seq_gt_pose_all[seq_pose_indexes, :]
+
+                                if 'velocity' in sequence_data:
+                                    seq_gt_vel = seq_gt_vel_all[seq_pose_indexes, :]
+
                             else:
-                                seq_pose = seq_pose_all
                                 seq_gt_pose = seq_gt_pose_all
+
+                                seq_pose = seq_pose_all
+
+                                if 'velocity' in sequence_data:
+                                    seq_gt_vel = seq_gt_vel_all
+                                    seq_vel = seq_vel_all
+
                                 if 'time' in sequence_data:
                                     seq_time = seq_time_all
 
@@ -326,8 +378,13 @@ class Evaluator():
                                         padding_info = self.ho3d_padding_list[object_name]
                                         if i in padding_info:
                                             padding_info_i = padding_info[i]
-                                            seq_pose = seq_pose[padding_info_i['padding'] :, :]
                                             seq_gt_pose = seq_gt_pose[padding_info_i['padding'] :, :]
+
+                                            seq_pose = seq_pose[padding_info_i['padding'] :, :]
+
+                                            if 'velocity' in sequence_data:
+                                                seq_gt_vel = seq_gt_vel[padding_info_i['padding'] :, :]
+                                                seq_vel = seq_vel[padding_info_i['padding'] :, :]
 
                                             if 'time' in sequence_data:
                                                 seq_time = seq_time[padding_info_i['padding'] :, :]
@@ -348,22 +405,52 @@ class Evaluator():
                         # Concatenate data belonging to the same object
                         if i == 0:
                             gt_pose = seq_gt_pose
+
                             pose = seq_pose
+
+                            if 'velocity' in sequence_data:
+                                gt_vel = seq_gt_vel
+                                vel = seq_vel
+
                             if 'time' in sequence_data:
                                 time = seq_time
                         else:
                             gt_pose = numpy.concatenate((gt_pose, seq_gt_pose), axis = 0)
+
                             pose = numpy.concatenate((pose, seq_pose), axis = 0)
+
+                            if 'velocity' in sequence_data:
+                                gt_vel = numpy.concatenate((gt_vel, seq_gt_vel), axis = 0)
+                                vel = numpy.concatenate((vel, seq_vel), axis = 0)
+
                             if 'time' in sequence_data:
                                 time = numpy.concatenate((time, seq_time), axis = 0)
 
                     gt_pose_ALL[object_name] = gt_pose
+
                     pose_ALL[object_name] = pose
+
+                    if algorithm['name'] == 'ours' and 'velocity' in sequence_data:
+                    # Take into account pole displacement of the 6D velocity
+                    # in order to compare to the ground truth signal
+                        for i in range(gt_vel.shape[0]):
+                            vo = vel[i, 0:3]
+                            w = vel[i, 3:6]
+                            r = gt_pose[i, 0:3]
+                            vel[i, 0:3] = vo + numpy.cross(w, r)
+
+                    if 'velocity' in sequence_data:
+                        gt_vel_ALL[object_name] = gt_vel
+                        vel_ALL[object_name] = vel
+
                     if 'time' in sequence_data:
                         time_ALL[object_name] = time
 
                 for metric_name in self.metrics:
-                    exp_results[algorithm['label']][object_name][metric_name] = self.metrics[metric_name].evaluate(object_name, gt_pose, pose, time)
+                    if 'velocity' in metric_name:
+                        exp_results[algorithm['label']][object_name][metric_name] = self.metrics[metric_name].evaluate(object_name, gt_vel, vel, time)
+                    else:
+                        exp_results[algorithm['label']][object_name][metric_name] = self.metrics[metric_name].evaluate(object_name, gt_pose, pose, time)
 
         # Remove the experiment if there are no results for that experiment
         if len(exp_results) == 0:
