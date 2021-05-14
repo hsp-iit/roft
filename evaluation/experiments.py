@@ -41,6 +41,10 @@ class Experiments():
 
         self.add_algorithm_to_experiment('exp_ycbvs', 'ours', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_1_slow', pose_set = 'dope', dataset = 'ycbv_synthetic')
 
+        self.add_algorithm_to_experiment('exp_ycbvs_velocities', 'ours', masks_set = 'gt', of_set = 'nvof_1_slow', pose_set = 'dope', dataset = 'ycbv_synthetic', label = 'ours_gt_mask')
+        self.add_algorithm_to_experiment('exp_ycbvs_velocities', 'ours', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_1_slow', pose_set = 'dope', dataset = 'ycbv_synthetic')
+        self.add_algorithm_to_experiment('exp_ycbvs_velocities', 'ours', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_1_slow', pose_set = 'dope', dataset = 'ycbv_synthetic', no_flowaid = True, label = 'ours_no_flowaid')
+
         # real YCB-Video
         self.add_algorithm_to_experiment('exp_ycbvr_real', 'ours', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_1_slow', pose_set = 'dope', dataset = 'ycbv_real')
         self.add_algorithm_to_experiment('exp_ycbvr_real', 'poserbpf', particles = 200, fps = 7, init_from = 'dope', reinit = False, reinit_from = '', dataset = 'ycbv_real', label = 'poserbpf_200_7')
