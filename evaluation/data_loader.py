@@ -135,6 +135,7 @@ class DataLoader():
         """Load gt data using our format for dataset ycbv synthetic."""
 
         self.data['ycbv_synthetic'] = {}
+        self.data['ycbv_synthetic_velocity'] = {}
 
         dataset_location_file = open('./config/ycbv_synthetic_location', 'r')
         dataset_location = dataset_location_file.read()
@@ -147,6 +148,10 @@ class DataLoader():
 
             file_path = os.path.join(dataset_location, 'object_motion', object_name, 'gt', 'poses_ycb.txt')
             self.data['ycbv_synthetic'][object_name] = [self.load_generic(file_path)]
+
+            # Load ground truth velocities
+            vel_file_path = os.path.join(dataset_location, 'object_motion', object_name, 'gt', 'velocities.txt')
+            self.data['ycbv_synthetic_velocity'][object_name] = [self.load_generic(vel_file_path)]
 
 
     def load_gt_ho3d(self):
