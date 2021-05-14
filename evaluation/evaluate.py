@@ -595,8 +595,7 @@ def main():
 
     options = parser.parse_args()
 
-    evaluator = Evaluator(options.metric_name, options.experiment_name, options.output_head, options.output_path, options.use_subset, options.disable_ho3d_padding, options.expand_if_missing
-)
+    evaluator = Evaluator(options.metric_name, options.experiment_name, options.output_head, options.output_path, options.use_subset, options.disable_ho3d_padding, options.expand_if_missing)
 
 
 if __name__ == '__main__':
