@@ -30,6 +30,10 @@ class Metric():
             'rmse_cartesian_y' : self.rmse_cartesian_y,
             'rmse_cartesian_z' : self.rmse_cartesian_z,
             'rmse_angular' : self.rmse_angular,
+            'rmse_linear_velocity' : self.rmse_linear_velocity,
+            'rmse_angular_velocity' : self.rmse_angular_velocity,
+            'max_linear_velocity' : self.max_linear_velocity,
+            'max_angular_velocity' : self.max_angular_velocity,
             'add' : self.add,
             'adi' : self.adi,
             'time' : self.time,
@@ -157,6 +161,50 @@ class Metric():
         return self.error_cartesian(object_name, reference, signal, 'z')
 
 
+    def error_linear_velocity(self, object_name, reference, signal):
+        """Evaluate the linear velocity error."""
+
+        if object_name == 'ALL':
+            reference = self.make_union_objects(reference)
+            signal = self.make_union_objects(signal)
+
+        error = (reference[:, 0:3] - signal[:, 0:3])
+
+        return numpy.linalg.norm(error, axis = 1)
+
+
+    def error_angular_velocity(self, object_name, reference, signal):
+        """Evaluate the angular velocity error."""
+
+        if object_name == 'ALL':
+            reference = self.make_union_objects(reference)
+            signal = self.make_union_objects(signal)
+
+        error = (reference[:, 3:6] - signal[:, 3:6]) * 180.0 / numpy.pi
+
+        return numpy.linalg.norm(error, axis = 1)
+
+
+    def norm_linear_velocity(self, object_name, reference, signal):
+        """Evaluate the linear velocity norm."""
+
+        if object_name == 'ALL':
+            reference = self.make_union_objects(reference)
+            signal = self.make_union_objects(signal)
+
+        return numpy.linalg.norm(reference[:, 0:3], axis = 1)
+
+
+    def norm_angular_velocity(self, object_name, reference, signal):
+        """Evaluate the angular velocity norm."""
+
+        if object_name == 'ALL':
+            reference = self.make_union_objects(reference)
+            signal = self.make_union_objects(signal)
+
+        return numpy.linalg.norm(reference[:, 3:6], axis = 1)
+
+
     def rmse_cartesian(self, object_name, reference, signal, coordinate_name):
         """Evaluate the RMSE Cartesian error for the specified coordinate."""
 
@@ -197,6 +245,34 @@ class Metric():
         error = self.error_angular(object_name, reference, signal)
 
         return numpy.linalg.norm(error) / numpy.sqrt(error.shape[0])
+
+
+    def rmse_linear_velocity(self, object_name, reference, signal, time):
+        """Evaluate the RMSE linear velocity error."""
+
+        error = self.error_linear_velocity(object_name, reference, signal)
+
+        return numpy.linalg.norm(error) / numpy.sqrt(error.shape[0])
+
+
+    def rmse_angular_velocity(self, object_name, reference, signal, time):
+        """Evaluate the RMSE angular velocity error."""
+
+        error = self.error_angular_velocity(object_name, reference, signal)
+
+        return numpy.linalg.norm(error) / numpy.sqrt(error.shape[0])
+
+
+    def max_linear_velocity(self, object_name, reference, signal, time):
+        """Evaluate the maximum linear velocity."""
+
+        return numpy.max(self.norm_linear_velocity(object_name, reference, signal))
+
+
+    def max_angular_velocity(self, object_name, reference, signal, time):
+        """Evaluate the maximum angular velocity."""
+
+        return numpy.max(self.norm_angular_velocity(object_name, reference, signal)) * 180.0 / numpy.pi
 
 
     def adi(self, object_name, reference, signal, time):
