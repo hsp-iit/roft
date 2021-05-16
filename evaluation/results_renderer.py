@@ -10,7 +10,9 @@
 import sys
 sys.path.insert(0, './build/lib/')
 
+import cv2
 import ffmpeg
+import glob
 import markdown_table
 import matplotlib
 import matplotlib.pyplot as plt
@@ -393,3 +395,85 @@ class ResultsVideoRenderer():
 
                     # remove frames to free space
                     [f.unlink() for f in Path(sequence_results['output_path_rgb']).glob("*.png") if f.is_file()]
+
+
+class ResultsThumbnailRenderer():
+
+    def __init__(self):
+        """Contructor."""
+
+        self.extension = 'png'
+
+
+    def render(self, results_name, results, objects, experiments_data, subset_from):
+        """Renderer."""
+
+        # this render awaits extra argument in the experiments_data field
+        experiment_data = experiments_data(results_name)
+
+        # store output paths
+        paths = []
+
+        # for each algorithm in the experiment
+        for i, algorithm_name in enumerate(results):
+
+            if 'thumbnail' not in experiment_data[i]['config']:
+                print('Output head "thumbnail" requires extra parameters set "thumbnail" in the experiment configuration')
+
+            parameters = experiment_data[i]['config']['thumbnail']
+
+            sequence_results = results[algorithm_name][parameters['object']][0]
+
+            # create output folder
+            os.makedirs(sequence_results['output_path_thumbnail'], exist_ok = True)
+
+            # remove existing frames
+            [f.unlink() for f in Path(sequence_results['output_path_thumbnail']).glob("*.png") if f.is_file()]
+
+            # render frames
+            object_renderer.render\
+            (
+                sequence_results['mesh_path'],
+                sequence_results['rgb_path'],
+                sequence_results['output_path_thumbnail'],
+                sequence_results['cam_intrinsics'],
+                parameters['frames'],
+                sequence_results['pose']
+            )
+
+            paths.append(sequence_results['output_path_thumbnail'])
+
+        # extract output path from any of the sequence output path
+        output_path = '/'.join(sequence_results['output_path_thumbnail'].split('/')[:-4])
+
+        # sequences share the same input rgb path
+        paths.insert(0, sequence_results['rgb_path'])
+
+        # sequences share the same crop size
+        crop_size = parameters['crop']
+
+        # sequences share the same list of indexes
+        indexes = parameters['frames']
+
+        # evaluate output size
+        border_size = 10
+        cols_width = crop_size[2] - crop_size[0]
+        rows_width = crop_size[3] - crop_size[1]
+        number_thumb = len(indexes)
+        number_algorithms = 1 + len(paths)
+        cols = (number_thumb - 1) * border_size + cols_width * number_thumb
+        rows = (number_algorithms - 1) * border_size + rows_width * number_algorithms
+
+        # compose image with thumbnails
+        image = numpy.full((rows, cols, 3), (255, 255, 255), numpy.uint8)
+
+        # attach frames
+        for i, path in enumerate(paths):
+            for j, index in enumerate(indexes):
+                img = cv2.imread(os.path.join(path, str(index) + '.png'))
+                img = img[crop_size[1] : crop_size[3], crop_size[0] : crop_size[2], :]
+                image[(rows_width + border_size) * i : (rows_width + border_size) * i + rows_width,\
+                      (cols_width + border_size) * j : (cols_width + border_size) * j + cols_width, :] = img
+
+        # save
+        cv2.imwrite(os.path.join(output_path, 'thumb.png'), image)
