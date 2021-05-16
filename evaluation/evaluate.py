@@ -17,7 +17,7 @@ from data_loader import DataLoader
 from experiments import Experiments
 from objects import Objects
 from metrics import Metric
-from results_renderer import ResultsLaTeXRenderer, ResultsMarkdownRenderer, ResultsMatplotlibRenderer, ResultsVideoRenderer
+from results_renderer import ResultsLaTeXRenderer, ResultsMarkdownRenderer, ResultsMatplotlibRenderer, ResultsThumbnailRenderer, ResultsVideoRenderer
 
 
 class Evaluator():
@@ -103,7 +103,7 @@ class Evaluator():
     def process_experiment(self, experiment_name):
         """Process a single experiment."""
 
-        if self.output_head == 'video':
+        if self.output_head in ['video', 'thumbnail']:
             self.prepare_experiment_for_video(experiment_name)
         else:
             self.evaluate_experiment(experiment_name)
@@ -539,6 +539,8 @@ class Evaluator():
             renderer = ResultsLaTeXRenderer()
         elif self.output_head == 'video':
             renderer = ResultsVideoRenderer()
+        elif self.output_head == 'thumbnail':
+            renderer = ResultsThumbnailRenderer()
         elif self.output_head == 'plot':
             # not implemented
             pass
@@ -586,7 +588,7 @@ def main():
     experiment_names = [name for name in experiments]
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--metric-name', dest = 'metric_name', type = str, required = ('video' not in sys.argv), help = "available metrics: ['ad', 'add-distances', 'error', 'rmse']")
+    parser.add_argument('--metric-name', dest = 'metric_name', type = str, required = ('video' not in sys.argv and 'thumbnail' not in sys.argv), help = "available metrics: ['ad', 'add-distances', 'error', 'rmse']")
     parser.add_argument('--experiment-name', dest = 'experiment_name', type = str, required = False, help = 'available experiments: ' + str(experiment_names))
     parser.add_argument('--use-subset', dest = 'use_subset', type = str, required = False, help = "name of the algorithm whose ground truth indexes should be used for the evaluation. available names are ['ours', 'se3tracknet, 'poserbpf']")
     parser.add_argument('--output-head', dest = 'output_head', type = str, required = False, help = "available heads: ['latex', 'markdown', 'plot', 'video']", default = 'markdown')
