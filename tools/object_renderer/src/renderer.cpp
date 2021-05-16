@@ -42,11 +42,15 @@ void render
     const std::string& rgb_path,
     const std::string& output_path,
     pybind11::dict& cam_intrinsics_pybind,
+    const pybind11::array_t<float>& indexes_pybind,
     const pybind11::array_t<float>& poses_pybind
 )
 {
     /* Extract camera intrinsics. */
     auto cam_intrinsics = extract_intrinsics(cam_intrinsics_pybind);
+
+    /* Extract indexes of frames without bound checks for performance. */
+    auto indexes = indexes_pybind.unchecked<1>();
 
     /* Extract view of poses without bound checks for performance. */
     auto poses = poses_pybind.unchecked<2>();
@@ -73,27 +77,20 @@ void render
     SICAD::ModelPose last_pose;
     bool is_last_pose = false;
 
-    std::cout << "[object_renderer::renderer(). Processing frames." << std::endl;
-    std::size_t index = 0;
-    cv::Mat image;
-    while (!(image = cv::imread(rgb_path + "/" + std::to_string(index) + ".png", cv::IMREAD_COLOR)).empty())
+    std::cout << "[object_renderer::renderer()]. Processing frames." << std::endl;
+
+    /* Pre-process poses to account for invalid poses. */
+    std::vector<SICAD::ModelPose> processed_poses;
+    for (int i = 0; i < poses.shape(0); i++)
     {
-        if (PyErr_CheckSignals() != 0)
-            throw pybind11::error_already_set();
-
-        /* Render the object mesh on grayed out background. */
-        cv::cvtColor(image, image, cv::COLOR_RGB2GRAY);
-        cv::cvtColor(image, image, cv::COLOR_GRAY2RGB);
-
-        float x = poses(index, 0);
-        float y = poses(index, 1);
-        float z = poses(index, 2);
+        float x = poses(i, 0);
+        float y = poses(i, 1);
+        float z = poses(i, 2);
         bool invalid_pose = (x == 0.0) && (y == 0.0) && (z == 0.0);
 
         if ((!invalid_pose) || (is_last_pose))
         {
             SICAD::ModelPose pose;
-            SICAD::ModelPoseContainer pose_container;
 
             if (invalid_pose)
                 pose = last_pose;
@@ -102,33 +99,52 @@ void render
                 pose.push_back(x); // x
                 pose.push_back(y); // y
                 pose.push_back(z); // z
-                pose.push_back(poses(index, 3)); // axis x
-                pose.push_back(poses(index, 4)); // axis y
-                pose.push_back(poses(index, 5)); // axis z
-                pose.push_back(poses(index, 6)); // axis angle
+                pose.push_back(poses(i, 3)); // axis x
+                pose.push_back(poses(i, 4)); // axis y
+                pose.push_back(poses(i, 5)); // axis z
+                pose.push_back(poses(i, 6)); // axis angle
             }
-            pose_container.emplace("object", pose);
 
-            /* Camera pose placeholder. */
-            double cam_x [4] = {0.0, 0.0, 0.0};
-            double cam_o [4] = {1.0, 0.0, 0.0, 0.0};
-
-            /* Render scene. */
-            bool outcome = renderer.superimpose(pose_container, cam_x, cam_o, image);
-
-            if (!outcome)
-                throw std::runtime_error("object_renderer::renderer(). Error: error while trying to render the image.");
-
-            cv::cvtColor(image, image, cv::COLOR_RGB2BGR);
+            processed_poses.push_back(pose);
 
             is_last_pose = true;
             last_pose = pose;
         }
+    }
+
+    /* Render images. */
+    cv::Mat image;
+    for (int i = 0; i < indexes.shape(0); i++)
+    {
+        int index = indexes(i);
+
+        if (PyErr_CheckSignals() != 0)
+            throw pybind11::error_already_set();
+
+        image = cv::imread(rgb_path + "/" + std::to_string(index) + ".png", cv::IMREAD_COLOR);
+
+        /* Render the object mesh on grayed out background. */
+        cv::cvtColor(image, image, cv::COLOR_RGB2GRAY);
+        cv::cvtColor(image, image, cv::COLOR_GRAY2RGB);
+
+        SICAD::ModelPoseContainer pose_container;
+        SICAD::ModelPose pose = processed_poses.at(index);
+        pose_container.emplace("object", pose);
+
+        /* Camera pose placeholder. */
+        double cam_x [4] = {0.0, 0.0, 0.0};
+        double cam_o [4] = {1.0, 0.0, 0.0, 0.0};
+
+        /* Render scene. */
+        bool outcome = renderer.superimpose(pose_container, cam_x, cam_o, image);
+
+        if (!outcome)
+            throw std::runtime_error("object_renderer::renderer(). Error: error while trying to render the image.");
+
+        cv::cvtColor(image, image, cv::COLOR_RGB2BGR);
 
         /* Save to file. */
         cv::imwrite(output_path + "/" + std::to_string(index) + ".png", image);
-
-        index++;
     }
 }
 
