@@ -7,8 +7,9 @@
 #
 #===============================================================================
 
-option(BUILD_NVOF     "Build NVIDIA NVOF-based optical flow dumper" OFF)
-option(BUILD_RENDERER "Build OpenGL-based object renderer" OFF)
+option(BUILD_NVOF       "Build NVIDIA NVOF-based optical flow dumper" OFF)
+option(BUILD_RENDERER   "Build OpenGL-based object renderer" OFF)
+option(BUILD_RS_CAPTURE "Build realsense-based sequence recording tool" OFF)
 
 if (BUILD_NVOF)
    add_subdirectory(nvof)
@@ -16,4 +17,8 @@ endif()
 
 if (BUILD_RENDERER)
   add_subdirectory(object_renderer)
+endif()
+
+if (BUILD_RS_CAPTURE)
+  add_subdirectory(rs-capture)
 endif()
