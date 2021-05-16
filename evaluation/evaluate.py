@@ -195,7 +195,8 @@ class Evaluator():
                     output_sequence_data['rgb_path'] = sequence_data['rgb_path']
 
                     # compose output path and assing post-processed poses
-                    output_sequence_data['output_path'] = os.path.join(self.output_path, experiment_name, algorithm['label'], object_name, 'sequence_' + str(i))
+                    output_sequence_data['output_path_rgb'] = os.path.join(self.output_path, experiment_name, algorithm['label'], object_name, 'sequence_' + str(i))
+                    output_sequence_data['output_path_thumbnail'] = os.path.join(self.output_path, experiment_name, algorithm['label'], object_name, 'sequence_' + str(i), 'thumb')
                     output_sequence_data['pose'] = seq_pose
 
                     exp_results[algorithm['label']][object_name].append(output_sequence_data)
