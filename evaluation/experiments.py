@@ -127,6 +127,13 @@ class Experiments():
         )
 
 
+    def add_parameters_to_experiment(self, experiment_name, parameters_group_name, parameters_values):
+        """Attach given parameters to all the items in a given experiment."""
+
+        for item in self._experiments[experiment_name]:
+            item['config'][parameters_group_name] = parameters_values
+
+
     def exclude_object_from_evaluation(self, experiment_name, object_name):
         """Exclude object from the evaluation."""
 
