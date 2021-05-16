@@ -24,6 +24,7 @@ class Experiments():
         self.add_algorithm_to_experiment('exp_ycbvs_real_50', 'ours', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_1_slow', pose_set = 'dope', dataset = 'ycbv_synthetic')
         self.add_algorithm_to_experiment('exp_ycbvs_real_50', 'poserbpf', particles = 50, fps = 15, init_from = 'dope', reinit = False, reinit_from = '', dataset = 'ycbv_synthetic')
         self.add_algorithm_to_experiment('exp_ycbvs_real_50', 'se3tracknet', init_from = 'dope', reinit = True, reinit_from = 'dope', reinit_fps = 5, dataset = 'ycbv_synthetic')
+        self.add_parameters_to_experiment('exp_ycbvs_real_50', 'thumbnail', {'object' : '003_cracker_box', 'frames' : (565, 572, 576, 580), 'crop' : (390, 60, 1120, 574)})
 
         self.add_algorithm_to_experiment('exp_ycbvs_se3_plain', 'se3tracknet', init_from = 'dope', reinit = False, reinit_from = '', dataset = 'ycbv_synthetic')
 
@@ -54,6 +55,7 @@ class Experiments():
         self.add_algorithm_to_experiment('exp_ycbvr_real', 'se3tracknet', init_from = 'dope', reinit = True, reinit_from = 'dope', reinit_fps = 5, dataset = 'ycbv_real')
         self.add_algorithm_to_experiment('exp_ycbvr_real', 'dope', dataset = 'ycbv_real', simulate_inference = True, label = 'dope')
         self.add_algorithm_to_experiment('exp_ycbvr_real', 'dope', dataset = 'ycbv_real', simulate_inference = False, label = 'dope_ideal')
+        self.add_parameters_to_experiment('exp_ycbvr_real', 'thumbnail', {'object' : '003_cracker_box', 'frames' : (1280, 1290, 1300, 1310), 'crop' : (0, 0, 730, 514)})
 
         # HO-3D
         self.add_algorithm_to_experiment('exp_ho3d', 'ours', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_2_slow', pose_set = 'dope', dataset = 'ho3d')
