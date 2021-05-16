@@ -372,20 +372,24 @@ class ResultsVideoRenderer():
                 for sequence_results in object_name_results:
 
                     # create output folder
-                    os.makedirs(sequence_results['output_path'], exist_ok = True)
+                    os.makedirs(sequence_results['output_path_rgb'], exist_ok = True)
+
+                    # create list of indexes
+                    indexes = list(range(sequence_results['pose'].shape[0]))
 
                     # render frames
                     object_renderer.render\
                     (
                         sequence_results['mesh_path'],
                         sequence_results['rgb_path'],
-                        sequence_results['output_path'],
+                        sequence_results['output_path_rgb'],
                         sequence_results['cam_intrinsics'],
+                        indexes,
                         sequence_results['pose']
                     )
 
                     # convert to a video
-                    self.frames_to_video(sequence_results['cam_intrinsics'], sequence_results['output_path'])
+                    self.frames_to_video(sequence_results['cam_intrinsics'], sequence_results['output_path_rgb'])
 
                     # remove frames to free space
-                    [f.unlink() for f in Path(sequence_results['output_path']).glob("*.png") if f.is_file()]
+                    [f.unlink() for f in Path(sequence_results['output_path_rgb']).glob("*.png") if f.is_file()]
