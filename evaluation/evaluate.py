@@ -17,8 +17,12 @@ from data_loader import DataLoader
 from experiments import Experiments
 from objects import Objects
 from metrics import Metric
-from results_renderer import ResultsLaTeXRenderer, ResultsMarkdownRenderer, ResultsMatplotlibRenderer, ResultsThumbnailRenderer, ResultsVideoRenderer
-
+from results_renderer import ResultsLaTeXRenderer
+from results_renderer import ResultsLaTeXSummaryRenderer
+from results_renderer import ResultsMarkdownRenderer
+from results_renderer import ResultsMatplotlibRenderer
+from results_renderer import ResultsThumbnailRenderer
+from results_renderer import ResultsVideoRenderer
 
 class Evaluator():
 
