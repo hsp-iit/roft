@@ -28,20 +28,7 @@ rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
 rc('text', usetex = True)
 
 
-class ResultsLaTeXRenderer():
-
-    def __init__(self):
-        """Contructor."""
-
-        self.extension = 'tex'
-
-
-    def render(self, results_name, results, objects, experiments_data, subset_from):
-        """Renderer."""
-        pass
-
-
-class ResultsMarkdownRenderer():
+class ResultsTableRenderer():
 
     def __init__(self):
         """Contructor."""
@@ -126,33 +113,23 @@ class ResultsMarkdownRenderer():
             'excess_33_ms' : less_than
         }
 
-        self.extension = 'md'
 
+    def process(self, results_name, results, objects, experiments_data, subset_from):
+        """Streamline processing of object names and excluded objects, algorithm names,
+        metric names and best algorithms given the results."""
 
-    def render(self, results_name, results, objects, experiments_data, subset_from):
-        """Renderer."""
-
-        # Get dataset name
+        # Get objects
         dataset_name = experiments_data(results_name)[0]['config']['dataset']
+        objects = objects[dataset_name]
 
         # Get excluded objects
         excluded_objects = experiments_data(results_name)[0]['config']['excluded_objects']
-
-        # Get objects
-        objects = objects[dataset_name]
 
         # Get algorithm names
         algorithm_names = [name for name in results]
 
         # Get metric names
         metric_names = [name for name in results[algorithm_names[0]][objects[0]]]
-
-        # Construct table header
-        header_vector = ['obj']
-
-        for j, metric_name in enumerate(metric_names):
-            for i, alg_name in enumerate(algorithm_names):
-                header_vector.append(self.metric_labels[metric_name] + ' (' + self.alg_labels[alg_name] + ')')
 
         # Find best result for each row
         best = {}
@@ -164,15 +141,256 @@ class ResultsMarkdownRenderer():
             best[object_name] = {}
 
             for i, metric_name in enumerate(metric_names):
-                best[object_name][metric_name] = algorithm_names[0]
-                best_result = results[algorithm_names[0]][object_name][metric_name]
+
+                for alg_name in algorithm_names:
+                    if 'gt' not in alg_name and 'ideal' not in alg_name:
+                        best[object_name][metric_name] = alg_name
+                        best_result = results[alg_name][object_name][metric_name]
+                        break
 
                 for j, alg_name in enumerate(algorithm_names):
                     result = results[alg_name][object_name][metric_name]
 
+                    # Do not consider ground truth-aided scenarios to find the best
+                    if 'gt' in alg_name or 'ideal' in alg_name:
+                        continue
+
                     if self.best_evaluator[metric_name](result, best_result):
                         best_result = result
                         best[object_name][metric_name] = alg_name
+
+        return objects, excluded_objects, algorithm_names, metric_names, best
+
+
+class ResultsLaTeXRenderer(ResultsTableRenderer):
+
+    def __init__(self):
+        """Contructor."""
+
+        super().__init__()
+
+        self.extension = 'tex'
+
+        self.alg_labels =\
+        {
+            'ours' : 'Ours',
+            'ours_gt_mask' : 'ideal segm.',
+            'ours_gt_pose' : 'ideal pose',
+            'ours_gt' : 'ideal segm. and pose',
+            'ours_flowaid' : 'refined segm.',
+            'ours_no_flowaid' : 'w/o refined segm.',
+            'ours_no_posesync' : 'w/o refined pose',
+            'ours_no_outrej' : 'w/o outlier rej.',
+            'ours_no_velocity' : 'w/o velocity.',
+            'ours_no_pose' : 'w/o pose.',
+            'dope_real' : 'DOPE',
+            'dope_ideal' : 'ideal DOPE',
+            'se3tracknet' : 'se3',
+            'poserbpf' : 'PoseRBPF',
+            'dope' : 'DOPE'
+        }
+
+        self.metric_labels =\
+        {
+            'rmse_cartesian_3d' : 'RMSE $e_{r} (cm)$',
+            'rmse_cartesian_x' : 'RMSE $e_{x} (cm)$',
+            'rmse_cartesian_y' : 'RMSE $e_{y} (cm)$',
+            'rmse_cartesian_z' : 'RMSE $e_{z} (cm)$',
+            'rmse_angular' : 'RMSE $e_{a}$ (deg)',
+            'rmse_linear_velocity' : 'RMSE $e_{v} (cm/s)$',
+            'rmse_angular_velocity' : 'RMSE $e_{\omega} (deg/s)$',
+            'add' : 'ADD (\%)'
+        }
+
+
+    def render(self, results_name, results, objects, experiments_data, subset_from):
+        """Renderer."""
+
+        objects, excluded_objects, algorithm_names, metric_names, best =\
+            self.process(results_name, results, objects, experiments_data, subset_from)
+
+        # Construct table header
+        output =\
+            '\\begin{table*}\r\n' +\
+            '    \centering\r\n' +\
+            '    \caption{.\label{tab:' + results_name + '}}\r\n' +\
+            '    \\begin{tabular}{|'
+        for i in range(len(metric_names) * len(algorithm_names) + 1):
+            output += ' c |'
+        output += '}\r\n'
+        output +=\
+            '    \hline\r\n'
+
+        # First row
+        output +=\
+            '    metric'
+        for metric_name in metric_names:
+            output +=' & \multicolumn{' + str(len(algorithm_names)) + '}{c|}{' + self.metric_labels[metric_name] + '}'
+        output += '\\\\\r\n'
+
+        # Second row
+        output +=\
+            '    \hline\r\n'
+        output +=\
+            '    method'
+        for metric_name in metric_names:
+            for alg_name in algorithm_names:
+                output += ' & ' + self.alg_labels[alg_name]
+        output += '\\\\\r\n'
+
+        # Results
+        output +=\
+            '    \hline\r\n'
+        for object_name in objects:
+
+            if object_name in excluded_objects:
+                continue
+
+            if object_name == 'ALL':
+                output +=\
+            '    \hline\r\n'
+
+            name = object_name
+            if name != 'ALL':
+                name = '{\_}'.join(name.split('_'))
+
+            output +=\
+            '    ' + name
+            for j, metric_name in enumerate(metric_names):
+                for i, alg_name in enumerate(algorithm_names):
+                    result = results[alg_name][object_name][metric_name]
+                    result_str = str(Decimal(result).quantize(self.digits[metric_name]))
+                    if alg_name == best[object_name][metric_name]:
+                        result_str = '\\textbf{' + result_str + '}'
+
+                    output += ' & ' + result_str
+
+            output += '\\\\\r\n'
+
+        # Construct table ending
+        output +=\
+            '    \hline\r\n' +\
+            '    \end{tabular}\r\n' +\
+            '\end{table*}\r\n'
+
+        return output
+
+
+class ResultsLaTeXSummaryRenderer(ResultsTableRenderer):
+
+    def __init__(self):
+        """Contructor."""
+
+        super().__init__()
+
+        self.extension = 'tex'
+
+        self.alg_labels =\
+        {
+            'ours' : 'Ours',
+            'ours_gt_mask' : 'ideal segm.',
+            'ours_gt_pose' : 'ideal pose',
+            'ours_gt' : 'ideal segm. and pose',
+            'ours_flowaid' : 'refined segm.',
+            'ours_no_flowaid' : 'w/o refined segm.',
+            'ours_no_posesync' : 'w/o refined pose',
+            'ours_no_outrej' : 'w/o outlier rej.',
+            'ours_no_velocity' : 'w/o velocity.',
+            'ours_no_pose' : 'w/o pose.',
+            'dope_real' : 'DOPE',
+            'dope_ideal' : 'ideal DOPE'
+        }
+
+        self.metric_labels =\
+        {
+            'rmse_cartesian_3d' : 'RMSE $e_{r} (cm)$',
+            'rmse_angular' : 'RMSE $e_{a}$ (deg)',
+            'add' : 'ADD (\%)'
+        }
+
+
+    def render(self, results_name, results, objects, experiments_data, subset_from):
+        """Renderer."""
+
+        objects, excluded_objects, algorithm_names, metric_names, best =\
+            self.process(results_name, results, objects, experiments_data, subset_from)
+
+        # Construct table header
+        output =\
+            '\\begin{table*}\r\n' +\
+            '    \centering\r\n' +\
+            '    \caption{.\label{tab:' + results_name + '}}\r\n' +\
+            '    \\begin{tabular}{|'
+        for i in range(len(metric_names) + 1):
+            output += ' c |'
+        output += '}\r\n'
+        output +=\
+            '    \hline\r\n'
+
+        # First row
+        output +=\
+            '    metric'
+        for metric_name in metric_names:
+            output +=' & ' + self.metric_labels[metric_name]
+        output += '\\\\\r\n'
+
+        # Results
+        output +=\
+            '    \hline\r\n'
+        for object_name in objects:
+
+            if object_name in excluded_objects:
+                continue
+
+            if object_name != 'ALL':
+                continue
+
+            for i, alg_name in enumerate(algorithm_names):
+                output +=\
+            '    ' + self.alg_labels[alg_name]
+
+                for j, metric_name in enumerate(metric_names):
+
+                    result = results[alg_name][object_name][metric_name]
+                    result_str = str(Decimal(result).quantize(self.digits[metric_name]))
+                    if alg_name == best[object_name][metric_name]:
+                        result_str = '\\textbf{' + result_str + '}'
+
+                    output += ' & ' + result_str
+
+                output += '\\\\\r\n'
+
+        # Construct table ending
+        output +=\
+            '    \hline\r\n' +\
+            '    \end{tabular}\r\n' +\
+            '\end{table*}\r\n'
+
+        return output
+
+
+class ResultsMarkdownRenderer(ResultsTableRenderer):
+
+    def __init__(self):
+        """Contructor."""
+
+        super().__init__()
+
+        self.extension = 'md'
+
+
+    def render(self, results_name, results, objects, experiments_data, subset_from):
+        """Renderer."""
+
+        objects, excluded_objects, algorithm_names, metric_names, best =\
+            self.process(results_name, results, objects, experiments_data, subset_from)
+
+        # Construct table header
+        header_vector = ['obj']
+
+        for j, metric_name in enumerate(metric_names):
+            for i, alg_name in enumerate(algorithm_names):
+                header_vector.append(self.metric_labels[metric_name] + ' (' + self.alg_labels[alg_name] + ')')
 
         # Construct table content
         data_matrix = []
