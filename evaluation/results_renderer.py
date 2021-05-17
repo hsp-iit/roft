@@ -305,7 +305,9 @@ class ResultsLaTeXSummaryRenderer(ResultsTableRenderer):
         {
             'rmse_cartesian_3d' : 'RMSE $e_{r} (cm)$',
             'rmse_angular' : 'RMSE $e_{a}$ (deg)',
-            'add' : 'ADD (\%)'
+            'add' : 'ADD (\%)',
+            'max_linear_velocity' : 'max $\|v\| (m/s)$',
+            'max_angular_velocity' : 'max $\|\omega\| (deg/s)$'
         }
 
 
