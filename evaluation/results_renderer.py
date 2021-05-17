@@ -197,7 +197,7 @@ class ResultsLaTeXRenderer(ResultsTableRenderer):
             'rmse_cartesian_y' : 'RMSE $e_{y} (cm)$',
             'rmse_cartesian_z' : 'RMSE $e_{z} (cm)$',
             'rmse_angular' : 'RMSE $e_{a}$ (deg)',
-            'rmse_linear_velocity' : 'RMSE $e_{v} (cm/s)$',
+            'rmse_linear_velocity' : 'RMSE $e_{v} (m/s)$',
             'rmse_angular_velocity' : 'RMSE $e_{\omega} (deg/s)$',
             'add' : 'ADD (\%)'
         }
@@ -317,7 +317,7 @@ class ResultsLaTeXSummaryRenderer(ResultsTableRenderer):
 
         # Construct table header
         output =\
-            '\\begin{table*}\r\n' +\
+            '\\begin{table}\r\n' +\
             '    \centering\r\n' +\
             '    \caption{.\label{tab:' + results_name + '}}\r\n' +\
             '    \\begin{tabular}{|'
@@ -364,7 +364,7 @@ class ResultsLaTeXSummaryRenderer(ResultsTableRenderer):
         output +=\
             '    \hline\r\n' +\
             '    \end{tabular}\r\n' +\
-            '\end{table*}\r\n'
+            '\end{table}\r\n'
 
         return output
 
