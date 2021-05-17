@@ -543,6 +543,8 @@ class Evaluator():
             renderer = ResultsMarkdownRenderer()
         elif self.output_head == 'latex':
             renderer = ResultsLaTeXRenderer()
+        elif self.output_head == 'latex-summary':
+            renderer = ResultsLaTeXSummaryRenderer()
         elif self.output_head == 'video':
             renderer = ResultsVideoRenderer()
         elif self.output_head == 'thumbnail':
@@ -564,7 +566,7 @@ class Evaluator():
             return
 
         os.makedirs(self.output_path, exist_ok = 'True')
-        if self.output_head == 'markdown' or self.output_head == 'latex':
+        if self.output_head in ['markdown', 'latex', 'latex-summary']:
 
             print('Rendered results saved to:')
 
@@ -597,7 +599,7 @@ def main():
     parser.add_argument('--metric-name', dest = 'metric_name', type = str, required = ('video' not in sys.argv and 'thumbnail' not in sys.argv), help = "available metrics: ['ad', 'add-distances', 'error', 'rmse']")
     parser.add_argument('--experiment-name', dest = 'experiment_name', type = str, required = False, help = 'available experiments: ' + str(experiment_names))
     parser.add_argument('--use-subset', dest = 'use_subset', type = str, required = False, help = "name of the algorithm whose ground truth indexes should be used for the evaluation. available names are ['ours', 'se3tracknet, 'poserbpf']")
-    parser.add_argument('--output-head', dest = 'output_head', type = str, required = False, help = "available heads: ['latex', 'markdown', 'plot', 'video']", default = 'markdown')
+    parser.add_argument('--output-head', dest = 'output_head', type = str, required = False, help = "available heads: ['latex', 'latex-summary', 'markdown', 'plot', 'video']", default = 'markdown')
     parser.add_argument('--output-path', dest = 'output_path', type = str, required = False, help = "where to save results", default = './evaluation_output')
     parser.add_argument('--disable-ho3d-padding', dest = 'disable_ho3d_padding', type = bool, default = False, help = "whether to handle that DOPE predictions for HO-3D in sequence 006_mustard_bottle_2 are missing starting from the first frame")
     parser.add_argument('--expand-if-missing', dest = 'expand_if_missing', type = bool, default = False, help = "whether to sample and hold algorithm output if provided frames are less than ground truth frames")
