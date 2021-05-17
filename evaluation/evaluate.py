@@ -76,6 +76,8 @@ class Evaluator():
             self.metric_names = ['rmse_linear_velocity', 'rmse_angular_velocity']
         elif metric_name == 'max_velocity':
             self.metric_names = ['max_linear_velocity', 'max_angular_velocity']
+        elif metric_name == 'mix':
+            self.metric_names = ['add', 'rmse_cartesian_3d', 'rmse_angular']
         elif metric_name == 'time':
             self.metric_names = ['time', 'excess_33_ms']
 
