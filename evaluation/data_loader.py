@@ -231,6 +231,7 @@ class DataLoader():
             for i, video_id in enumerate(video_ids[dataset_name][object_name]):
 
                 object_path = os.path.join(path, object_name + video_id)
+                segmentation_path = os.path.join(path, object_name + video_id, 'segmentation')
                 rgb_path = os.path.join(self.dataset_paths[dataset_name], object_name + video_id, 'rgb')
                 cam_path = os.path.join(self.dataset_paths[dataset_name], object_name + video_id, 'cam_K.json')
                 mesh_path = os.path.join(self.dataset_mesh_paths[dataset_name], object_name, 'textured.obj')
@@ -249,6 +250,7 @@ class DataLoader():
                 object_video_data['rgb_path'] = rgb_path
                 object_video_data['cam_intrinsics'] = self.load_camera_intrinsics(cam_path)
                 object_video_data['mesh_path'] = mesh_path
+                object_video_data['segmentation_path'] = segmentation_path
 
                 object_data.append(object_video_data)
 
