@@ -199,6 +199,8 @@ class Evaluator():
                     output_sequence_data['cam_intrinsics'] = sequence_data['cam_intrinsics']
                     output_sequence_data['mesh_path'] = sequence_data['mesh_path']
                     output_sequence_data['rgb_path'] = sequence_data['rgb_path']
+                    if 'segmentation_path' in sequence_data:
+                        output_sequence_data['segmentation_path'] = sequence_data['segmentation_path']
 
                     # compose output path and assing post-processed poses
                     output_sequence_data['output_path_rgb'] = os.path.join(self.output_path, experiment_name, algorithm['label'], object_name, 'sequence_' + str(i))
