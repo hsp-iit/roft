@@ -611,10 +611,39 @@ class ResultsVideoRenderer():
                     )
 
                     # convert to a video
-                    self.frames_to_video(sequence_results['cam_intrinsics'], sequence_results['output_path_rgb'])
+                    frames_to_video(sequence_results['cam_intrinsics'], sequence_results['output_path_rgb'], sequence_results['output_path_rgb'])
 
                     # remove frames to free space
                     [f.unlink() for f in Path(sequence_results['output_path_rgb']).glob("*.png") if f.is_file()]
+
+
+class ResultsSegmentationVideoRenderer():
+
+    def __init__(self):
+        """Contructor."""
+
+        self.extension = 'mp4'
+
+
+    def render(self, results_name, results, objects, experiments_data, subset_from):
+        """Renderer."""
+
+        # for each algorithm in the experiment
+        for algorithm_name in results:
+            algorithm_results = results[algorithm_name]
+
+            # for each object
+            for object_name in algorithm_results:
+                object_name_results = algorithm_results[object_name]
+
+                # for each sequence
+                for sequence_results in object_name_results:
+
+                    # create output folder
+                    os.makedirs(sequence_results['output_path_segmentation'], exist_ok = True)
+
+                    # convert to a video
+                    frames_to_video(sequence_results['cam_intrinsics'], sequence_results['segmentation_path'], sequence_results['output_path_segmentation'])
 
 
 class ResultsThumbnailRenderer():
