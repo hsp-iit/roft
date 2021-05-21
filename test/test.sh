@@ -122,7 +122,9 @@ INITIAL_ORIENTATION="${INITIAL_POSE_ARRAY[@]:3:7}"
 OUTPUT_PATH=$OUTPUT_ROOT_PATH"$LOG_POSTFIX"/"$OBJECT_NAME"/
 echo $OUTPUT_PATH
 mkdir -p $OUTPUT_PATH
+mkdir -p $OUTPUT_PATH/segmentation
 rm -f $OUTPUT_PATH/*.txt
+rm -f $OUTPUT_PATH/segmentation/*.png
 
 $EXECUTABLE --from $CONFIG_ROOT_PATH/config_ycbv_syn.ini\
             --CAMERA::fx $FX\
@@ -134,6 +136,7 @@ $EXECUTABLE --from $CONFIG_ROOT_PATH/config_ycbv_syn.ini\
             --INITIAL_CONDITION::p_axis_angle_0 "($INITIAL_ORIENTATION)"\
             --KINEMATIC_MODEL::sigma_ang_vel "$SIGMA_ANG_VEL"\
             --LOG::absolute_log_path $OUTPUT_PATH\
+            --LOG::enable_log_segmentation false\
             --MEASUREMENT_MODEL::p_cov_q "$P_COV_Q"\
             --MEASUREMENT_MODEL::use_pose_measurement $USE_POSE_MEASUREMENT\
             --MEASUREMENT_MODEL::use_vel_measurement $USE_VEL_MEASUREMENT\
