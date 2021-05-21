@@ -21,6 +21,7 @@ from results_renderer import ResultsLaTeXRenderer
 from results_renderer import ResultsLaTeXSummaryRenderer
 from results_renderer import ResultsMarkdownRenderer
 from results_renderer import ResultsMatplotlibRenderer
+from results_renderer import ResultsSegmentationVideoRenderer
 from results_renderer import ResultsThumbnailRenderer
 from results_renderer import ResultsVideoRenderer
 
@@ -109,7 +110,7 @@ class Evaluator():
     def process_experiment(self, experiment_name):
         """Process a single experiment."""
 
-        if self.output_head in ['video', 'thumbnail']:
+        if self.output_head in ['video', 'video-segmentation', 'thumbnail']:
             self.prepare_experiment_for_video(experiment_name)
         else:
             self.evaluate_experiment(experiment_name)
@@ -205,6 +206,7 @@ class Evaluator():
                     # compose output path and assing post-processed poses
                     output_sequence_data['output_path_rgb'] = os.path.join(self.output_path, experiment_name, algorithm['label'], object_name, 'sequence_' + str(i))
                     output_sequence_data['output_path_thumbnail'] = os.path.join(self.output_path, experiment_name, algorithm['label'], object_name, 'sequence_' + str(i), 'thumb')
+                    output_sequence_data['output_path_segmentation'] = os.path.join(self.output_path, experiment_name, algorithm['label'], object_name, 'sequence_' + str(i), 'segmentation')
                     output_sequence_data['pose'] = seq_pose
 
                     exp_results[algorithm['label']][object_name].append(output_sequence_data)
@@ -549,6 +551,8 @@ class Evaluator():
             renderer = ResultsLaTeXSummaryRenderer()
         elif self.output_head == 'video':
             renderer = ResultsVideoRenderer()
+        elif self.output_head == 'video-segmentation':
+            renderer = ResultsSegmentationVideoRenderer()
         elif self.output_head == 'thumbnail':
             renderer = ResultsThumbnailRenderer()
         elif self.output_head == 'plot':
@@ -598,10 +602,23 @@ def main():
     experiment_names = [name for name in experiments]
 
     parser = argparse.ArgumentParser()
-    parser.add_argument('--metric-name', dest = 'metric_name', type = str, required = ('video' not in sys.argv and 'thumbnail' not in sys.argv), help = "available metrics: ['ad', 'add-distances', 'error', 'rmse']")
+    parser.add_argument\
+    (
+        '--metric-name',
+        dest = 'metric_name',
+        type = str,
+        required =\
+        (
+            'video' not in sys.argv and\
+            'video-segmentation' not in sys.argv and\
+            'thumbnail' not in sys.argv
+        ),
+        help = "available metrics: ['ad', 'add-distances', 'error', 'rmse']"
+    )
+
     parser.add_argument('--experiment-name', dest = 'experiment_name', type = str, required = False, help = 'available experiments: ' + str(experiment_names))
     parser.add_argument('--use-subset', dest = 'use_subset', type = str, required = False, help = "name of the algorithm whose ground truth indexes should be used for the evaluation. available names are ['ours', 'se3tracknet, 'poserbpf']")
-    parser.add_argument('--output-head', dest = 'output_head', type = str, required = False, help = "available heads: ['latex', 'latex-summary', 'markdown', 'plot', 'video']", default = 'markdown')
+    parser.add_argument('--output-head', dest = 'output_head', type = str, required = False, help = "available heads: ['latex', 'latex-summary', 'markdown', 'plot', 'thumb', 'video', 'video-segmentation']", default = 'markdown')
     parser.add_argument('--output-path', dest = 'output_path', type = str, required = False, help = "where to save results", default = './evaluation_output')
     parser.add_argument('--disable-ho3d-padding', dest = 'disable_ho3d_padding', type = bool, default = False, help = "whether to handle that DOPE predictions for HO-3D in sequence 006_mustard_bottle_2 are missing starting from the first frame")
     parser.add_argument('--expand-if-missing', dest = 'expand_if_missing', type = bool, default = False, help = "whether to sample and hold algorithm output if provided frames are less than ground truth frames")
