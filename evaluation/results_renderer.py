@@ -634,6 +634,9 @@ class ResultsThumbnailRenderer():
         # store output paths
         paths = []
 
+        # store segmentation paths
+        segmentation_paths = {}
+
         # for each algorithm in the experiment
         for i, algorithm_name in enumerate(results):
 
@@ -661,6 +664,9 @@ class ResultsThumbnailRenderer():
                 sequence_results['pose']
             )
 
+            if 'segmentation_path' in sequence_results:
+                segmentation_paths[algorithm_name] = sequence_results['segmentation_path']
+
             paths.append(sequence_results['output_path_thumbnail'])
 
         # extract output path from any of the sequence output path
@@ -668,6 +674,23 @@ class ResultsThumbnailRenderer():
 
         # sequences share the same input rgb path
         paths.insert(0, sequence_results['rgb_path'])
+
+        # check if 'ours' is one of the available algorithm and, in that case, if segmentation is available
+        if 'ours' in results:
+            segmentation_files = glob.glob(os.path.join(segmentation_paths['ours'], '*.png'))
+
+            # if there is segmentation, put it between the RGB input and DOPE (if it is there)
+            # or just after the RGB otherwise
+            dope_index = -1
+            if len(segmentation_files) > 0:
+                for i, algorithm_name in enumerate(results):
+                    if 'dope' in algorithm_name:
+                        dope_index = i
+                        break
+                if dope_index < 0:
+                    dope_index = 0
+                paths.insert(dope_index + 1, segmentation_paths['ours'])
+
 
         # sequences share the same crop size
         crop_size = parameters['crop']
@@ -696,4 +719,7 @@ class ResultsThumbnailRenderer():
                       (cols_width + border_size) * j : (cols_width + border_size) * j + cols_width, :] = img
 
         # save
-        cv2.imwrite(os.path.join(output_path, 'thumb.png'), image)
+        output_file_path = os.path.join(output_path, 'thumb.png')
+        cv2.imwrite(output_file_path, image)
+
+        print('Thumbnails rendererd in ' + output_file_path)
