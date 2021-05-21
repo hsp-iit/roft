@@ -28,6 +28,29 @@ rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
 rc('text', usetex = True)
 
 
+def frames_to_video(cam_intrinsics, input_path, output_path):
+    """Convert frames to output mp4 video."""
+
+    input_options =\
+    {
+        'r': 30,
+        'f': 'image2'
+    }
+
+    output_options =\
+    {
+        'crf': 25,
+        'pix_fmt': 'yuv420p',
+        'vcodec' : 'libx264',
+        's' : str(cam_intrinsics['width']) + 'x' + str(cam_intrinsics['height'])
+    }
+
+    ffmpeg\
+        .input(os.path.join(input_path, '%d.png'), **input_options)\
+        .output(os.path.join(output_path, 'output.mp4'), **output_options)\
+        .run(overwrite_output = True)
+
+
 class ResultsTableRenderer():
 
     def __init__(self):
@@ -554,29 +577,6 @@ class ResultsVideoRenderer():
         """Contructor."""
 
         self.extension = 'mp4'
-
-
-    def frames_to_video(self, cam_intrinsics, input_path):
-        """Convert frames to output mp4 video."""
-
-        input_options =\
-        {
-            'r': 30,
-            'f': 'image2'
-        }
-
-        output_options =\
-        {
-            'crf': 25,
-            'pix_fmt': 'yuv420p',
-            'vcodec' : 'libx264',
-            's' : str(cam_intrinsics['width']) + 'x' + str(cam_intrinsics['height'])
-        }
-
-        ffmpeg\
-        .input(os.path.join(input_path, '%d.png'), **input_options)\
-        .output(os.path.join(input_path, 'output.mp4'), **output_options)\
-        .run(overwrite_output = True)
 
 
     def render(self, results_name, results, objects, experiments_data, subset_from):
