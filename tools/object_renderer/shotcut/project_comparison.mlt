@@ -55,7 +55,7 @@
   <producer id="producer1" title="Anonymous Submission" in="00:00:00.000" out="00:01:09.967">
     <property name="length">00:01:10.000</property>
     <property name="eof">pause</property>
-    <property name="resource">tmp/dope.mp4</property>
+    <property name="resource">tmp/poserbpf.mp4</property>
     <property name="audio_index">-1</property>
     <property name="video_index">0</property>
     <property name="mute_on_pause">0</property>
@@ -65,7 +65,7 @@
     <property name="creation_time">2020-10-12T20:59:03</property>
     <property name="shotcut:hash">e6cfbaa2afadd82e32296a4153153266</property>
     <property name="ignore_points">0</property>
-    <property name="shotcut:caption">dope (5 fps)</property>
+    <property name="shotcut:caption">poserbpf</property>
     <property name="shotcut:skipConvert">1</property>
     <property name="global_feed">1</property>
     <property name="xml">was here</property>
@@ -91,7 +91,7 @@
   <producer id="producer3" in="00:00:00.000" out="00:00:51.600">
     <property name="length">00:00:51.633</property>
     <property name="eof">pause</property>
-    <property name="resource">tmp/segmentation.mp4</property>
+    <property name="resource">tmp/se3tracknet.mp4</property>
     <property name="audio_index">-1</property>
     <property name="video_index">0</property>
     <property name="mute_on_pause">0</property>
@@ -101,7 +101,7 @@
     <property name="creation_time">2021-04-13T00:03:17</property>
     <property name="shotcut:hash">c0d55b01a1a5d7caab9d3b88d4c6ea88</property>
     <property name="ignore_points">0</property>
-    <property name="shotcut:caption">segmentation</property>
+    <property name="shotcut:caption">se3tracknet</property>
     <property name="global_feed">1</property>
     <property name="xml">was here</property>
     <filter id="filter0" out="00:00:51.600">
@@ -118,59 +118,9 @@
       <property name="transition.threads">0</property>
       <property name="transition.fix_rotate_x">0</property>
     </filter>
-    <filter id="filter2" out="00:00:51.600">
-      <property name="argument"></property>
-      <property name="geometry">0 300 640 50 1</property>
-      <property name="family">Sans</property>
-      <property name="size">48</property>
-      <property name="weight">400</property>
-      <property name="style">normal</property>
-      <property name="fgcolour">0x000000ff</property>
-      <property name="bgcolour">#00000000</property>
-      <property name="olcolour">0x00000000</property>
-      <property name="pad">0</property>
-      <property name="halign">left</property>
-      <property name="valign">top</property>
-      <property name="outline">0</property>
-      <property name="pixel_ratio">1</property>
-      <property name="mlt_service">qtext</property>
-      <property name="shotcut:filter">richText</property>
-      <property name="html">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans Serif'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Times New Roman'; font-size:30pt; color:#ffffff;&quot;&gt;Segmentation&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</property>
-      <property name="shotcut:animIn">00:00:00.000</property>
-      <property name="shotcut:animOut">00:00:00.000</property>
-    </filter>
     <filter id="filter3" out="00:00:51.600">
       <property name="argument"></property>
       <property name="geometry">640 300 640 50 1</property>
-      <property name="family">Sans</property>
-      <property name="size">48</property>
-      <property name="weight">400</property>
-      <property name="style">normal</property>
-      <property name="fgcolour">0x000000ff</property>
-      <property name="bgcolour">#00000000</property>
-      <property name="olcolour">0x00000000</property>
-      <property name="pad">0</property>
-      <property name="halign">left</property>
-      <property name="valign">top</property>
-      <property name="outline">0</property>
-      <property name="pixel_ratio">1</property>
-      <property name="mlt_service">qtext</property>
-      <property name="shotcut:filter">richText</property>
-      <property name="html">&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans Serif'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Times New Roman'; font-size:30pt; color:#ffffff;&quot;&gt;Pose measurement&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</property>
-      <property name="shotcut:animIn">00:00:00.000</property>
-      <property name="shotcut:animOut">00:00:00.000</property>
-    </filter>
-    <filter id="filter5" out="00:00:51.600">
-      <property name="argument"></property>
-      <property name="geometry">1280 300 640 50 1</property>
       <property name="family">Sans</property>
       <property name="size">48</property>
       <property name="weight">400</property>
@@ -214,8 +164,7 @@ p, li { white-space: pre-wrap; }
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans Serif'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Times New Roman'; font-size:23pt; color:#ff0000;&quot;&gt;▢ &lt;/span&gt;&lt;span style=&quot; font-family:'Times New Roman'; font-size:23pt; color:#ffffff;&quot;&gt;Mask R-CNN (5 fps)&lt;/span&gt;&lt;/p&gt;
-&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Times New Roman'; font-size:23pt; color:#0dbf09;&quot;&gt;▦ &lt;/span&gt;&lt;span style=&quot; font-family:'Times New Roman'; font-size:23pt; color:#ffffff;&quot;&gt;optical flow-aided segmentation&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</property>
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Times New Roman'; font-size:23pt; color:#ffffff;&quot;&gt;se3-TrackNet&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</property>
       <property name="shotcut:animIn">00:00:00.000</property>
       <property name="shotcut:animOut">00:00:00.000</property>
     </filter>
@@ -265,7 +214,7 @@ p, li { white-space: pre-wrap; }
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Sans Serif'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Times New Roman'; font-size:23pt; color:#ffffff;&quot;&gt;DOPE (5 fps)&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</property>
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Times New Roman'; font-size:23pt; color:#ffffff;&quot;&gt;PoseRBPF&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</property>
       <property name="shotcut:animIn">00:00:00.000</property>
       <property name="shotcut:animOut">00:00:00.000</property>
     </filter>
