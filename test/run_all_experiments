@@ -13,4 +13,3 @@ bash test/test_full_all_ho3d.sh
 bash test/test_full_gt_mask_all_ho3d.sh
 bash test/test_full_gt_mask_gt_pose_all_ho3d.sh
 bash test/test_full_gt_pose_all_ho3d.sh
-bash test/test_full_ho3d_mask_all_ho3d.sh
