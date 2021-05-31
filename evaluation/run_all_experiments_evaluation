@@ -1,23 +1,14 @@
-python evaluation/evaluate.py --experiment-name exp_ho3d_real_50 --metric-name add
-python evaluation/evaluate.py --experiment-name exp_ho3d_real_50 --metric-name rmse_3d
-python evaluation/evaluate.py --experiment-name exp_ho3d_real_50 --metric-name rmse_angular
-python evaluation/evaluate.py --experiment-name exp_ho3d --metric-name time
-python evaluation/evaluate.py --experiment-name exp_ho3d_se3_plain --metric-name add
-python evaluation/evaluate.py --experiment-name exp_ho3d_ablation --metric-name add
-python evaluation/evaluate.py --experiment-name exp_ho3d_ablation --metric-name rmse_3d
-python evaluation/evaluate.py --experiment-name exp_ho3d_ablation --metric-name rmse_angular
-python evaluation/evaluate.py --experiment-name exp_ycbvs_real_50 --metric-name add
-python evaluation/evaluate.py --experiment-name exp_ycbvs_real_50 --metric-name rmse_3d
-python evaluation/evaluate.py --experiment-name exp_ycbvs_real_50 --metric-name rmse_angular
-python evaluation/evaluate.py --experiment-name exp_ycbvs --metric-name time
-python evaluation/evaluate.py --experiment-name exp_ycbvs_se3_plain --metric-name add
-python evaluation/evaluate.py --experiment-name exp_ycbvs_ablation --metric-name add
-python evaluation/evaluate.py --experiment-name exp_ycbvs_ablation --metric-name rmse_3d
-python evaluation/evaluate.py --experiment-name exp_ycbvs_ablation --metric-name rmse_angular
-python evaluation/evaluate.py --experiment-name exp_ycbvs_rbpf_comparison --metric-name add
-python evaluation/evaluate.py --experiment-name exp_ycbvs_rbpf_comparison --metric-name rmse_3d
-python evaluation/evaluate.py --experiment-name exp_ycbvs_rbpf_comparison --metric-name rmse_angular
-python evaluation/evaluate.py --experiment-name exp_ho3d_rbpf_comparison --metric-name add
-python evaluation/evaluate.py --experiment-name exp_ho3d_rbpf_comparison --metric-name rmse_3d
-python evaluation/evaluate.py --experiment-name exp_ho3d_rbpf_comparison --metric-name rmse_angular
-python evaluation/evaluate.py --experiment-name exp_ycbvr_real --output-head video
+python evaluation/evaluate.py --experiment-name exp_ho3d_real --metric-name mix --output-head latex
+python evaluation/evaluate.py --experiment-name exp_ho3d_ablation --metric-name mix --output-head latex-summary
+python evaluation/evaluate.py --experiment-name exp_ho3d --metric-name time --output-head latex-summary
+python evaluation/evaluate.py --experiment-name exp_ycbvs_real --metric-name mix --output-head latex
+python evaluation/evaluate.py --experiment-name exp_ycbvs_real --output-head thumbnail
+python evaluation/evaluate.py --experiment-name exp_ycbvs_velocities --metric-name rmse_velocity --output-head latex
+python evaluation/evaluate.py --experiment-name exp_ycbvs --metric-name max_velocity --output-head latex
+python evaluation/evaluate.py --experiment-name exp_ycbvs --metric-name time --output-head latex-summary
+python evaluation/evaluate.py --experiment-name exp_ycbvs_se3_plain --metric-name add --output-head latex
+python evaluation/evaluate.py --experiment-name exp_ycbvs_ablation --metric-name mix --output-head latex-summary
+# python evaluation/evaluate.py --experiment-name exp_ycbvs_real --output-head video
+# python evaluation/evaluate.py --experiment-name exp_ycbvr_real --output-head video
+# python evaluation/evaluate.py --experiment-name exp_ycbvs --output-head video-segmentation
+# python evaluation/evaluate.py --experiment-name exp_ycbvr --output-head video-segmentation
