@@ -95,7 +95,7 @@ class ResultsTableRenderer():
             'add' : 'ADD',
             'adi' : 'ADI',
             'time' : 'time',
-            'excess_33_ms' : '# > 33 ms',
+            'excess_33_ms' : '# > 33 ms'
         }
 
         self.digits =\
@@ -222,7 +222,12 @@ class ResultsLaTeXRenderer(ResultsTableRenderer):
             'rmse_angular' : 'RMSE $e_{a}$ (deg)',
             'rmse_linear_velocity' : 'RMSE $e_{v} (m/s)$',
             'rmse_angular_velocity' : 'RMSE $e_{\omega} (deg/s)$',
-            'add' : 'ADD (\%)'
+            'max_linear_velocity' : 'max v',
+            'max_angular_velocity' : 'max w',
+            'max_angular_velocity' : 'max w',
+            'add' : 'ADD (\%)',
+            'time' : 'time',
+            'excess_33_ms' : '# > 33 ms'
         }
 
 
@@ -330,7 +335,9 @@ class ResultsLaTeXSummaryRenderer(ResultsTableRenderer):
             'rmse_angular' : 'RMSE $e_{a}$ (deg)',
             'add' : 'ADD (\%)',
             'max_linear_velocity' : 'max $\|v\| (m/s)$',
-            'max_angular_velocity' : 'max $\|\omega\| (deg/s)$'
+            'max_angular_velocity' : 'max $\|\omega\| (deg/s)$',
+            'time' : 'time',
+            'excess_33_ms' : '# > 33 ms'
         }
 
 
