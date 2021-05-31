@@ -15,5 +15,6 @@ for object_name in 003_cracker_box 006_mustard_bottle; do
         ln -sfT $REPOSITORY_PATH/evaluation_output/exp_ycbvr_real/$name/$object_name/sequence_0/output.mp4 $REPOSITORY_PATH/tools/object_renderer/shotcut/tmp/$name.mp4;
     done
     ln -sfT $REPOSITORY_PATH/evaluation_output/exp_ycbvr/$name/$object_name/sequence_0/segmentation/output.mp4 $REPOSITORY_PATH/tools/object_renderer/shotcut/tmp/segmentation.mp4;
+    ln -sfT $REPOSITORY_PATH/evaluation_output/exp_ycbvr/$name/$object_name/sequence_0/segmentation_refined/output.mp4 $REPOSITORY_PATH/tools/object_renderer/shotcut/tmp/segmentation_refined.mp4;
     shotcut tools/object_renderer/shotcut/project.mlt
 done
