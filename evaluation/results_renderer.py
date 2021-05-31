@@ -652,6 +652,13 @@ class ResultsSegmentationVideoRenderer():
                     # convert to a video
                     frames_to_video(sequence_results['cam_intrinsics'], sequence_results['segmentation_path'], sequence_results['output_path_segmentation'])
 
+                    # repeat for refined segmentation
+                    # create output folder
+                    os.makedirs(sequence_results['output_path_segmentation'] + '_refined', exist_ok = True)
+
+                    # convert to a video
+                    frames_to_video(sequence_results['cam_intrinsics'], sequence_results['segmentation_path'] + '_refined', sequence_results['output_path_segmentation'] + '_refined')
+
 
 class ResultsThumbnailRenderer():
 
