@@ -618,7 +618,7 @@ def main():
 
     parser.add_argument('--experiment-name', dest = 'experiment_name', type = str, required = False, help = 'available experiments: ' + str(experiment_names))
     parser.add_argument('--use-subset', dest = 'use_subset', type = str, required = False, help = "name of the algorithm whose ground truth indexes should be used for the evaluation. available names are ['ours', 'se3tracknet, 'poserbpf']")
-    parser.add_argument('--output-head', dest = 'output_head', type = str, required = False, help = "available heads: ['latex', 'latex-summary', 'markdown', 'plot', 'thumb', 'video', 'video-segmentation']", default = 'markdown')
+    parser.add_argument('--output-head', dest = 'output_head', type = str, required = False, help = "available heads: ['latex', 'latex-summary', 'markdown', 'plot', 'thumbnail', 'video', 'video-segmentation']", default = 'markdown')
     parser.add_argument('--output-path', dest = 'output_path', type = str, required = False, help = "where to save results", default = './evaluation_output')
     parser.add_argument('--disable-ho3d-padding', dest = 'disable_ho3d_padding', type = bool, default = False, help = "whether to handle that DOPE predictions for HO-3D in sequence 006_mustard_bottle_2 are missing starting from the first frame")
     parser.add_argument('--expand-if-missing', dest = 'expand_if_missing', type = bool, default = False, help = "whether to sample and hold algorithm output if provided frames are less than ground truth frames")
