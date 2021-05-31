@@ -123,8 +123,10 @@ OUTPUT_PATH=$OUTPUT_ROOT_PATH"$LOG_POSTFIX"/"$OBJECT_NAME"/
 echo $OUTPUT_PATH
 mkdir -p $OUTPUT_PATH
 mkdir -p $OUTPUT_PATH/segmentation
+mkdir -p $OUTPUT_PATH/segmentation_refined
 rm -f $OUTPUT_PATH/*.txt
 rm -f $OUTPUT_PATH/segmentation/*.png
+rm -f $OUTPUT_PATH/segmentation_refined/*.png
 
 $EXECUTABLE --from $CONFIG_ROOT_PATH/config_ycbv_syn.ini\
             --CAMERA::fx $FX\
