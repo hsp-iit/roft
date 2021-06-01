@@ -1,7 +1,10 @@
-# optical-flow-6d-tracking-code
+<h1 align="center">
+  ROFT
+</h1>
 
-This is the official repository associated to the paper "6D Object Pose Tracking using Optical Flow and slow fps CNNs".
+<h3 align="center">
+  Real-time  Optical  Flow-aided 6D  Object  Pose  and  Velocity  Tracking
+</h3>
 
 <p align="center"><img src="https://github.com/robotology/optical-flow-6d-tracking-code/blob/main/assets/scheme.png" alt="" height=300px/></p>
 
-Code for evaluation will be made available.
