@@ -169,7 +169,7 @@ class Metric():
             reference = self.make_union_objects(reference)
             signal = self.make_union_objects(signal)
 
-        error = (reference[:, 0:3] - signal[:, 0:3])
+        error = (reference[:, 0:3] - signal[:, 0:3]) * 100.0
 
         return numpy.linalg.norm(error, axis = 1)
 
