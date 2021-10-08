@@ -8,3 +8,4 @@
 
 <p align="center"><img src="https://github.com/robotology/optical-flow-6d-tracking-code/blob/main/assets/scheme.png" alt="" height=300px/></p>
 
+<h4 align="center">The associated code will be made available soon.</h4>
