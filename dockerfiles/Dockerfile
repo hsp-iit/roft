@@ -22,6 +22,13 @@ RUN apt update && \
     apt install --no-install-recommends -y -qq apt-utils build-essential ca-certificates cmake cmake-curses-gui curl emacs-nox git glmark2 gnupg2 htop iputils-ping lsb-release mesa-utils nano psmisc sudo unzip vim wget && \
     rm -rf /var/lib/apt/lists/*
 
+# Install GitHub cli
+RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null && \
+    apt update && \
+    apt install --no-install-recommends -y -qq gh && \
+    rm -rf /var/lib/apt/lists/*
+
 # Install additional dependencies
 RUN apt update && \
     apt install --no-install-recommends -y -qq libassimp-dev libglfw3-dev libglew-dev libglm-dev libeigen3-dev libopencv-dev && \
