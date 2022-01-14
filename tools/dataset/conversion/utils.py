@@ -1,10 +1,11 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Mar 26 14:08:33 2021
-
-@author: Yuriy Onyshchuk
-"""
+#===============================================================================
+#
+# Copyright (C) 2022 Istituto Italiano di Tecnologia (IIT)
+#
+# This software may be modified and distributed under the terms of the
+# GPL-2+ license. See the accompanying LICENSE file for details.
+#
+#===============================================================================
 
 import os
 import pyrender
@@ -28,12 +29,12 @@ def axis_angle_to_R(pose):
     if np.nonzero(aa)[0].size > 0:
         R = matrix_from_axis_angle(aa)
         T[:3,:3] = R
-    
+
     T[0,3] = pose[0]
     T[1,3] = pose[1]
     T[2,3] = pose[2]
     T[3,3] = 1
-    
+
     return T
 
 
@@ -107,20 +108,20 @@ def get_K_tracknet(camera_K_txt_path):
     for row in cam_K_file:
         cam_K[i] = [float(val) for val in row.split(' ') if val != '\n']
         i += 1
-    
+
     return cam_K
 
 
 def get_K_synthetic(path):
     cam_file = json.load(open(path))
     cam_K = np.zeros((3,3))
-    
+
     cam_K[0,0] = float(cam_file['fx'])
     cam_K[1,1] = float(cam_file['fy'])
     cam_K[0,2] = float(cam_file['cx'])
     cam_K[1,2] = float(cam_file['cy'])
     cam_K[2,2] = 1
-    
+
     return cam_K
 
 
@@ -131,7 +132,7 @@ def get_obj_pose_tracknet(pose_path):
     for row in pose_file:
         pose[i] = [float(val) for val in row.split(' ') if val != '\n']
         i += 1
-    
+
     return pose
 
 
@@ -150,14 +151,14 @@ def get_obj_poses_synthetic(pose_path):
     pose_file = open(pose_path)
     poses = dict()
     i = 0
-    
+
     for row in pose_file:
         pose_axis_angle = [float(val.split('\n')[0]) for val in row.split(' ') if val.split('\n')[0] != '']
         # Take only last 7 values, skip the first values related to velocities
         T = axis_angle_to_R(pose_axis_angle[-7:])
         poses[i] = T
         i += 1
-    
+
     return poses
 
 
@@ -168,7 +169,7 @@ def crop_and_resize(img, data_type='uint8'):
         img_crop = np.zeros((720,960))
     img_crop = img[:,160:1120]
     img_res = cv2.resize(img_crop, (640, 480), interpolation=cv2.INTER_NEAREST)
-    
+
     return np.array(img_res, dtype=data_type)
 
 
@@ -184,7 +185,7 @@ def pad_and_resize(img, data_type='uint8', depth_factor=0):
 
     img_pad[120:840] = img
     img_res = cv2.resize(img_pad, (640, 480), interpolation=cv2.INTER_NEAREST)
-    
+
     return np.array(img_res, dtype=data_type)
 
 
@@ -198,7 +199,7 @@ def convert_depth(path, in_format='synth', factor=1000):
     elif in_format == 'ho3d':
         depth = (np.array(data[4:])*factor).reshape(480, 640)
         depth = np.array(np.where(depth==0, 10*factor, depth), dtype='uint16')
-    
+
     return depth
 
 
@@ -216,22 +217,22 @@ def convert_mask(path, obj_id, in_format='synth'):
     if in_format == 'synth' or in_format == 'real':
         mask = pad_and_resize(mask)
     converted = np.where(mask == 255, int(obj_id), 0)
-    
+
     where = np.array(np.where(converted))
     x1, y1 = np.amin(where, axis=1) # top-left, row-column
     x2, y2 = np.amax(where, axis=1) # bottom-right, row-column
     bbox = f' {y1} {x1} {y2} {x2}\n' # column-row, top-left, bottom-right
-    
+
     return converted, bbox
 
 
 def render_pose(model_path, cam_K, obj_pose):
     os.environ['PYOPENGL_PLATFORM'] = 'egl'
-    
+
     trimesh_model = trimesh.load(model_path)
     mesh = pyrender.Mesh.from_trimesh(trimesh_model)
     scene = pyrender.Scene()
-    
+
     fx, fy, cx, cy = cam_K[0,0], cam_K[1,1], cam_K[0,2], cam_K[1,2]
     camera = pyrender.IntrinsicsCamera(fx, fy, cx, cy)
     cam_pose = np.identity(4)
@@ -239,7 +240,7 @@ def render_pose(model_path, cam_K, obj_pose):
     cam_pose[2,2] = 0
     cam_pose[1,2] = 1
     cam_pose[2,1] = 1
-    
+
     scene.add(mesh, pose=obj_pose)
     scene.add(camera, pose=cam_pose)
 
@@ -248,25 +249,25 @@ def render_pose(model_path, cam_K, obj_pose):
                                 outerConeAngle=np.pi/6.0)
     scene.add(light, pose=cam_pose)
 
-    r = pyrender.OffscreenRenderer(viewport_width=640, viewport_height=480, 
+    r = pyrender.OffscreenRenderer(viewport_width=640, viewport_height=480,
                                    point_size=1.0)
     color, depth = r.render(scene)
     r.delete()
-    
+
     return color, depth
 
 
 def vis_rendering(color_img, depth_img):
     plt.figure()
-    
+
     plt.subplot(1,2,1)
     plt.axis('off')
     plt.imshow(color_img)
-    
+
     plt.subplot(1,2,2)
     plt.axis('off')
     plt.imshow(depth_img, cmap=plt.cm.gray_r)
-    
+
     plt.show()
 
 
@@ -275,7 +276,7 @@ def vis_overlap_render(orig_img, color, ren_depth):
     grayscale = rgb2gray(orig_img)
     for i in range(3):
         img_overlapped[:,:,i] = np.where(ren_depth != 0, color[:,:,i], grayscale)
-    
+
     plt.figure()
     plt.imshow(img_overlapped)
 
@@ -284,14 +285,14 @@ def vis_overlap_mask(orig_img, ren_depth):
     img_overlapped = np.zeros_like(orig_img)
     for i in range(3):
         img_overlapped[:,:,i] = np.where(ren_depth != 0, orig_img[:,:,i], 0)
-    
+
     plt.figure()
     plt.imshow(img_overlapped)
 
 
 def zero_pad(inp, out_dim):
     zeros = '0' * out_dim
-    
+
     return (zeros + str(inp))[-out_dim:]
 
 
@@ -303,10 +304,10 @@ def matrix_to_txt(matrix, out_path, velNaN=False):
         for val in row:
             file.write(str(val))
             file.write(' ')
-        file.write('\n')      
+        file.write('\n')
     file.close()
-    
-    
+
+
 def rgb2gray(rgb):
 
     r, g, b = rgb[:,:,0], rgb[:,:,1], rgb[:,:,2]
