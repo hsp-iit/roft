@@ -7,7 +7,7 @@
 #
 #===============================================================================
 
-YCBVSYN_PATH=`cat ./config/ycbv_synthetic_location`
+YCBVSYN_PATH='./dataset/fast-ycb'
 DETECTRON2_VENV_PATH=`cat ./config/detectron2_venv_location`
 GPU_ID=$1
 

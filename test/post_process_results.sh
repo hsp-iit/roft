@@ -7,7 +7,7 @@
 #
 #===============================================================================
 
-YCBV_SYN_PATH=`cat ./config/ycbv_synthetic_location`
+YCBV_SYN_PATH='./dataset/fast-ycb'
 OBJECT_NAME=$1
 INPUT_PATH=$2
 

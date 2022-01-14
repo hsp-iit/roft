@@ -9,7 +9,7 @@
 
 CONVERSION_TOOL_PATH=./tools/dataset/conversion/
 HO3D_PATH=`cat ./config/ho3d_location`
-YCBV_SYN_PATH=`cat ./config/ycbv_synthetic_location`
+YCBV_SYN_PATH='./dataset/fast-ycb'
 
 for object_name in `cat config/classes.txt`
 do

@@ -137,9 +137,7 @@ class DataLoader():
         self.data['ycbv_synthetic'] = {}
         self.data['ycbv_synthetic_velocity'] = {}
 
-        dataset_location_file = open('./config/ycbv_synthetic_location', 'r')
-        dataset_location = dataset_location_file.read()
-        dataset_location_file.close()
+        dataset_location = './dataset/fast-ycb'
 
         for object_name in self.objects['ycbv_synthetic']:
 

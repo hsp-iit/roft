@@ -7,7 +7,7 @@
 #
 #===============================================================================
 
-YCBVSYN_PATH=`cat ./config/ycbv_synthetic_location`
+YCBVSYN_PATH='./dataset/fast-ycb'
 DOPE_PATH=`cat ./config/dope_location`
 DOPE_VENV_PATH=`cat ./config/dope_venv_location`
 GPU_ID=$1
