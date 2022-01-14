@@ -7,7 +7,7 @@
 #
 #===============================================================================
 
-DETECTRON2_VENV_PATH=`cat ./config/detectron2_venv_location`
+DETECTRON2_VENV_PATH='./tools/third_party/detectron2/env'
 
 . $DETECTRON2_VENV_PATH/bin/activate
 python ./tools/detectron2/dataset_tester.py --dataset-name ycbv_bop_pbr
