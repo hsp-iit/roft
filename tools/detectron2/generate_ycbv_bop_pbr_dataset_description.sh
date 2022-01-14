@@ -1,4 +1,4 @@
-YCBV_BOP_PBR_PATH=`cat ./config/ycbv_bop_pbr_location`
+YCBV_BOP_PBR_PATH='./dataset/ycbv_bop_pbr'
 DETECTRON2_VENV_PATH=`cat ./config/detectron2_venv_location`
 
 . $DETECTRON2_VENV_PATH/bin/activate
