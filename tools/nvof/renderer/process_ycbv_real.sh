@@ -7,7 +7,7 @@
 #
 #===============================================================================
 
-YCBVSYN_PATH=`cat ./config/ycbv_synthetic_location`
+YCBVSYN_PATH='./dataset/fast-ycb'
 
 for OBJECT_NAME in 003_cracker_box_real 006_mustard_bottle_real; do
     OUTPUT_PATH=$YCBVSYN_PATH/object_motion/$OBJECT_NAME/optical_flow/nvof_1_slow/debugging
