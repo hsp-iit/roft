@@ -8,8 +8,8 @@
 #===============================================================================
 
 YCBVSYN_PATH='./dataset/fast-ycb'
-DOPE_PATH=`cat ./config/dope_location`
-DOPE_VENV_PATH=`cat ./config/dope_venv_location`
+DOPE_PATH='./tools/third_party/Deep_Object_Pose'
+DOPE_VENV_PATH='./dope_env'
 GPU_ID=$1
 
 . $DOPE_VENV_PATH/bin/activate
