@@ -157,9 +157,7 @@ class DataLoader():
 
         self.data['ho3d'] = {}
 
-        dataset_location_file = open('./config/ho3d_location', 'r')
-        dataset_location = dataset_location_file.read()
-        dataset_location_file.close()
+        dataset_location = './dataset/ho3d'
 
         video_ids = self.dataset_video_ids['ho3d']
 

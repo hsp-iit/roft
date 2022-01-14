@@ -7,7 +7,7 @@
 #
 #===============================================================================
 
-HO3D_PATH=`cat ./config/ho3d_location`
+HO3D_PATH='./dataset/ho3d'
 DETECTRON2_VENV_PATH=`cat ./config/detectron2_venv_location`
 GPU_ID=$1
 

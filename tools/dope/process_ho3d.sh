@@ -7,7 +7,7 @@
 #
 #===============================================================================
 
-HO3D_PATH=`cat ./config/ho3d_location`
+HO3D_PATH='./dataset/ho3d'
 DOPE_PATH='./tools/third_party/Deep_Object_Pose'
 DOPE_VENV_PATH='./dope_env'
 GPU_ID=$1
