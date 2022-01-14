@@ -7,7 +7,6 @@
 #
 #===============================================================================
 
-CONVERSION_TOOL=`cat ./config/conversion_tool_location`/Conversion/nvdu_poses_to_ycbv.py
 YCBV_SYN_PATH=`cat ./config/ycbv_synthetic_location`
 OBJECT_NAME=$1
 INPUT_PATH=$2
@@ -28,7 +27,7 @@ elif [ $OBJECT_NAME == "010_potted_meat_can" ]; then
 fi
 
 rm -f $INPUT_PATH/pose_estimate_ycb.txt
-python $CONVERSION_TOOL\
+python ./tools/dataset/conversion/nvdu_poses_to_ycbv.py\
        --format pred\
        --obj_id $OBJECT_ID\
        --in_path $INPUT_PATH/pose_estimate.txt\
