@@ -79,9 +79,16 @@ RUN echo "(setq-default indent-tabs-mode nil)" >> /home/user/.emacs.el && \
 WORKDIR /home/user
 RUN git clone https://github.com/hsp-iit/roft
 
+# Configure the virtual environment
+WORKDIR /home/user/roft
+RUN virtualenv roft_env -p `which python3` && \
+    . roft_env/bin/activate && \
+    pip install -r requirements.txt
+
 # Download third-party assets and tools
 WORKDIR /home/user/roft
-RUN bash tools/third_party/download_google_drive_file.sh https://drive.google.com/file/d/1gmcDD-5bkJfcMKLZb3zGgH_HUFbulQWu/view && \
+RUN . roft_env/bin/activate && \
+    bash tools/third_party/download_google_drive_file.sh https://drive.google.com/file/d/1gmcDD-5bkJfcMKLZb3zGgH_HUFbulQWu/view && \
     unzip YCB_Video_Models.zip -d YCB_Video_Models/ && \
     rm YCB_Video_Models.zip && \
     git clone https://github.com/NVIDIA/Dataset_Utilities tools/third_party/Dataset_Utilities && \
@@ -89,13 +96,6 @@ RUN bash tools/third_party/download_google_drive_file.sh https://drive.google.co
     git checkout 532b8c76e3d7946748a10af3398438b35383f157 && \
     pip install -e . && \
     nvdu_ycb --setup
-
-# Configure the virtual environment
-WORKDIR /home/user
-RUN cd roft && \
-    virtualenv roft_env -p `which python3` && \
-    . roft_env/bin/activate && \
-    pip install -r requirements.txt
 
 # Launch bash from /home/user
 WORKDIR /home/user
