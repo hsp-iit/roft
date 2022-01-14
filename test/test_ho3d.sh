@@ -22,7 +22,7 @@ HO3D_MASK=${11}
 
 # paths and names
 EXECUTABLE=robmo-misc-object-tracker-of
-HO3D_PATH=`cat ./config/ho3d_location`
+HO3D_PATH='./dataset/ho3d/'
 CONFIG_ROOT_PATH=./config/
 OBJECT_ROOT_PATH=$HO3D_PATH/${OBJECT_NAME}_${SEQ_NAME}/
 OUTPUT_ROOT_PATH=./results/ours/ho3d/

@@ -7,7 +7,7 @@
 #
 #===============================================================================
 
-HO3D_PATH=`cat ./config/ho3d_location`
+HO3D_PATH='./dataset/ho3d/'
 
 for object_name in `cat config/classes_ho3d.txt`
 do
