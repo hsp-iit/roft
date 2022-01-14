@@ -45,9 +45,9 @@ class DataLoader():
         self.dataset_paths['ycbv_real'] = self.dataset_paths['ycbv_synthetic']
         self.dataset_mesh_paths =\
         {
-            'ycbv_synthetic' : open(os.path.join('./config/ycbv_models_location')).readline(),
-            'ycbv_real' : open(os.path.join('./config/ycbv_models_location')).readline(),
-            'ho3d' : open(os.path.join('./config/ycbv_models_location')).readline()
+            'ycbv_synthetic' : './YCB_Video_Models/',
+            'ycbv_real' : './YCB_Video_Models/',
+            'ho3d' : './YCB_Video_Models/'
         }
 
         self.dataset_video_ids = {}
