@@ -7,7 +7,7 @@
 #
 #===============================================================================
 
-CONVERSION_TOOL_PATH=`cat ./config/conversion_tool_location`/Conversion/
+CONVERSION_TOOL_PATH=./tools/dataset/conversion/
 HO3D_PATH=`cat ./config/ho3d_location`
 YCBV_SYN_PATH=`cat ./config/ycbv_synthetic_location`
 
