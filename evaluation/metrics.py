@@ -12,9 +12,9 @@ import numpy
 import os
 from objects import Objects
 from pyquaternion import Quaternion
-from third_party.bop_pose_error import add as bop_add
-from third_party.bop_pose_error import adi as bop_adi
-from third_party.bop_pose_error import VOCap
+from tools.third_party.bop_pose_error import add as bop_add
+from tools.third_party.bop_pose_error import adi as bop_adi
+from tools.third_party.bop_pose_error import VOCap
 
 
 class Metric():
