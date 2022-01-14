@@ -19,7 +19,7 @@ ENV LANG=en_US.UTF-8
 
 # Install essentials
 RUN apt update && \
-    apt install --no-install-recommends -y -qq apt-utils build-essential ca-certificates cmake cmake-curses-gui curl emacs-nox git glmark2 gnupg2 htop iputils-ping lsb-release mesa-utils nano psmisc sudo unzip vim wget && \
+    apt install --no-install-recommends -y -qq apt-utils build-essential ca-certificates cmake cmake-curses-gui curl emacs-nox git glmark2 gnupg2 htop iputils-ping lsb-release mesa-utils nano psmisc python3-virtualenv sudo unzip vim wget && \
     rm -rf /var/lib/apt/lists/*
 
 # Install GitHub cli
@@ -77,8 +77,25 @@ RUN echo "(setq-default indent-tabs-mode nil)" >> /home/user/.emacs.el && \
 
 # Build ROFT
 WORKDIR /home/user
-RUN git clone https://github.com/hsp-iit/roft && \
-    bash tools/download/download_ycb_models.sh
+RUN git clone https://github.com/hsp-iit/roft
+
+# Download third-party assets and tools
+WORKDIR /home/user/roft
+RUN bash tools/third_party/download_google_drive_file.sh https://drive.google.com/file/d/1gmcDD-5bkJfcMKLZb3zGgH_HUFbulQWu/view && \
+    unzip YCB_Video_Models.zip -d YCB_Video_Models/ && \
+    rm YCB_Video_Models.zip && \
+    git clone https://github.com/NVIDIA/Dataset_Utilities tools/third_party/Dataset_Utilities && \
+    cd tools/third_party/Dataset_Utilities && \
+    git checkout 532b8c76e3d7946748a10af3398438b35383f157 && \
+    pip install -e . && \
+    nvdu_ycb --setup
+
+# Configure the virtual environment
+WORKDIR /home/user
+RUN cd roft &&
+    virtualenv roft_env -p `which python3` && \
+    . roft_env/bin/activate && \
+    pip install -r requirements.txt
 
 # Launch bash from /home/user
 WORKDIR /home/user
