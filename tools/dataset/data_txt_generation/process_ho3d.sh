@@ -7,7 +7,7 @@
 #
 #===============================================================================
 
-HO3D_PATH='./dataset/ho3d/
+HO3D_PATH='./dataset/ho3d/'
 
 for SEQ_NAME in `ls $HO3D_PATH`; do
     python ./tools/dataset/data_txt_generation/generate_data_txt.py $HO3D_PATH/$SEQ_NAME
