@@ -92,7 +92,7 @@ RUN bash tools/third_party/download_google_drive_file.sh https://drive.google.co
 
 # Configure the virtual environment
 WORKDIR /home/user
-RUN cd roft &&
+RUN cd roft && \
     virtualenv roft_env -p `which python3` && \
     . roft_env/bin/activate && \
     pip install -r requirements.txt
