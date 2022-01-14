@@ -75,6 +75,11 @@ RUN echo "(setq-default indent-tabs-mode nil)" >> /home/user/.emacs.el && \
     echo "(custom-set-variables '(custom-enabled-themes '(tango-dark)))" >> /home/user/.emacs.el && \
     echo "(custom-set-faces)" >> /home/user/.emacs.elx
 
+# Build ROFT
+WORKDIR /home/user
+RUN git clone https://github.com/hsp-iit/roft && \
+    bash tools/download/download_ycb_models.sh
+
 # Launch bash from /home/user
 WORKDIR /home/user
 CMD ["bash"]
