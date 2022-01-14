@@ -7,7 +7,7 @@
 #
 #===============================================================================
 
-REPOSITORY_PATH=`cat config/this_location`
+REPOSITORY_PATH=$PWD
 mkdir -p tools/object_renderer/shotcut/tmp
 
 for object_name in 003_cracker_box 004_sugar_box 005_tomato_soup_can 006_mustard_bottle 009_gelatin_box 010_potted_meat_can; do
