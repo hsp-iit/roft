@@ -7,7 +7,7 @@
 #
 #===============================================================================
 
-DETECTRON2_VENV_PATH=`cat ./config/detectron2_venv_location`
+DETECTRON2_VENV_PATH='./tools/third_party/detectron2/env'
 GPU_ID=$1
 
 . $DETECTRON2_VENV_PATH/bin/activate
