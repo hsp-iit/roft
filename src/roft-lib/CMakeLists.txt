@@ -7,7 +7,11 @@
 #
 #===============================================================================
 
-set(LIBRARY_TARGET_NAME RoftLib)
+project(ROFTLib
+        LANGUAGES CXX
+        VERSION 1.0.0)
+
+set(LIBRARY_TARGET_NAME ROFTLib)
 
 # CMakeRC
 include(CMakeRC)
@@ -67,7 +71,19 @@ set(${LIBRARY_TARGET_NAME}_SRC
     src/QuaternionModel.cpp
     src/SpatialVelocityModel.cpp
     src/SKFCorrection.cpp
-)
+    )
+
+# Support for NVIDIA Optical Flow within OpenCV is optional
+if (OpenCV_opencv_cudaoptflow_FOUND)
+    list(APPEND ${LIBRARY_TARGET_NAME}_HDR
+         include/ROFT/ImageOpticalFlowNVOF.h
+    )
+
+    list(APPEND ${LIBRARY_TARGET_NAME}_SRC
+         src/ImageOpticalFlowNVOF.cpp
+    )
+endif()
+
 # Resources
 cmrc_add_resource_library(${LIBRARY_TARGET_NAME}_Resources
                           ALIAS ${LIBRARY_TARGET_NAME}::Resources
@@ -102,9 +118,10 @@ target_link_libraries(${LIBRARY_TARGET_NAME}
                       Eigen3::Eigen
                       RobotsIO::RobotsIO
                       SI::SuperimposeMesh
-                      ${LIBRARY_TARGET_NAME}::Resources
                       ${MLPACK_LIBRARIES}
                       ${OpenCV_LIBS}
+                      PRIVATE
+                      ${LIBRARY_TARGET_NAME}::Resources
 )
 
 # Specify installation targets, typology and destination folders.
@@ -117,3 +134,15 @@ install(TARGETS ${LIBRARY_TARGET_NAME}
 )
 
 set_property(GLOBAL APPEND PROPERTY ${PROJECT_NAME}_TARGETS ${LIBRARY_TARGET_NAME})
+
+# Export the library
+set(DEPENDENCIES "Eigen3" "BayesFilters" "RobotsIO" "SuperimposeMesh")
+include(InstallBasicPackageFiles)
+install_basic_package_files(${PROJECT_NAME}
+                            VERSION ${${PROJECT_NAME}_VERSION}
+                            COMPATIBILITY ExactVersion
+                            EXPORT ${PROJECT_NAME}
+                            NO_SET_AND_CHECK_MACRO
+                            VARS_PREFIX ${PROJECT_NAME}
+                            NO_CHECK_REQUIRED_COMPONENTS_MACRO
+                            DEPENDENCIES ${DEPENDENCIES})
