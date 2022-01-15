@@ -11,6 +11,8 @@ project(ROFTLib
         LANGUAGES CXX
         VERSION 1.0.0)
 
+set(CMAKE_CXX_STANDARD 11)
+
 set(LIBRARY_TARGET_NAME ROFTLib)
 
 # CMakeRC
