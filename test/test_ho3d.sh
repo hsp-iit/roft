@@ -60,14 +60,14 @@ USE_POSE_RESYNC="true"
 USE_FLOW_AIDED="true"
 USE_POSE_MEASUREMENT="true"
 USE_VEL_MEASUREMENT="true"
-SIGMA_ANG_VEL="(1.0, 1.0, 1.0)"
-P_COV_Q="(0.0001, 0.0001, 0.0001)"
+SIGMA_ANG_VEL="1.0,1.0,1.0"
+P_COV_Q="0.0001,0.0001,0.0001"
 
 INITIAL_POSE_STRING=`python ./tools/dataset/dope_pose_finder/pose_finder.py $OBJECT_ROOT_PATH/dope/poses.txt 5` # 5 is the FPS used for DOPE
 INITIAL_POSE_ARRAY=($INITIAL_POSE_STRING)
 INITIAL_INDEX="${INITIAL_POSE_ARRAY[@]:0:1}"
-INITIAL_POSITION="${INITIAL_POSE_ARRAY[@]:1:3}"
-INITIAL_ORIENTATION="${INITIAL_POSE_ARRAY[@]:4}"
+INITIAL_POSITION=`echo "${INITIAL_POSE_ARRAY[@]:1:3}" | sed "s/ /,/g"`
+INITIAL_ORIENTATION=`echo "${INITIAL_POSE_ARRAY[@]:4}" | sed "s/ /,/g"`
 
 LOG_POSTFIX="full"
 if [ "$GT_MASK" == "true" ]; then
@@ -90,8 +90,8 @@ if [ "$GT_POSE" == "true" ]; then
     INITIAL_POSE_STRING=`head $OBJECT_ROOT_PATH/gt/poses_nvdu.txt -n 1`
     INITIAL_POSE_ARRAY=($INITIAL_POSE_STRING)
     INITIAL_INDEX="0"
-    INITIAL_POSITION="${INITIAL_POSE_ARRAY[@]:0:3}"
-    INITIAL_ORIENTATION="${INITIAL_POSE_ARRAY[@]:3}"
+    INITIAL_POSITION=`echo "${INITIAL_POSE_ARRAY[@]:0:3}" | sed "s/ /,/g"`
+    INITIAL_ORIENTATION=`echo "${INITIAL_POSE_ARRAY[@]:3}" | sed "s/ /,/g"`
 fi
 LOG_POSTFIX=${LOG_POSTFIX}"_pose_"${POSE_SET}
 
@@ -115,8 +115,8 @@ if [ "$NO_VEL" == "true" ]; then
     USE_VEL_MEASUREMENT="false"
     USE_OUTREJ="false"
     USE_POSE_RESYNC="false"
-    SIGMA_ANG_VEL="(0.01, 0.01, 0.01)"
-    P_COV_Q="(0.01, 0.01, 0.01)"
+    SIGMA_ANG_VEL="0.01,0.01,0.01"
+    P_COV_Q="0.01,0.01,0.01"
 fi
 
 if [ "$NO_POSE" == "true" ]; then
@@ -130,31 +130,31 @@ OUTPUT_PATH=$OUTPUT_ROOT_PATH"$LOG_POSTFIX"/"$OBJECT_NAME"_"$SEQ_NAME"/
 mkdir -p $OUTPUT_PATH
 rm -f $OUTPUT_PATH/*.txt
 
-$EXECUTABLE --from $CONFIG_ROOT_PATH/config_ho3d.ini\
-            --CAMERA::fx $FX\
-            --CAMERA::fy $FY\
-            --CAMERA::cx $CX\
-            --CAMERA::cy $CY\
-            --CAMERA_DATASET::path $OBJECT_ROOT_PATH\
-            --CAMERA_DATASET::index_offset $INITIAL_INDEX\
-            --INITIAL_CONDITION::p_x_0 "($INITIAL_POSITION)"\
-            --INITIAL_CONDITION::p_axis_angle_0 "($INITIAL_ORIENTATION)"\
-            --KINEMATIC_MODEL::sigma_ang_vel "$SIGMA_ANG_VEL"\
-            --LOG::absolute_log_path $OUTPUT_PATH\
-            --MEASUREMENT_MODEL::p_cov_q "$P_COV_Q"\
-            --MEASUREMENT_MODEL::use_pose_measurement $USE_POSE_MEASUREMENT\
-            --MEASUREMENT_MODEL::use_vel_measurement $USE_VEL_MEASUREMENT\
-            --MEASUREMENT_MODEL::use_pose_resync $USE_POSE_RESYNC\
-            --MODEL::name $OBJECT_NAME\
-            --OPTICAL_FLOW_DATASET::path $OBJECT_ROOT_PATH\
-            --OPTICAL_FLOW_DATASET::set $OF_SET/\
-            --OPTICAL_FLOW_DATASET::index_offset $INITIAL_INDEX\
-            --POSE_DATASET::path $OBJECT_ROOT_PATH/$POSE_SET/poses$POSE_POSTIX.txt\
-            --POSE_DATASET::skip_rows $INITIAL_INDEX\
-            --SEGMENTATION::flow_aided $USE_FLOW_AIDED\
-            --SEGMENTATION_DATASET::path $OBJECT_ROOT_PATH\
-            --SEGMENTATION_DATASET::set $MASK_SET\
-            --SEGMENTATION_DATASET::index_offset $INITIAL_INDEX
+$EXECUTABLE --from $CONFIG_ROOT_PATH/config_ho3d.cfg\
+            --camera_dataset::fx $FX\
+            --camera_dataset::fy $FY\
+            --camera_dataset::cx $CX\
+            --camera_dataset::cy $CY\
+            --camera_dataset::path $OBJECT_ROOT_PATH\
+            --camera_dataset::index_offset $INITIAL_INDEX\
+            --initial_condition::position::x "$INITIAL_POSITION"\
+            --initial_condition::position::axis_angle "$INITIAL_ORIENTATION"\
+            --kinematic_model::pose::sigma_angular "$SIGMA_ANG_VEL"\
+            --log::path $OUTPUT_PATH\
+            --measurement_model::position::cov_q "$P_COV_Q"\
+            --measurement_model::use_pose $USE_POSE_MEASUREMENT\
+            --measurement_model::use_pose_resync $USE_POSE_RESYNC\
+            --measurement_model::use_velocity $USE_VEL_MEASUREMENT\
+            --model::name $OBJECT_NAME\
+            --optical_flow_dataset::path $OBJECT_ROOT_PATH\
+            --optical_flow_dataset::set $OF_SET/\
+            --optical_flow_dataset::index_offset $INITIAL_INDEX\
+            --pose_dataset::path $OBJECT_ROOT_PATH/$POSE_SET/poses$POSE_POSTIX.txt\
+            --pose_dataset::skip_rows $INITIAL_INDEX\
+            --segmentation_dataset::flow_aided $USE_FLOW_AIDED\
+            --segmentation_dataset::path $OBJECT_ROOT_PATH\
+            --segmentation_dataset::set $MASK_SET\
+            --segmentation_dataset::index_offset $INITIAL_INDEX
 
 # Convert to YCB-V reference frame
 bash ./test/post_process_results_ho3d.sh $OBJECT_NAME $SEQ_NAME $OUTPUT_PATH
