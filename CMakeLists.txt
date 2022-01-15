@@ -49,8 +49,9 @@ if(NOT CMAKE_CONFIGURATION_TYPES)
   endif()
 endif()
 
-# Build library
+# Build library and executable
 add_subdirectory(src/roft-lib)
+add_subdirectory(src/roft)
 
 # Add standard uninstall target
 include(AddUninstallTarget)
