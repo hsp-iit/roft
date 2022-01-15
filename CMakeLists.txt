@@ -9,9 +9,8 @@
 
 cmake_minimum_required(VERSION 3.16)
 
-project(ROFT
-        LANGUAGES CXX
-        VERSION 1.0.0)
+project(ROFTSuite
+        LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 11)
 
@@ -50,4 +49,8 @@ if(NOT CMAKE_CONFIGURATION_TYPES)
   endif()
 endif()
 
+# Build library
 add_subdirectory(src/roft-lib)
+
+# Add standard uninstall target
+include(AddUninstallTarget)
