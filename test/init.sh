@@ -7,6 +7,8 @@
 #
 #===============================================================================
 
+. roft_env/bin/activate
+
 CONVERSION_TOOL_PATH=./tools/dataset/conversion/
 HO3D_PATH='./dataset/ho3d/'
 YCBV_SYN_PATH='./dataset/fast-ycb'
@@ -93,3 +95,5 @@ do
                --out_path $sequence/dope/poses_ycb.txt
     done
 done
+
+deactivate

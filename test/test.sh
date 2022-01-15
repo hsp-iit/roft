@@ -7,6 +7,8 @@
 #
 #===============================================================================
 
+. roft_env/bin/activate
+
 # arguments
 OBJECT_NAME=$1
 GT_MASK=$2
@@ -154,3 +156,5 @@ $EXECUTABLE --from $CONFIG_ROOT_PATH/config_ycbv_syn.ini\
 
 # Convert to YCB-V reference frame
 bash ./test/post_process_results.sh $MODEL_NAME $OUTPUT_PATH
+
+deactivate
