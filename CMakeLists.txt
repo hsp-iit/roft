@@ -12,8 +12,6 @@ cmake_minimum_required(VERSION 3.16)
 project(ROFTSuite
         LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 11)
-
 include(GNUInstallDirs)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}")
