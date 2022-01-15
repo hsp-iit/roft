@@ -31,7 +31,7 @@ RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | d
 
 # Install additional dependencies
 RUN apt update && \
-    apt install --no-install-recommends -y -qq libassimp-dev libglfw3-dev libglew-dev libglm-dev libeigen3-dev libopencv-dev && \
+    apt install --no-install-recommends -y -qq libassimp-dev libconfig++-dev libglfw3-dev libglew-dev libglm-dev libeigen3-dev libopencv-dev libtclap-dev && \
     rm -rf /var/lib/apt/lists/*
 
 # Build bayes-filters-lib
