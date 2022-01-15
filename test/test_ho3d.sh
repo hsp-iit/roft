@@ -7,6 +7,8 @@
 #
 #===============================================================================
 
+. roft_env/bin/activate
+
 # arguments
 OBJECT_NAME=$1
 SEQ_NAME=$2
@@ -156,3 +158,5 @@ $EXECUTABLE --from $CONFIG_ROOT_PATH/config_ho3d.ini\
 
 # Convert to YCB-V reference frame
 bash ./test/post_process_results_ho3d.sh $OBJECT_NAME $SEQ_NAME $OUTPUT_PATH
+
+deactivate
