@@ -5,7 +5,7 @@
  * GPL-2+ license. See the accompanying LICENSE file for details.
  */
 
-#include <ROFT/OFAidedFilter.h>
+#include <ROFT/Filter.h>
 
 #include <BayesFilters/AdditiveMeasurementModel.h>
 #include <BayesFilters/KFPrediction.h>
@@ -29,7 +29,7 @@ using namespace RobotsIO::Utils;
 using namespace bfl;
 
 
-OFAidedFilter::OFAidedFilter
+Filter::Filter
 (
     std::shared_ptr<ROFT::CameraMeasurement> camera_measurement,
     std::shared_ptr<ROFT::ImageSegmentationSource> segmentation_source,
@@ -198,19 +198,19 @@ OFAidedFilter::OFAidedFilter
 }
 
 
-OFAidedFilter::~OFAidedFilter()
+Filter::~Filter()
 {
     disable_log();
 }
 
 
-bool OFAidedFilter::runCondition()
+bool Filter::runCondition()
 {
     return true;
 }
 
 
-bool OFAidedFilter::initialization()
+bool Filter::initialization()
 {
     /* Initialize Gaussian belief. */
     v_corr_belief_.mean().head<3>() = v_v_0_;
@@ -234,14 +234,14 @@ bool OFAidedFilter::initialization()
 }
 
 
-bool OFAidedFilter::skip(const std::string& what_step, const bool status)
+bool Filter::skip(const std::string& what_step, const bool status)
 {
     /* Not implemented. */
     return false;
 }
 
 
-std::vector<std::string> OFAidedFilter::log_file_names(const std::string& prefix_path, const std::string& prefix_name)
+std::vector<std::string> Filter::log_file_names(const std::string& prefix_path, const std::string& prefix_name)
 {
     return  {prefix_path + "/" + prefix_name + "pose_estimate",
              prefix_path + "/" + prefix_name + "velocity_estimate",
@@ -249,7 +249,7 @@ std::vector<std::string> OFAidedFilter::log_file_names(const std::string& prefix
 }
 
 
-void OFAidedFilter::filteringStep()
+void Filter::filteringStep()
 {
     bool data_in;
 
@@ -449,19 +449,19 @@ void OFAidedFilter::filteringStep()
 }
 
 
-void OFAidedFilter::start_time_count()
+void Filter::start_time_count()
 {
     std_time_0_ = std::chrono::steady_clock::now();
 }
 
 
-double OFAidedFilter::stop_time_count()
+double Filter::stop_time_count()
 {
     return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - std_time_0_).count();
 }
 
 
-std::pair<bool, bfl::Gaussian> OFAidedFilter::pick_best_alternative(const std::vector<bfl::Gaussian>& alternatives, const bool use_buffered_features)
+std::pair<bool, bfl::Gaussian> Filter::pick_best_alternative(const std::vector<bfl::Gaussian>& alternatives, const bool use_buffered_features)
 {
     auto failed = std::make_pair(false, Gaussian());
 
@@ -618,7 +618,7 @@ std::pair<bool, bfl::Gaussian> OFAidedFilter::pick_best_alternative(const std::v
 }
 
 
-bool OFAidedFilter::buffer_outlier_rejection_features()
+bool Filter::buffer_outlier_rejection_features()
 {
     /* Measure depth. */
     bfl::Data camera_data;
@@ -643,7 +643,7 @@ bool OFAidedFilter::buffer_outlier_rejection_features()
 }
 
 
-Gaussian OFAidedFilter::correct_outlier_rejection(const Gaussian& prediction, const bool use_buffered_features)
+Gaussian Filter::correct_outlier_rejection(const Gaussian& prediction, const bool use_buffered_features)
 {
     Gaussian correction = prediction;
     Gaussian corr_belief_v = prediction;

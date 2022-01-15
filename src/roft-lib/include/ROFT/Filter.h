@@ -5,8 +5,8 @@
  * GPL-2+ license. See the accompanying LICENSE file for details.
  */
 
-#ifndef ROFT_OFAIDEDFILTER_H
-#define ROFT_OFAIDEDFILTER_H
+#ifndef ROFT_FILTER_H
+#define ROFT_FILTER_H
 
 #include <BayesFilters/FilteringAlgorithm.h>
 #include <BayesFilters/Gaussian.h>
@@ -32,15 +32,15 @@
 #include <opencv2/opencv.hpp>
 
 namespace ROFT {
-    class OFAidedFilter;
+    class Filter;
 }
 
 
-class ROFT::OFAidedFilter : public bfl::FilteringAlgorithm,
-                           public RobotsIO::Utils::ProbeContainer
+class ROFT::Filter : public bfl::FilteringAlgorithm,
+                     public RobotsIO::Utils::ProbeContainer
 {
 public:
-    OFAidedFilter
+    Filter
     (
         std::shared_ptr<ROFT::CameraMeasurement> camera_measurement,
         std::shared_ptr<ROFT::ImageSegmentationSource> segmentation_source,
@@ -73,7 +73,7 @@ public:
         const std::string& log_prefix
     );
 
-    virtual ~OFAidedFilter();
+    virtual ~Filter();
 
     bool runCondition() override;
 
@@ -189,7 +189,7 @@ private:
 
     /* Log name. */
 
-    const std::string log_name_ = "OFAidedFilter";
+    const std::string log_name_ = "Filter";
 };
 
-#endif /* ROFT_OFAIDEDFILTER_H */
+#endif /* ROFT_FILTER_H */
