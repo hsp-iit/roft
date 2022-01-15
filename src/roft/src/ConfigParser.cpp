@@ -15,6 +15,8 @@ ConfigParser::ConfigParser
     default_path_(file_path)
 {
     std::string cfg_path = get_cfg_file_path(argc, argv);
+    if (cfg_path == "")
+        throw(std::runtime_error("ConfigParser::ctor. Please provide a valid configuration file using --from <path_to_cfg_file>"));
 
     try
     {
