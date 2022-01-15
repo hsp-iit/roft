@@ -32,15 +32,15 @@ do
     python $CONVERSION_TOOL_PATH/nvdu_poses_to_ycbv.py\
            --format gt\
            --obj_id $OBJECT_ID\
-           --in_path $YCBV_SYN_PATH/object_motion/$object_name/gt/poses.txt\
-           --out_path $YCBV_SYN_PATH/object_motion/$object_name/gt/poses_ycb.txt
+           --in_path $YCBV_SYN_PATH/$object_name/gt/poses.txt\
+           --out_path $YCBV_SYN_PATH/$object_name/gt/poses_ycb.txt
 
     echo "[ycbv_synthetic] Converting DOPE poses to YCB-Video format for sequence "$object_name
     python $CONVERSION_TOOL_PATH/nvdu_poses_to_ycbv.py\
            --format gt\
            --obj_id $OBJECT_ID\
-           --in_path $YCBV_SYN_PATH/object_motion/$object_name/dope/poses.txt\
-           --out_path $YCBV_SYN_PATH/object_motion/$object_name/dope/poses_ycb.txt
+           --in_path $YCBV_SYN_PATH/$object_name/dope/poses.txt\
+           --out_path $YCBV_SYN_PATH/$object_name/dope/poses_ycb.txt
 done
 
 for object_name in 003_cracker_box 006_mustard_bottle;
@@ -56,8 +56,8 @@ do
     python $CONVERSION_TOOL_PATH/nvdu_poses_to_ycbv.py\
            --format gt\
            --obj_id $OBJECT_ID\
-           --in_path $YCBV_SYN_PATH/object_motion/${object_name}_real/dope/poses.txt\
-           --out_path $YCBV_SYN_PATH/object_motion/${object_name}_real/dope/poses_ycb.txt
+           --in_path $YCBV_SYN_PATH/${object_name}_real/dope/poses.txt\
+           --out_path $YCBV_SYN_PATH/${object_name}_real/dope/poses_ycb.txt
 done
 
 for object_name in `cat config/classes_ho3d.txt`

@@ -41,7 +41,6 @@ class DataLoader():
         {
             name : open(os.path.join('./config/', name + '_location'), 'r').readline() for name in ['ho3d', 'ycbv_synthetic']
         }
-        self.dataset_paths['ycbv_synthetic'] = os.path.join(self.dataset_paths['ycbv_synthetic'], 'object_motion')
         self.dataset_paths['ycbv_real'] = self.dataset_paths['ycbv_synthetic']
         self.dataset_mesh_paths =\
         {
@@ -144,11 +143,11 @@ class DataLoader():
             if object_name == 'ALL':
                 continue
 
-            file_path = os.path.join(dataset_location, 'object_motion', object_name, 'gt', 'poses_ycb.txt')
+            file_path = os.path.join(dataset_location,  object_name, 'gt', 'poses_ycb.txt')
             self.data['ycbv_synthetic'][object_name] = [self.load_generic(file_path)]
 
             # Load ground truth velocities
-            vel_file_path = os.path.join(dataset_location, 'object_motion', object_name, 'gt', 'velocities.txt')
+            vel_file_path = os.path.join(dataset_location, object_name, 'gt', 'velocities.txt')
             self.data['ycbv_synthetic_velocity'][object_name] = [self.load_generic(vel_file_path)]
 
 

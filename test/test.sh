@@ -22,7 +22,7 @@ NO_VEL=$9
 EXECUTABLE=robmo-misc-object-tracker-of
 YCBV_SYN_PATH='./dataset/fast-ycb'
 CONFIG_ROOT_PATH=./config/
-OBJECT_ROOT_PATH=$YCBV_SYN_PATH/object_motion/$OBJECT_NAME/
+OBJECT_ROOT_PATH=$YCBV_SYN_PATH/$OBJECT_NAME/
 OUTPUT_ROOT_PATH=./results/ours/ycbv_synthetic/
 
 MODEL_NAME=$OBJECT_NAME
