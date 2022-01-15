@@ -77,7 +77,10 @@ RUN echo "(setq-default indent-tabs-mode nil)" >> /home/user/.emacs.el && \
 
 # Build ROFT
 WORKDIR /home/user
-RUN git clone https://github.com/hsp-iit/roft
+RUN git clone https://github.com/hsp-iit/roft && \
+    mkdir build && cd build && \
+    cmake -DCMAKE_INSTALL_PREFIX=/home/user/roft/install .. && \
+    make install
 
 # Configure the virtual environment
 WORKDIR /home/user/roft
@@ -96,6 +99,10 @@ RUN . roft_env/bin/activate && \
     git checkout 532b8c76e3d7946748a10af3398438b35383f157 && \
     pip install -e . && \
     nvdu_ycb --setup
+
+# Setup PATH and LD_LIBRARY_PATH
+ENV PATH "$PATH:/home/user/roft/install/bin"
+ENV LD_LIBRARY_PATH "$LD_LIBRARY_PATH:/home/user/roft/install/lib"
 
 # Launch bash from /home/user
 WORKDIR /home/user
