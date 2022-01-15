@@ -78,7 +78,7 @@ RUN echo "(setq-default indent-tabs-mode nil)" >> /home/user/.emacs.el && \
 # Build ROFT
 WORKDIR /home/user
 RUN git clone https://github.com/hsp-iit/roft && \
-    mkdir build && cd build && \
+    cd roft && mkdir build && cd build && \
     cmake -DCMAKE_INSTALL_PREFIX=/home/user/roft/install .. && \
     make install
 
