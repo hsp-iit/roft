@@ -129,6 +129,7 @@ rm -f $OUTPUT_PATH/*.txt
 rm -f $OUTPUT_PATH/segmentation/*.png
 rm -f $OUTPUT_PATH/segmentation_refined/*.png
 
+# sudo cpupower frequency-set --governor performance
 $EXECUTABLE --from $CONFIG_ROOT_PATH/config_fast_ycb.cfg\
             --camera_dataset::fx $FX\
             --camera_dataset::fy $FY\
@@ -152,6 +153,7 @@ $EXECUTABLE --from $CONFIG_ROOT_PATH/config_fast_ycb.cfg\
             --segmentation_dataset::flow_aided $USE_FLOW_AIDED\
             --segmentation_dataset::path $OBJECT_ROOT_PATH\
             --segmentation_dataset::set $MASK_SET
+# sudo cpupower frequency-set --governor powersave
 
 # Convert to YCB-V reference frame
 bash ./test/post_process_results.sh $MODEL_NAME $OUTPUT_PATH
