@@ -259,7 +259,7 @@ class DataLoader():
         config = self.algorithm['config']
 
         contents_map = { 'pred' : 'pose' }
-        dataset_map = { 'fastycb' : 'synthetic', 'ho3d' : 'ho3d', 'fastycb_qual' : 'real'}
+        dataset_map = { 'fastycb' : 'fastycb', 'ho3d' : 'ho3d', 'fastycb_qual' : 'fastycb_qual'}
 
         dataset_name = config['dataset']
         se3_dataset_name = dataset_map[config['dataset']]
@@ -367,7 +367,7 @@ class DataLoader():
         config = self.algorithm['config']
 
         contents_map = { 'Pose' : 'pose', 'Index' : 'indexes' }
-        dataset_map = { 'fastycb' : 'synthetic' , 'ho3d' : 'ho3d', 'fastycb_qual' : 'real'}
+        dataset_map = { 'fastycb' : 'fastycb' , 'ho3d' : 'ho3d', 'fastycb_qual' : 'fastycb_qual'}
 
         dataset_name = config['dataset']
         poserbpf_dataset_name = dataset_map[config['dataset']]
