@@ -137,11 +137,11 @@ $EXECUTABLE --from $CONFIG_ROOT_PATH/config_ho3d.cfg\
             --camera_dataset::cy $CY\
             --camera_dataset::path $OBJECT_ROOT_PATH\
             --camera_dataset::index_offset $INITIAL_INDEX\
-            --initial_condition::position::x "$INITIAL_POSITION"\
-            --initial_condition::position::axis_angle "$INITIAL_ORIENTATION"\
+            --initial_condition::pose::x "$INITIAL_POSITION"\
+            --initial_condition::pose::axis_angle "$INITIAL_ORIENTATION"\
             --kinematic_model::pose::sigma_angular "$SIGMA_ANG_VEL"\
             --log::path $OUTPUT_PATH\
-            --measurement_model::position::cov_q "$P_COV_Q"\
+            --measurement_model::pose::cov_q "$P_COV_Q"\
             --measurement_model::use_pose $USE_POSE_MEASUREMENT\
             --measurement_model::use_pose_resync $USE_POSE_RESYNC\
             --measurement_model::use_velocity $USE_VEL_MEASUREMENT\
