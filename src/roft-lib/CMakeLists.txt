@@ -12,6 +12,7 @@ project(ROFTLib
         VERSION 1.0.0)
 
 set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 set(LIBRARY_TARGET_NAME ROFTLib)
 
@@ -89,7 +90,7 @@ endif()
 # Resources
 cmrc_add_resource_library(${LIBRARY_TARGET_NAME}_Resources
                           ALIAS ${LIBRARY_TARGET_NAME}::Resources
-                          NAMESPACE roft_lib_resources
+                          NAMESPACE resources
                           PREFIX __prc
                           meshes/DOPE/003_cracker_box.obj
                           meshes/DOPE/004_sugar_box.obj

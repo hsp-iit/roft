@@ -11,7 +11,7 @@
 #include <sstream>
 
 #include <cmrc/cmrc.hpp>
-CMRC_DECLARE(otl_resources);
+CMRC_DECLARE(resources);
 
 using namespace ROFT;
 
@@ -20,7 +20,7 @@ MeshResource::MeshResource(const std::string& name, const std::string& set)
 {
     const std::string virtual_path = "__prc/meshes/" + set + "/" + name + ".obj";
 
-    auto cmrc_fs = cmrc::otl_resources::get_filesystem();
+    auto cmrc_fs = cmrc::resources::get_filesystem();
 
     if (!(cmrc_fs.exists(virtual_path) && cmrc_fs.is_file(virtual_path)))
         throw(std::runtime_error(log_name_ + "::ctor. Cannot find requested mesh among available resources."));
@@ -36,7 +36,7 @@ MeshResource::MeshResource(const ROFT::ModelParameters& model_parameters)
     {
         const std::string virtual_path = "__prc/meshes/" + model_parameters.internal_db_name() + "/" + model_parameters.name() + ".obj";
 
-        auto cmrc_fs = cmrc::otl_resources::get_filesystem();
+        auto cmrc_fs = cmrc::resources::get_filesystem();
 
         if (!(cmrc_fs.exists(virtual_path) && cmrc_fs.is_file(virtual_path)))
             throw(std::runtime_error(log_name_ + "::ctor. Cannot find requested mesh among available resources."));
