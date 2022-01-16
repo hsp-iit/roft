@@ -16,7 +16,7 @@ import sys
 def configure(args):
     cfg = dict()
     cfg['nvdu_path'] = './tools/third_party/Dataset_Utilities/'
-    cfg['ycbv_models_path'] = './YCB_Video_Models/'
+    cfg['ycbv_models_path'] = './YCB_Video_Models/models/'
 
     cfg['out_path']  = args.out_path
     cfg['in_path'] = args.in_path
