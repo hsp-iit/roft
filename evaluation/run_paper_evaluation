@@ -1,0 +1,20 @@
+. roft_env/bin/activate
+
+# Table I
+python evaluation/evaluate.py --experiment-name exp_fastycb --metric-name mix --output-head latex
+pdflatex -output-directory=./evaluation_output evaluation_output/exp_fastycb_mix.tex
+mv evaluation_output/exp_fastycb_mix.pdf evaluation_output/tableI.pdf
+
+# Table II
+python evaluation/evaluate.py --experiment-name exp_fastycb_velocities --metric-name rmse_velocity --output-head latex
+pdflatex -output-directory=./evaluation_output evaluation_output/exp_fastycb_velocities_rmse_velocity.tex
+mv evaluation_output/exp_fastycb_velocities_rmse_velocity.pdf evaluation_output/tableII.pdf
+
+# Table IV
+python evaluation/evaluate.py --experiment-name exp_fastycb_ablation --metric-name mix --output-head latex-summary
+pdflatex -output-directory=./evaluation_output evaluation_output/exp_fastycb_ablation_mix.tex
+mv evaluation_output/exp_fastycb_ablation_mix.pdf evaluation_output/tableIV.pdf
+
+rm evaluation_output/*.log
+rm evaluation_output/*.aux
+deactivate
