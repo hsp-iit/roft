@@ -19,6 +19,58 @@
   <a href="https://ieeexplore.ieee.org/ielx7/7083369/9568780/9568706/supp1-3119379.mp4?arnumber=9568706"><b>Video</b></a>
 </div>
 
+## Reproducing the experiments
+
+We support running the experiments on the FastYCB dataset via the provided Docker image.
+
+1. Pull the docker image:
+    ```console
+    docker pull ghcr.io/hsp-iit/roft:latest
+    ```
+1. Launch the container:
+    ```console
+    docker run -it --rm --user user --env="DISPLAY" --net=host --device /dev/dri/ ghcr.io/hsp-iit/roft:latest
+    ```
+1. Update and build the project:
+    ```console
+    cd /home/user/roft
+    git pull
+    cd build
+    make install
+    ```
+1. Download and extract the accompanying data (FastYCB dataset and pre-evaluated results):
+    ```console
+    cd /home/user/roft
+    bash tools/download/download_results.sh
+    bash tools/download/download_fastycb.sh
+    ```
+1. Run the experiments (optional):
+    ```console
+    cd /home/user/roft
+    bash test/run_paper_experiments
+    ```
+    > The accompanying data contains the pre-evaluated results. If desired, the results can be re-evaluated using the above command.
+1. Run the evaluation:
+    ```console
+    cd /home/user/roft
+    bash evaluation/run_paper_evaluation
+    ```
+1. Visualize the results:
+    The results on the FastYCB dataset (Table I, II, IV and Figure 3) can be found in `/home/user/roft/evaluation_output`:
+    - `tableI.pdf`
+    - `tableII.pdf`
+    - `tableIV.pdf`
+    - `Fig3_*.png`
+
+    The docker image provides `evince` and `eog` in order open pdf and png files, respectively.
+
+> In order to run part of the provided software it could be required to temporarily execute `xhost +` in a console outside of Docker in order to allow the container accessing the X server facilities. The command can be run even **after** the container has been already launched.
+
+> If you want to install the repository manually, please refer to the recipe contained in the [**`Dockerfile`**](./dockerfiles/Dockerfile). Please be aware that the results might differ if unsupported versions of the dependencies are used.
+
+> Support for reproducing the experiments on the HO-3D dataest will be added in the near future.
+
+> Instructions on how to use the ROFT library in external C++ projects and how to execute ROFT on custom datasets will be added in the near future.
 
 ## Citing ROFT
 
