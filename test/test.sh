@@ -137,10 +137,10 @@ $EXECUTABLE --from $CONFIG_ROOT_PATH/config_fast_ycb.cfg\
             --camera_dataset::path $OBJECT_ROOT_PATH\
             --initial_condition::pose::x "$INITIAL_POSITION"\
             --initial_condition::pose::axis_angle "$INITIAL_ORIENTATION"\
-            --kinematic_model::position::sigma_angular "$SIGMA_ANG_VEL"\
+            --kinematic_model::pose::sigma_angular "$SIGMA_ANG_VEL"\
             --log::path $OUTPUT_PATH\
             --log::enable_segmentation false\
-            --measurement_model::position::cov_q "$P_COV_Q"\
+            --measurement_model::pose::cov_q "$P_COV_Q"\
             --measurement_model::use_pose $USE_POSE_MEASUREMENT\
             --measurement_model::use_pose_resync $USE_POSE_RESYNC\
             --measurement_model::use_velocity $USE_VEL_MEASUREMENT\
