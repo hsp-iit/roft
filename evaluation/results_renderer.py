@@ -196,26 +196,26 @@ class ResultsLaTeXRenderer(ResultsTableRenderer):
 
         self.alg_labels =\
         {
-            'ours' : 'Ours',
-            'ours_gt_mask' : 'ideal segm.',
-            'ours_gt_pose' : 'ideal pose',
-            'ours_gt' : 'ideal segm. and pose',
-            'ours_flowaid' : 'refined segm.',
-            'ours_no_flowaid' : 'w/o refined segm.',
-            'ours_no_posesync' : 'w/o refined pose',
-            'ours_no_outrej' : 'w/o outlier rej.',
-            'ours_no_velocity' : 'w/o velocity.',
-            'ours_no_pose' : 'w/o pose.',
-            'dope_real' : 'DOPE',
-            'dope_ideal' : 'ideal DOPE',
-            'se3tracknet' : 'se3',
-            'poserbpf' : 'PoseRBPF',
-            'dope' : 'DOPE'
+            'ours' : 'ROFT',
+            'ours_gt_mask' : 'ROFT w/ GT segm.',
+            'ours_gt_pose' : 'ROFT w/ GT pose',
+            'ours_gt' : 'ROFT w/ GT segm. and pose',
+            'ours_flowaid' : 'ROFT',
+            'ours_no_flowaid' : 'ROFT w/o segm. sync',
+            'ours_no_posesync' : 'ROFT w/o pose sync.',
+            'ours_no_outrej' : 'ROFT w/o outlier rej.',
+            'ours_no_velocity' : 'ROFT w/o velocity',
+            'ours_no_pose' : 'ROFT w/o pose',
+            'dope_real' : 'DOPE [23]',
+            'dope_ideal' : 'DOPE [23] (ideal)',
+            'se3tracknet' : 'se(3)-TN [7]',
+            'poserbpf' : 'PoseRBPF [6]',
+            'dope' : 'DOPE [23]'
         }
 
         self.metric_labels =\
         {
-            'rmse_cartesian_3d' : 'RMSE $e_{r} (cm)$',
+            'rmse_cartesian_3d' : 'RMSE $e_{t} (cm)$',
             'rmse_cartesian_x' : 'RMSE $e_{x} (cm)$',
             'rmse_cartesian_y' : 'RMSE $e_{y} (cm)$',
             'rmse_cartesian_z' : 'RMSE $e_{z} (cm)$',
@@ -243,6 +243,7 @@ class ResultsLaTeXRenderer(ResultsTableRenderer):
             '\\usepackage[landscape, margin=0.5in]{geometry}\r\n' +\
             '\\begin{document}\r\n' +\
             '\\begin{table*}\r\n' +\
+            '    \\small\r\n' +\
             '    \centering\r\n' +\
             '    \caption{.\label{tab:' + results_name + '}}\r\n' +\
             '    \\begin{tabular}{|'
@@ -319,23 +320,23 @@ class ResultsLaTeXSummaryRenderer(ResultsTableRenderer):
 
         self.alg_labels =\
         {
-            'ours' : 'Ours',
-            'ours_gt_mask' : 'ideal segm.',
-            'ours_gt_pose' : 'ideal pose',
-            'ours_gt' : 'ideal segm. and pose',
-            'ours_flowaid' : 'refined segm.',
-            'ours_no_flowaid' : 'w/o refined segm.',
-            'ours_no_posesync' : 'w/o refined pose',
-            'ours_no_outrej' : 'w/o outlier rej.',
-            'ours_no_velocity' : 'w/o velocity.',
-            'ours_no_pose' : 'w/o pose.',
-            'dope_real' : 'DOPE',
-            'dope_ideal' : 'ideal DOPE'
+            'ours' : 'ROFT',
+            'ours_gt_mask' : 'ROFT w/ GT segm.',
+            'ours_gt_pose' : 'ROFT w/ GT pose',
+            'ours_gt' : 'ROFT w/ GT segm. and pose',
+            'ours_flowaid' : 'ROFT',
+            'ours_no_flowaid' : 'ROFT w/o segm. sync',
+            'ours_no_posesync' : 'ROFT w/o pose sync.',
+            'ours_no_outrej' : 'ROFT w/o outlier rej.',
+            'ours_no_velocity' : 'ROFT w/o velocity',
+            'ours_no_pose' : 'ROFT w/o pose',
+            'dope_real' : 'DOPE [23]',
+            'dope_ideal' : 'DOPE [23] (ideal)'
         }
 
         self.metric_labels =\
         {
-            'rmse_cartesian_3d' : 'RMSE $e_{r} (cm)$',
+            'rmse_cartesian_3d' : 'RMSE $e_{t} (cm)$',
             'rmse_angular' : 'RMSE $e_{a}$ (deg)',
             'add' : 'ADD (\%)',
             'max_linear_velocity' : 'max $\|v\| (m/s)$',
@@ -353,7 +354,11 @@ class ResultsLaTeXSummaryRenderer(ResultsTableRenderer):
 
         # Construct table header
         output =\
-            '\\begin{table}\r\n' +\
+            '\\documentclass{article}\r\n' +\
+            '\\usepackage[landscape, margin=0.5in]{geometry}\r\n' +\
+            '\\begin{document}\r\n' +\
+            '\\begin{table*}\r\n' +\
+            '    \\small\r\n' +\
             '    \centering\r\n' +\
             '    \caption{.\label{tab:' + results_name + '}}\r\n' +\
             '    \\begin{tabular}{|'
@@ -400,7 +405,8 @@ class ResultsLaTeXSummaryRenderer(ResultsTableRenderer):
         output +=\
             '    \hline\r\n' +\
             '    \end{tabular}\r\n' +\
-            '\end{table}\r\n'
+            '\end{table*}\r\n' +\
+            '\end{document}\r\n'
 
         return output
 
