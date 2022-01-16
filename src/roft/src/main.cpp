@@ -111,10 +111,10 @@ int main(int argc, char** argv)
     std::string model_external_path;    conf("model.external_path", model_external_path);
 
     /* Optical flow dataset parameters. */
-    std::string optical_flow_path;      conf("optical_flow.path", optical_flow_path);
-    std::string optical_flow_set;       conf("optical_flow.set", optical_flow_set);
-    int optical_flow_heading_zeros;     conf("optical_flow.heading_zeros", optical_flow_heading_zeros);
-    int optical_flow_index_offset;      conf("optical_flow.index_offset", optical_flow_index_offset);
+    std::string optical_flow_path;      conf("optical_flow_dataset.path", optical_flow_path);
+    std::string optical_flow_set;       conf("optical_flow_dataset.set", optical_flow_set);
+    int optical_flow_heading_zeros;     conf("optical_flow_dataset.heading_zeros", optical_flow_heading_zeros);
+    int optical_flow_index_offset;      conf("optical_flow_dataset.index_offset", optical_flow_index_offset);
 
     /* Outlier detection parameters. */
     bool outlier_rejection_enable;      conf("outlier_rejection.enable", outlier_rejection_enable);
