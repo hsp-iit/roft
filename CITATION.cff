@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Piga"
+  given-names: "Nicola Agostino"
+  orcid: "https://orcid.org/0000-0003-3183-8108"
+- family-names: "Onyshchuk"
+  given-names: "Yuriy"
+  orcid: "https://orcid.org/0000-0003-1676-1261"
+- family-names: "Pasquale"
+  given-names: "Giulia"
+  orcid: "https://orcid.org/0000-0002-7221-3553"
+- family-names: "Pattacini"
+  given-names: "Ugo"
+  orcid: "https://orcid.org/0000-0001-8754-1632"
+- family-names: "Natale"
+  given-names: "Lorenzo"
+  orcid: "https://orcid.org/0000-0002-8777-5233"
+title: "roft"
+version: v1.0.0
+date-released: 2022-01-17
+url: "https://github.com/hsp-iit/roft"
