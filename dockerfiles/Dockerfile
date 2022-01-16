@@ -31,7 +31,7 @@ RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | d
 
 # Install additional dependencies
 RUN apt update && \
-    apt install --no-install-recommends -y -qq libassimp-dev libconfig++-dev libglfw3-dev libglew-dev libglm-dev libeigen3-dev libopencv-dev libtclap-dev && \
+    apt install --no-install-recommends -y -qq libassimp-dev libconfig++-dev libglfw3-dev libglew-dev libglm-dev libeigen3-dev libopencv-dev libpython3-dev libtclap-dev pybind11-dev && \
     rm -rf /var/lib/apt/lists/*
 
 # Build bayes-filters-lib
@@ -79,7 +79,7 @@ RUN echo "(setq-default indent-tabs-mode nil)" >> /home/user/.emacs.el && \
 WORKDIR /home/user
 RUN git clone https://github.com/hsp-iit/roft && \
     cd roft && mkdir build && cd build && \
-    cmake -DCMAKE_INSTALL_PREFIX=/home/user/roft/install .. && \
+    cmake -DCMAKE_INSTALL_PREFIX=/home/user/roft/install -DBUILD_RENDERER=ON .. && \
     make install
 
 # Configure the virtual environment
