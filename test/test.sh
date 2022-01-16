@@ -25,15 +25,15 @@ EXECUTABLE=ROFT-tracker
 FASTYCB_PATH='./dataset/fast-ycb'
 CONFIG_ROOT_PATH=./config/
 OBJECT_ROOT_PATH=$FASTYCB_PATH/$OBJECT_NAME/
-OUTPUT_ROOT_PATH=./results/ours/ycbv_synthetic/
+OUTPUT_ROOT_PATH=./results/ours/fastycb/
 
 MODEL_NAME=$OBJECT_NAME
 if [ "$MODEL_NAME" == "003_cracker_box_real" ]; then
     MODEL_NAME=003_cracker_box
-    OUTPUT_ROOT_PATH=./results/ours/ycbv_real/
+    OUTPUT_ROOT_PATH=./results/ours/fastycb_qual/
 elif [ "$MODEL_NAME" == "006_mustard_bottle_real" ]; then
     MODEL_NAME=006_mustard_bottle
-    OUTPUT_ROOT_PATH=./results/ours/ycbv_real/
+    OUTPUT_ROOT_PATH=./results/ours/fastycb_qual/
 fi
 
 # camera intrinsics

@@ -24,7 +24,7 @@ class Objects():
             '010_potted_meat_can'
         ]
 
-        self.objects['ycbv_synthetic'] =\
+        self.objects['fastycb'] =\
         [
             '003_cracker_box',
             '004_sugar_box',
@@ -35,7 +35,7 @@ class Objects():
             'ALL'
         ]
 
-        self.objects['ycbv_real'] =\
+        self.objects['fastycb_qual'] =\
         [
             '003_cracker_box',
             '006_mustard_bottle'

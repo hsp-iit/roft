@@ -92,12 +92,12 @@ class DOPEInference():
             pass # as this is done at video sequence level
         elif self.dataset_name == 'ycbv':
             pass # to be done
-        elif self.dataset_name == 'ycbv_synthetic':
+        elif self.dataset_name == 'fastycb':
             self.camera_matrix[0,0] = 614.7142806307731
             self.camera_matrix[1,1] = 614.7142806307731
             self.camera_matrix[0,2] = 320.0
             self.camera_matrix[1,2] = 240.0
-        elif self.dataset_name == 'ycbv_real':
+        elif self.dataset_name == 'fastycb_qual':
             self.camera_matrix[0,0] = 460.8377380371095
             self.camera_matrix[1,1] = 460.8377380371095
             self.camera_matrix[0,2] = 329.501647949219
@@ -113,7 +113,7 @@ class DOPEInference():
         # Load PnP solver
         if self.dataset_name == 'ho3d':
             pass # as this is done at video sequence level
-        elif self.dataset_name == 'ycbv_real' or self.dataset_name == 'ycbv_synthetic':
+        elif self.dataset_name == 'fastycb_qual' or self.dataset_name == 'fastycb':
             self.pnp_solver = CuboidPNPSolver\
             (
                 self.object_info['name'],
@@ -216,7 +216,7 @@ class DOPEInference():
 
                 self.process_sequence(path, output_path)
 
-        elif self.dataset_name == 'ycbv_synthetic':
+        elif self.dataset_name == 'fastycb':
             # Compose input path
             path = os.path.join(self.dataset_path, self.object_name)
 
@@ -225,7 +225,7 @@ class DOPEInference():
 
             self.process_sequence(path, output_path)
 
-        elif self.dataset_name == 'ycbv_real':
+        elif self.dataset_name == 'fastycb_qual':
             # Compose input path
             path = os.path.join(self.dataset_path, self.object_name + '_real')
 
@@ -264,7 +264,7 @@ class DOPEInference():
 
             img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
-            if self.dataset_name == 'ycbv_synthetic' or self.dataset_name == 'ycbv_real':
+            if self.dataset_name == 'fastycb' or self.dataset_name == 'fastycb_qual':
                 # These frames are @ 1280x720, hence they are zeropadded, extended and resized
                 # to the original resolution required for DOPE
                 img_extended = numpy.zeros((960, 1280, 3), dtype = numpy.uint8)

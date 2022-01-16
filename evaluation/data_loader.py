@@ -23,7 +23,7 @@ class DataLoader():
         self.load_methods =\
         {
             'gt_ho3d' : self.load_gt_ho3d,
-            'gt_ycbv_synthetic' : self.load_gt_ycbv_synthetic,
+            'gt_fastycb' : self.load_gt_fastycb,
             'ours' : self.load_ours,
             'se3tracknet' : self.load_se3_tracknet,
             'poserbpf' : self.load_poserbpf,
@@ -41,18 +41,18 @@ class DataLoader():
         self.dataset_paths =\
         {
             'ho3d' : './dataset/ho3d/',
-            'ycbv_synthetic' : './dataset/fast-ycb'
+            'fastycb' : './dataset/fast-ycb'
         }
-        self.dataset_paths['ycbv_real'] = self.dataset_paths['ycbv_synthetic']
+        self.dataset_paths['fastycb_qual'] = self.dataset_paths['fastycb']
         self.dataset_mesh_paths =\
         {
-            'ycbv_synthetic' : './YCB_Video_Models/',
-            'ycbv_real' : './YCB_Video_Models/',
+            'fastycb' : './YCB_Video_Models/',
+            'fastycb_qual' : './YCB_Video_Models/',
             'ho3d' : './YCB_Video_Models/'
         }
 
         self.dataset_video_ids = {}
-        self.dataset_video_ids['ycbv_synthetic'] =\
+        self.dataset_video_ids['fastycb'] =\
         {
             '003_cracker_box' : [''],
             '004_sugar_box' : [''],
@@ -61,7 +61,7 @@ class DataLoader():
             '009_gelatin_box' : [''],
             '010_potted_meat_can' : ['']
         }
-        self.dataset_video_ids['ycbv_real'] =\
+        self.dataset_video_ids['fastycb_qual'] =\
         {
             '003_cracker_box' : ['_real'],
             '006_mustard_bottle' : ['_real'],
@@ -132,27 +132,27 @@ class DataLoader():
         return numpy.array(data)
 
 
-    def load_gt_ycbv_synthetic(self):
-        """Load gt data using our format for dataset ycbv synthetic."""
+    def load_gt_fastycb(self):
+        """Load gt data using our format for dataset FastYCB."""
 
-        self.log('load_gt_ycbv_synthetic', 'loading ground truth data', starter = True)
+        self.log('load_gt_fastycb', 'loading ground truth data', starter = True)
 
-        self.data['ycbv_synthetic'] = {}
-        self.data['ycbv_synthetic_velocity'] = {}
+        self.data['fastycb'] = {}
+        self.data['fastycb_velocity'] = {}
 
         dataset_location = './dataset/fast-ycb'
 
-        for object_name in self.objects['ycbv_synthetic']:
+        for object_name in self.objects['fastycb']:
 
             if object_name == 'ALL':
                 continue
 
             file_path = os.path.join(dataset_location,  object_name, 'gt', 'poses_ycb.txt')
-            self.data['ycbv_synthetic'][object_name] = [self.load_generic(file_path)]
+            self.data['fastycb'][object_name] = [self.load_generic(file_path)]
 
             # Load ground truth velocities
             vel_file_path = os.path.join(dataset_location, object_name, 'gt', 'velocities.txt')
-            self.data['ycbv_synthetic_velocity'][object_name] = [self.load_generic(vel_file_path)]
+            self.data['fastycb_velocity'][object_name] = [self.load_generic(vel_file_path)]
 
         print('')
 
@@ -258,7 +258,7 @@ class DataLoader():
         config = self.algorithm['config']
 
         contents_map = { 'pred' : 'pose' }
-        dataset_map = { 'ycbv_synthetic' : 'synthetic', 'ho3d' : 'ho3d', 'ycbv_real' : 'real'}
+        dataset_map = { 'fastycb' : 'synthetic', 'ho3d' : 'ho3d', 'fastycb_qual' : 'real'}
 
         dataset_name = config['dataset']
         se3_dataset_name = dataset_map[config['dataset']]
@@ -269,12 +269,12 @@ class DataLoader():
 
         # Video ids used in se3-tracknet
         video_ids = {}
-        video_ids['ycbv_real'] =\
+        video_ids['fastycb_qual'] =\
         {
             '003_cracker_box' : ['0001'],
             '006_mustard_bottle' : ['0002']
         }
-        video_ids['ycbv_synthetic'] =\
+        video_ids['fastycb'] =\
         {
             '003_cracker_box' : ['0001'],
             '004_sugar_box' : ['0002'],
@@ -366,7 +366,7 @@ class DataLoader():
         config = self.algorithm['config']
 
         contents_map = { 'Pose' : 'pose', 'Index' : 'indexes' }
-        dataset_map = { 'ycbv_synthetic' : 'synthetic' , 'ho3d' : 'ho3d', 'ycbv_real' : 'real'}
+        dataset_map = { 'fastycb' : 'synthetic' , 'ho3d' : 'ho3d', 'fastycb_qual' : 'real'}
 
         dataset_name = config['dataset']
         poserbpf_dataset_name = dataset_map[config['dataset']]
@@ -377,12 +377,12 @@ class DataLoader():
 
         # Video ids used in poserbpf
         video_ids = {}
-        video_ids['ycbv_real'] =\
+        video_ids['fastycb_qual'] =\
         {
             '003_cracker_box' : ['seq_30'],
             '006_mustard_bottle' : ['seq_30']
         }
-        video_ids['ycbv_synthetic'] =\
+        video_ids['fastycb'] =\
         {
             '003_cracker_box' : ['seq_10'],
             '004_sugar_box' : ['seq_10'],
