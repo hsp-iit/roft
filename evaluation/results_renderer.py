@@ -239,6 +239,9 @@ class ResultsLaTeXRenderer(ResultsTableRenderer):
 
         # Construct table header
         output =\
+            '\\documentclass{article}\r\n' +\
+            '\\usepackage[landscape, margin=0.5in]{geometry}\r\n' +\
+            '\\begin{document}\r\n' +\
             '\\begin{table*}\r\n' +\
             '    \centering\r\n' +\
             '    \caption{.\label{tab:' + results_name + '}}\r\n' +\
@@ -299,7 +302,8 @@ class ResultsLaTeXRenderer(ResultsTableRenderer):
         output +=\
             '    \hline\r\n' +\
             '    \end{tabular}\r\n' +\
-            '\end{table*}\r\n'
+            '\end{table*}\r\n' +\
+            '\end{document}\r\n'
 
         return output
 
