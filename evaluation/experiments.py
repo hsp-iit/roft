@@ -15,51 +15,51 @@ class Experiments():
 
         self._experiments = {}
 
-        # synthetic YCB-Video
-        self.add_algorithm_to_experiment('exp_ycbvs_real', 'dope', dataset = 'ycbv_synthetic', simulate_inference = True)
-        self.add_algorithm_to_experiment('exp_ycbvs_real', 'ours', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_1_slow', pose_set = 'dope', dataset = 'ycbv_synthetic')
-        self.add_algorithm_to_experiment('exp_ycbvs_real', 'poserbpf', particles = 50, fps = 15, init_from = 'dope', reinit = False, reinit_from = '', dataset = 'ycbv_synthetic')
-        self.add_algorithm_to_experiment('exp_ycbvs_real', 'se3tracknet', init_from = 'dope', reinit = True, reinit_from = 'dope', reinit_fps = 5, dataset = 'ycbv_synthetic')
-        self.add_parameters_to_experiment('exp_ycbvs_real', 'thumbnail', {'object' : '003_cracker_box', 'frames' : (565, 572, 576, 580), 'crop' : (390, 60, 1120, 574)})
+        # FastYCB
+        self.add_algorithm_to_experiment('exp_fastycb', 'dope', dataset = 'ycbv_synthetic', simulate_inference = True)
+        self.add_algorithm_to_experiment('exp_fastycb', 'ours', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_1_slow', pose_set = 'dope', dataset = 'ycbv_synthetic')
+        self.add_algorithm_to_experiment('exp_fastycb', 'poserbpf', particles = 50, fps = 15, init_from = 'dope', reinit = False, reinit_from = '', dataset = 'ycbv_synthetic')
+        self.add_algorithm_to_experiment('exp_fastycb', 'se3tracknet', init_from = 'dope', reinit = True, reinit_from = 'dope', reinit_fps = 5, dataset = 'ycbv_synthetic')
+        self.add_parameters_to_experiment('exp_fastycb', 'thumbnail', {'object' : '003_cracker_box', 'frames' : (565, 572, 576, 580), 'crop' : (390, 60, 1120, 574)})
 
-        self.add_algorithm_to_experiment('exp_ycbvs_ablation', 'dope', label = 'dope_ideal', dataset = 'ycbv_synthetic', simulate_inference = False)
-        self.add_algorithm_to_experiment('exp_ycbvs_ablation', 'dope', label = 'dope_real', dataset = 'ycbv_synthetic', simulate_inference = True)
-        self.add_algorithm_to_experiment('exp_ycbvs_ablation', 'ours', label = 'ours_gt', masks_set = 'gt', of_set = 'nvof_1_slow', pose_set = 'gt', dataset = 'ycbv_synthetic')
-        self.add_algorithm_to_experiment('exp_ycbvs_ablation', 'ours', label = 'ours_gt_pose', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_1_slow', pose_set = 'gt', dataset = 'ycbv_synthetic')
-        self.add_algorithm_to_experiment('exp_ycbvs_ablation', 'ours', label = 'ours_gt_mask', masks_set = 'gt', of_set = 'nvof_1_slow', pose_set = 'dope', dataset = 'ycbv_synthetic')
-        self.add_algorithm_to_experiment('exp_ycbvs_ablation', 'ours', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_1_slow', pose_set = 'dope', dataset = 'ycbv_synthetic')
-        self.add_algorithm_to_experiment('exp_ycbvs_ablation', 'ours', label = 'ours_no_posesync', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_1_slow', pose_set = 'dope', dataset = 'ycbv_synthetic', no_posesync = True)
-        self.add_algorithm_to_experiment('exp_ycbvs_ablation', 'ours', label = 'ours_no_outrej', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_1_slow', pose_set = 'dope', dataset = 'ycbv_synthetic', no_outrej = True)
-        self.add_algorithm_to_experiment('exp_ycbvs_ablation', 'ours', label = 'ours_no_flowaid', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_1_slow', pose_set = 'dope', dataset = 'ycbv_synthetic', no_flowaid = True)
-        self.add_algorithm_to_experiment('exp_ycbvs_ablation', 'ours', label = 'ours_no_velocity', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_1_slow', pose_set = 'dope', dataset = 'ycbv_synthetic', no_velocity = True)
-        self.add_algorithm_to_experiment('exp_ycbvs_ablation', 'ours', label = 'ours_no_pose', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_1_slow', pose_set = 'dope', dataset = 'ycbv_synthetic', no_pose = True)
+        self.add_algorithm_to_experiment('exp_fastycb_ablation', 'dope', label = 'dope_ideal', dataset = 'ycbv_synthetic', simulate_inference = False)
+        self.add_algorithm_to_experiment('exp_fastycb_ablation', 'dope', label = 'dope_real', dataset = 'ycbv_synthetic', simulate_inference = True)
+        self.add_algorithm_to_experiment('exp_fastycb_ablation', 'ours', label = 'ours_gt', masks_set = 'gt', of_set = 'nvof_1_slow', pose_set = 'gt', dataset = 'ycbv_synthetic')
+        self.add_algorithm_to_experiment('exp_fastycb_ablation', 'ours', label = 'ours_gt_pose', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_1_slow', pose_set = 'gt', dataset = 'ycbv_synthetic')
+        self.add_algorithm_to_experiment('exp_fastycb_ablation', 'ours', label = 'ours_gt_mask', masks_set = 'gt', of_set = 'nvof_1_slow', pose_set = 'dope', dataset = 'ycbv_synthetic')
+        self.add_algorithm_to_experiment('exp_fastycb_ablation', 'ours', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_1_slow', pose_set = 'dope', dataset = 'ycbv_synthetic')
+        self.add_algorithm_to_experiment('exp_fastycb_ablation', 'ours', label = 'ours_no_posesync', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_1_slow', pose_set = 'dope', dataset = 'ycbv_synthetic', no_posesync = True)
+        self.add_algorithm_to_experiment('exp_fastycb_ablation', 'ours', label = 'ours_no_outrej', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_1_slow', pose_set = 'dope', dataset = 'ycbv_synthetic', no_outrej = True)
+        self.add_algorithm_to_experiment('exp_fastycb_ablation', 'ours', label = 'ours_no_flowaid', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_1_slow', pose_set = 'dope', dataset = 'ycbv_synthetic', no_flowaid = True)
+        self.add_algorithm_to_experiment('exp_fastycb_ablation', 'ours', label = 'ours_no_velocity', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_1_slow', pose_set = 'dope', dataset = 'ycbv_synthetic', no_velocity = True)
+        self.add_algorithm_to_experiment('exp_fastycb_ablation', 'ours', label = 'ours_no_pose', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_1_slow', pose_set = 'dope', dataset = 'ycbv_synthetic', no_pose = True)
 
-        self.add_algorithm_to_experiment('exp_ycbvs', 'ours', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_1_slow', pose_set = 'dope', dataset = 'ycbv_synthetic')
+        self.add_algorithm_to_experiment('exp_fastycb_roft', 'ours', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_1_slow', pose_set = 'dope', dataset = 'ycbv_synthetic')
 
-        self.add_algorithm_to_experiment('exp_ycbvs_velocities', 'ours', masks_set = 'gt', of_set = 'nvof_1_slow', pose_set = 'dope', dataset = 'ycbv_synthetic', label = 'ours_gt_mask')
-        self.add_algorithm_to_experiment('exp_ycbvs_velocities', 'ours', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_1_slow', pose_set = 'dope', dataset = 'ycbv_synthetic', label = 'ours_flowaid')
-        self.add_algorithm_to_experiment('exp_ycbvs_velocities', 'ours', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_1_slow', pose_set = 'dope', dataset = 'ycbv_synthetic', no_flowaid = True, label = 'ours_no_flowaid')
+        self.add_algorithm_to_experiment('exp_fastycb_velocities', 'ours', masks_set = 'gt', of_set = 'nvof_1_slow', pose_set = 'dope', dataset = 'ycbv_synthetic', label = 'ours_gt_mask')
+        self.add_algorithm_to_experiment('exp_fastycb_velocities', 'ours', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_1_slow', pose_set = 'dope', dataset = 'ycbv_synthetic', label = 'ours_flowaid')
+        self.add_algorithm_to_experiment('exp_fastycb_velocities', 'ours', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_1_slow', pose_set = 'dope', dataset = 'ycbv_synthetic', no_flowaid = True, label = 'ours_no_flowaid')
 
-        self.add_algorithm_to_experiment('exp_ycbvs_se3_plain', 'se3tracknet', init_from = 'dope', reinit = False, reinit_from = '', dataset = 'ycbv_synthetic')
+        self.add_algorithm_to_experiment('exp_fastycb_se3_plain', 'se3tracknet', init_from = 'dope', reinit = False, reinit_from = '', dataset = 'ycbv_synthetic')
 
-        # real YCB-Video
-        self.add_algorithm_to_experiment('exp_ycbvr', 'ours', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_1_slow', pose_set = 'dope', dataset = 'ycbv_real')
+        # FastYCB qualitative sequences
+        self.add_algorithm_to_experiment('exp_fastycb_qual_roft', 'ours', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_1_slow', pose_set = 'dope', dataset = 'ycbv_real')
 
-        self.add_algorithm_to_experiment('exp_ycbvr_real', 'dope', dataset = 'ycbv_real', simulate_inference = True, label = 'dope')
-        self.add_algorithm_to_experiment('exp_ycbvr_real', 'ours', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_1_slow', pose_set = 'dope', dataset = 'ycbv_real')
-        self.add_algorithm_to_experiment('exp_ycbvr_real', 'poserbpf', particles = 50, fps = 15, init_from = 'dope', reinit = False, reinit_from = '', dataset = 'ycbv_real')
-        self.add_algorithm_to_experiment('exp_ycbvr_real', 'se3tracknet', init_from = 'dope', reinit = True, reinit_from = 'dope', reinit_fps = 5, dataset = 'ycbv_real')
-        self.add_parameters_to_experiment('exp_ycbvr_real', 'thumbnail', {'object' : '003_cracker_box', 'frames' : (1280, 1290, 1300, 1310), 'crop' : (0, 0, 730, 514)})
+        self.add_algorithm_to_experiment('exp_fastycb_qual', 'dope', dataset = 'ycbv_real', simulate_inference = True, label = 'dope')
+        self.add_algorithm_to_experiment('exp_fastycb_qual', 'ours', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_1_slow', pose_set = 'dope', dataset = 'ycbv_real')
+        self.add_algorithm_to_experiment('exp_fastycb_qual', 'poserbpf', particles = 50, fps = 15, init_from = 'dope', reinit = False, reinit_from = '', dataset = 'ycbv_real')
+        self.add_algorithm_to_experiment('exp_fastycb_qual', 'se3tracknet', init_from = 'dope', reinit = True, reinit_from = 'dope', reinit_fps = 5, dataset = 'ycbv_real')
+        self.add_parameters_to_experiment('exp_fastycb_qual', 'thumbnail', {'object' : '003_cracker_box', 'frames' : (1280, 1290, 1300, 1310), 'crop' : (0, 0, 730, 514)})
 
         # HO-3D
-        self.add_algorithm_to_experiment('exp_ho3d', 'ours', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_2_slow', pose_set = 'dope', dataset = 'ho3d')
+        self.add_algorithm_to_experiment('exp_ho3d_roft', 'ours', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_2_slow', pose_set = 'dope', dataset = 'ho3d')
 
         self.add_algorithm_to_experiment('exp_ho3d_se3_plain', 'se3tracknet', init_from = 'dope', reinit = False, reinit_from = '', dataset = 'ho3d')
 
-        self.add_algorithm_to_experiment('exp_ho3d_real', 'dope', dataset = 'ho3d', simulate_inference = True)
-        self.add_algorithm_to_experiment('exp_ho3d_real', 'ours', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_2_slow', pose_set = 'dope', dataset = 'ho3d')
-        self.add_algorithm_to_experiment('exp_ho3d_real', 'poserbpf', particles = 50, fps = 15, init_from = 'dope', reinit = False, reinit_from = '', dataset = 'ho3d')
-        self.add_algorithm_to_experiment('exp_ho3d_real', 'se3tracknet', init_from = 'dope', reinit = True, reinit_from = 'dope', reinit_fps = 5, dataset = 'ho3d')
+        self.add_algorithm_to_experiment('exp_ho3d', 'dope', dataset = 'ho3d', simulate_inference = True)
+        self.add_algorithm_to_experiment('exp_ho3d', 'ours', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_2_slow', pose_set = 'dope', dataset = 'ho3d')
+        self.add_algorithm_to_experiment('exp_ho3d', 'poserbpf', particles = 50, fps = 15, init_from = 'dope', reinit = False, reinit_from = '', dataset = 'ho3d')
+        self.add_algorithm_to_experiment('exp_ho3d', 'se3tracknet', init_from = 'dope', reinit = True, reinit_from = 'dope', reinit_fps = 5, dataset = 'ho3d')
 
         # HO-3D ablations
         self.add_algorithm_to_experiment('exp_ho3d_ablation', 'ours', masks_set = 'mrcnn_ycbv_bop_pbr', of_set = 'nvof_2_slow', pose_set = 'dope', dataset = 'ho3d')

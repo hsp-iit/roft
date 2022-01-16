@@ -1,14 +1,14 @@
-python evaluation/evaluate.py --experiment-name exp_ho3d_real --metric-name mix --output-head latex
+python evaluation/evaluate.py --experiment-name exp_ho3d --metric-name mix --output-head latex
 python evaluation/evaluate.py --experiment-name exp_ho3d_ablation --metric-name mix --output-head latex-summary
-python evaluation/evaluate.py --experiment-name exp_ho3d --metric-name time --output-head latex-summary
-python evaluation/evaluate.py --experiment-name exp_ycbvs_real --metric-name mix --output-head latex
-python evaluation/evaluate.py --experiment-name exp_ycbvs_real --output-head thumbnail
-python evaluation/evaluate.py --experiment-name exp_ycbvs_velocities --metric-name rmse_velocity --output-head latex
-python evaluation/evaluate.py --experiment-name exp_ycbvs --metric-name max_velocity --output-head latex
-python evaluation/evaluate.py --experiment-name exp_ycbvs --metric-name time --output-head latex-summary
-python evaluation/evaluate.py --experiment-name exp_ycbvs_se3_plain --metric-name add --output-head latex
-python evaluation/evaluate.py --experiment-name exp_ycbvs_ablation --metric-name mix --output-head latex-summary
-# python evaluation/evaluate.py --experiment-name exp_ycbvs_real --output-head video
-# python evaluation/evaluate.py --experiment-name exp_ycbvr_real --output-head video
-# python evaluation/evaluate.py --experiment-name exp_ycbvs --output-head video-segmentation
-# python evaluation/evaluate.py --experiment-name exp_ycbvr --output-head video-segmentation
+python evaluation/evaluate.py --experiment-name exp_ho3d_roft --metric-name time --output-head latex-summary
+python evaluation/evaluate.py --experiment-name exp_fastycb --metric-name mix --output-head latex
+python evaluation/evaluate.py --experiment-name exp_fastycb --output-head thumbnail
+python evaluation/evaluate.py --experiment-name exp_fastycb_velocities --metric-name rmse_velocity --output-head latex
+python evaluation/evaluate.py --experiment-name exp_fastycb_roft --metric-name max_velocity --output-head latex
+python evaluation/evaluate.py --experiment-name exp_fastycb_roft --metric-name time --output-head latex-summary
+python evaluation/evaluate.py --experiment-name exp_fastycb_se3_plain --metric-name add --output-head latex
+python evaluation/evaluate.py --experiment-name exp_fastycb_ablation --metric-name mix --output-head latex-summary
+# python evaluation/evaluate.py --experiment-name exp_fastycb --output-head video
+# python evaluation/evaluate.py --experiment-name exp_fastycb_qual --output-head video
+# python evaluation/evaluate.py --experiment-name exp_fastycb_roft --output-head video-segmentation
+# python evaluation/evaluate.py --experiment-name exp_fastycb_qual_roft --output-head video-segmentation
