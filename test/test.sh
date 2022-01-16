@@ -135,8 +135,8 @@ $EXECUTABLE --from $CONFIG_ROOT_PATH/config_fast_ycb.cfg\
             --camera_dataset::cx $CX\
             --camera_dataset::cy $CY\
             --camera_dataset::path $OBJECT_ROOT_PATH\
-            --initial_condition::position::x "$INITIAL_POSITION"\
-            --initial_condition::position::axis_angle "$INITIAL_ORIENTATION"\
+            --initial_condition::pose::x "$INITIAL_POSITION"\
+            --initial_condition::pose::axis_angle "$INITIAL_ORIENTATION"\
             --kinematic_model::position::sigma_angular "$SIGMA_ANG_VEL"\
             --log::path $OUTPUT_PATH\
             --log::enable_segmentation false\
