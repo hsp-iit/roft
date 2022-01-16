@@ -36,46 +36,22 @@ def main():
 
     cfg = configure(args)
 
+    if args.format=='gt':
+        velNaN = False
+    elif args.format=='pred':
+        velNaN = True
+    else:
+        print(f'Input format "{args.format}" not supported.')
+        sys.exit(1)
+
     nvdu_aligned_to_ycbv = utils.nvdu_to_ycbv(cfg['nvdu_path'], cfg['ycbv_models_path'], cfg['obj_id'])
-    u, s, vh = numpy.linalg.svd(nvdu_aligned_to_ycbv[0:3, 0:3], full_matrices=False)
-    nvdu_aligned_to_ycbv[0:3, 0:3] = u @ vh
+    poses = utils.get_obj_poses_synthetic(cfg['in_path'])
+    ycbv_aa = list()
+    for i, nvdu_T in poses.items():
+        ycbv_T = numpy.dot(nvdu_T, nvdu_aligned_to_ycbv)
+        ycbv_aa.append(utils.T_to_aa(ycbv_T))
 
-    #     ycbv_T = numpy.dot(nvdu_T, nvdu_aligned_to_ycbv)
-
-    frames_in = open(args.in_path)
-
-    with open(args.out_path, 'w') as f:
-            for line in frames_in:
-
-                items = line.split(' ')
-                counter = int(items[-1].rstrip('\n'))
-
-                x = float(items[0])
-                y = float(items[1])
-                z = float(items[2])
-                axis_x = float(items[3])
-                axis_y = float(items[4])
-                axis_z = float(items[5])
-                angle = float(items[6])
-
-                rot = Quaternion(axis=[axis_x, axis_y, axis_z], angle = angle).transformation_matrix
-                rot[0, 3] = x
-                rot[1, 3] = y
-                rot[2, 3] = z
-
-                T = rot @ nvdu_aligned_to_ycbv
-                q = Quaternion(matrix = T[0:3, 0:3])
-
-                string = format(T[0, 3], '.6f') + ' ' +\
-                         format(T[1, 3], '.6f') + ' ' +\
-                         format(T[2, 3], '.6f') + ' ' +\
-                         format(q.axis[0], '.6f') + ' ' +\
-                         format(q.axis[1], '.6f') + ' ' +\
-                         format(q.axis[2], '.6f') + ' ' +\
-                         format(q.angle, '.6f') + ' ' +\
-                         '0.0 0.0 0.0 0.0 0.0 0.0 ' + str(counter) + '\n'
-                f.write(string)
-
+    utils.matrix_to_txt(ycbv_aa, cfg['out_path'], velNaN)
 
 
 if __name__ == '__main__':
