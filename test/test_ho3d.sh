@@ -130,6 +130,7 @@ OUTPUT_PATH=$OUTPUT_ROOT_PATH"$LOG_POSTFIX"/"$OBJECT_NAME"_"$SEQ_NAME"/
 mkdir -p $OUTPUT_PATH
 rm -f $OUTPUT_PATH/*.txt
 
+# sudo cpupower frequency-set --governor performance
 $EXECUTABLE --from $CONFIG_ROOT_PATH/config_ho3d.cfg\
             --camera_dataset::fx $FX\
             --camera_dataset::fy $FY\
@@ -155,6 +156,7 @@ $EXECUTABLE --from $CONFIG_ROOT_PATH/config_ho3d.cfg\
             --segmentation_dataset::path $OBJECT_ROOT_PATH\
             --segmentation_dataset::set $MASK_SET\
             --segmentation_dataset::index_offset $INITIAL_INDEX
+# sudo cpupower frequency-set --governor powersave
 
 # Convert to YCB-V reference frame
 bash ./test/post_process_results_ho3d.sh $OBJECT_NAME $SEQ_NAME $OUTPUT_PATH
