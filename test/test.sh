@@ -21,7 +21,7 @@ NO_POSE=$8
 NO_VEL=$9
 
 # paths and names
-EXECUTABLE=robmo-misc-object-tracker-of
+EXECUTABLE=ROFT-tracker
 FASTYCB_PATH='./dataset/fast-ycb'
 CONFIG_ROOT_PATH=./config/
 OBJECT_ROOT_PATH=$FASTYCB_PATH/$OBJECT_NAME/
