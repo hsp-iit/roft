@@ -81,7 +81,7 @@ int main(int argc, char** argv)
 
     /* Log parameters. */
     bool enable_log;                    conf("log.enable", enable_log);
-    bool enable_log_segmentation;       conf("log.segmentation", enable_log_segmentation);
+    bool enable_log_segmentation;       conf("log.enable_segmentation", enable_log_segmentation);
     std::string log_path;               conf("log.path", log_path);
     if (enable_log && log_path == "")
     {
@@ -162,9 +162,9 @@ int main(int argc, char** argv)
     std::cout << "- data_prefix: " << camera_data_prefix << std::endl;
     std::cout << "- rgb_prefix: " << camera_rgb_prefix << std::endl;
     std::cout << "- depth_prefix: " << camera_depth_prefix << std::endl;
-    std::cout << "- data_format: " << camera_data_prefix << std::endl;
-    std::cout << "- data_format: " << camera_rgb_format << std::endl;
-    std::cout << "- data_format: " << camera_depth_format << std::endl;
+    std::cout << "- data_format: " << camera_data_format << std::endl;
+    std::cout << "- rgb_format: " << camera_rgb_format << std::endl;
+    std::cout << "- depth_format: " << camera_depth_format << std::endl;
     std::cout << "- heading_zeros: " << camera_heading_zeros << std::endl;
     std::cout << "- index_offset: " << camera_index_offset << std::endl;
     std::cout << std::endl;
