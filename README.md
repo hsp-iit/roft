@@ -21,7 +21,7 @@
 
 ## Reproducing the experiments
 
-We support running the experiments on the [FastYCB](https://github.com/hsp-iit/fast-ycb) dataset via the provided Docker image.
+We support running the experiments on the [Fast-YCB](https://github.com/hsp-iit/fast-ycb) dataset via the provided Docker image.
 
 1. Pull the docker image:
     ```console
@@ -38,7 +38,7 @@ We support running the experiments on the [FastYCB](https://github.com/hsp-iit/f
     cd build
     make install
     ```
-1. Download and extract the accompanying data (FastYCB dataset and pre-evaluated results):
+1. Download and extract the accompanying data (Fast-YCB dataset and pre-evaluated results):
     ```console
     cd /home/user/roft
     bash tools/download/download_results.sh
@@ -56,7 +56,7 @@ We support running the experiments on the [FastYCB](https://github.com/hsp-iit/f
     bash evaluation/run_paper_evaluation
     ```
 1. Visualize the results:
-    The results on the FastYCB dataset (Table I, II, IV and Figure 3) can be found in `/home/user/roft/evaluation_output`:
+    The results on the Fast-YCB dataset (Table I, II, IV and Figure 3) can be found in `/home/user/roft/evaluation_output`:
     - `tableI.pdf`
     - `tableII.pdf`
     - `tableIV.pdf`
