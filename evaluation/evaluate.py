@@ -59,7 +59,9 @@ class Evaluator():
         print(self.experiments)
 
         # Load ground truth data
-        self.data['gt'] = DataLoader({'name' : 'gt'}).load()
+        experiment = self.experiments(experiment_name)
+        dataset_name = experiment[0]['config']['dataset']
+        self.data['gt'] = DataLoader({'name' : 'gt_' + dataset_name}).load()
 
         # Initialize metrics
         self.metrics = {}

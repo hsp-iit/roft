@@ -22,7 +22,8 @@ class DataLoader():
         self.algorithm = algorithm
         self.load_methods =\
         {
-            'gt' : self.load_gt,
+            'gt_ho3d' : self.load_gt_ho3d,
+            'gt_ycbv_synthetic' : self.load_gt_ycbv_synthetic,
             'ours' : self.load_ours,
             'se3tracknet' : self.load_se3_tracknet,
             'poserbpf' : self.load_poserbpf,
@@ -134,6 +135,8 @@ class DataLoader():
     def load_gt_ycbv_synthetic(self):
         """Load gt data using our format for dataset ycbv synthetic."""
 
+        self.log('load_gt_ycbv_synthetic', 'loading ground truth data', starter = True)
+
         self.data['ycbv_synthetic'] = {}
         self.data['ycbv_synthetic_velocity'] = {}
 
@@ -151,9 +154,13 @@ class DataLoader():
             vel_file_path = os.path.join(dataset_location, object_name, 'gt', 'velocities.txt')
             self.data['ycbv_synthetic_velocity'][object_name] = [self.load_generic(vel_file_path)]
 
+        print('')
+
 
     def load_gt_ho3d(self):
         """Load gt data using our format for dataset ho3d."""
+
+        self.log('load_gt_ho3d', 'loading ground truth data', starter = True)
 
         self.data['ho3d'] = {}
 
@@ -171,16 +178,6 @@ class DataLoader():
                 file_path = os.path.join(dataset_location, object_name + video_id, 'gt', 'poses.txt')
 
                 self.data['ho3d'][object_name].append(self.load_generic(file_path))
-
-
-    def load_gt(self):
-        """Load gt data using our format."""
-
-        self.log('load_gt', 'loading ground truth data', starter = True)
-
-        self.load_gt_ycbv_synthetic()
-
-        self.load_gt_ho3d()
 
         print('')
 
