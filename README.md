@@ -68,7 +68,7 @@ We support running the experiments on the FastYCB dataset via the provided Docke
 
 > If you want to install the repository manually, please refer to the recipe contained in the [**`Dockerfile`**](./dockerfiles/Dockerfile). Please be aware that the results might differ if unsupported versions of the dependencies are used.
 
-> Support for reproducing the experiments on the HO-3D dataest will be added in the near future.
+> Support for reproducing the experiments on the HO-3D dataset will be added in the near future.
 
 > Instructions on how to use the ROFT library in external C++ projects and how to execute ROFT on custom datasets will be added in the near future.
 
