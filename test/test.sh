@@ -7,7 +7,9 @@
 #
 #===============================================================================
 
-. roft_env/bin/activate
+if [ -f roft_env/bin/activate ]; then
+   . roft_env/bin/activate
+fi
 
 # arguments
 OBJECT_NAME=$1
@@ -158,4 +160,6 @@ $EXECUTABLE --from $CONFIG_ROOT_PATH/config_fast_ycb.cfg\
 # Convert to YCB-V reference frame
 bash ./test/post_process_results.sh $MODEL_NAME $OUTPUT_PATH
 
-deactivate
+if [ -f roft_env/bin/activate ]; then
+   deactivate
+fi

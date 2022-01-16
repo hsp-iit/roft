@@ -1,4 +1,6 @@
-. roft_env/bin/activate
+if [ -f roft_env/bin/activate ]; then
+   . roft_env/bin/activate
+fi
 
 # Table I
 python evaluation/evaluate.py --experiment-name exp_fastycb --metric-name mix --output-head latex
@@ -26,4 +28,7 @@ rm evaluation_output/*.log
 rm evaluation_output/*.aux
 rm -r evaluation_output/exp_fastycb
 rm -r evaluation_output/exp_fastycb_qual
-deactivate
+
+if [ -f roft_env/bin/activate ]; then
+   deactivate
+fi

@@ -1,4 +1,7 @@
-. roft_env/bin/activate
+if [ -f roft_env/bin/activate ]; then
+   . roft_env/bin/activate
+fi
+
 python evaluation/evaluate.py --experiment-name exp_ho3d --metric-name mix --output-head latex
 python evaluation/evaluate.py --experiment-name exp_ho3d_ablation --metric-name mix --output-head latex-summary
 python evaluation/evaluate.py --experiment-name exp_ho3d_roft --metric-name time --output-head latex-summary
@@ -13,4 +16,7 @@ python evaluation/evaluate.py --experiment-name exp_fastycb_ablation --metric-na
 # python evaluation/evaluate.py --experiment-name exp_fastycb_qual --output-head video
 # python evaluation/evaluate.py --experiment-name exp_fastycb_roft --output-head video-segmentation
 # python evaluation/evaluate.py --experiment-name exp_fastycb_qual_roft --output-head video-segmentation
-deactivate
+
+if [ -f roft_env/bin/activate ]; then
+   deactivate
+fi
