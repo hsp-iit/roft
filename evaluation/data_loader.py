@@ -24,6 +24,7 @@ class DataLoader():
         {
             'gt_ho3d' : self.load_gt_ho3d,
             'gt_fastycb' : self.load_gt_fastycb,
+            'gt_fastycb_qual' : lambda : None,
             'ours' : self.load_ours,
             'se3tracknet' : self.load_se3_tracknet,
             'poserbpf' : self.load_poserbpf,
