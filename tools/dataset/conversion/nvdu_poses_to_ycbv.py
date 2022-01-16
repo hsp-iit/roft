@@ -11,13 +11,12 @@ import utils
 import argparse
 import numpy
 import sys
-from pyquaternion import Quaternion
 
 
 def configure(args):
     cfg = dict()
-    cfg['nvdu_path'] = '/home/xenvre/robot-code/Dataset_Utilities/' # Please complete this field according to your configuration
-    cfg['ycbv_models_path'] = '/home/xenvre/robot-code/optical-flow-6d-tracking-code/YCB_Video_Models/models/' # Please complete this field according to your configuration
+    cfg['nvdu_path'] = './tools/third_party/Dataset_Utilities/'
+    cfg['ycbv_models_path'] = './YCB_Video_Models/'
 
     cfg['out_path']  = args.out_path
     cfg['in_path'] = args.in_path
