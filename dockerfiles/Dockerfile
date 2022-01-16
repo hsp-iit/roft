@@ -86,7 +86,8 @@ RUN git clone https://github.com/hsp-iit/roft && \
 WORKDIR /home/user/roft
 RUN virtualenv roft_env -p `which python3` && \
     . roft_env/bin/activate && \
-    pip install -r requirements.txt
+    pip install -r requirements.txt && \
+    pip install -e .
 
 # Download third-party assets and tools
 WORKDIR /home/user/roft
