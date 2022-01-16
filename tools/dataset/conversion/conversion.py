@@ -20,8 +20,8 @@ import ho3d_utils
 class Cfg:
 
     def __init__(self):
-        self.nvdu_path    = './tools/third_party/Dataset_Utilities/'
-        self.ycbv_models_dir   = './YCB_Video_Models/'
+        self.nvdu_path = './tools/third_party/Dataset_Utilities/'
+        self.ycbv_models_dir = './YCB_Video_Models/'
         self.model_name = 'textured_simple.obj'
 
         self.PoseRBPF_root = '?/PoseRBPF'
