@@ -1,3 +1,5 @@
-wget "https://storage-dataverse.iit.it/dataverse/10.48557/NM330A/17e6493343b-c9059e98be6d?response-content-disposition=attachment%3B%20filename%2A%3DUTF-8%27%27results.tar.gz&response-content-type=application%2Fgzip&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20220116T203054Z&X-Amz-SignedHeaders=host&X-Amz-Expires=3600&X-Amz-Credential=admin%2F20220116%2Fdataverse%2Fs3%2Faws4_request&X-Amz-Signature=ce8839f9a9c3263004ec43a6c76e9df895eab7b6a683b766133c4a48f24740eb" -O results.tar.gz
+wget -qO- --save-cookies cookies.txt --keep-session-cookies --no-check-certificate "https://dataverse.iit.it/privateurl.xhtml?token=16a1d3f6-4861-4e14-b339-602d7bc8326d" &> /dev/null
+wget --load-cookies cookies.txt "https://dataverse.iit.it/api/access/datafile/1768?gbrecs=true" -O results.tar.gz
+rm cookies.txt
 tar xzf results.tar.gz
 rm results.tar.gz
