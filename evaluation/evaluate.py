@@ -173,7 +173,7 @@ class Evaluator():
                     if seq_gt is not None:
                         sequence_length = seq_gt.shape[0]
                     # Ground truth data is not available for these datasets
-                    elif dataset_name in ['ycbv_real']:
+                    elif dataset_name in ['fastycb_qual']:
                         sequence_length = len(glob.glob(os.path.join(sequence_data['rgb_path'], '*')))
 
                     # Check if the length of sequence and that of the pose array is the same

@@ -7,12 +7,12 @@
 #
 #===============================================================================
 
-YCBVSYN_PATH='./dataset/fast-ycb'
+FASTYCB_PATH='./dataset/fast-ycb'
 DOPE_PATH='./tools/third_party/Deep_Object_Pose'
 DOPE_VENV_PATH='./tools/third_party/Deep_Object_Pose/env'
 GPU_ID=$1
 
 . $DOPE_VENV_PATH/bin/activate
 for OBJECT_NAME in 003_cracker_box 006_mustard_bottle; do
-    python ./tools/dope/inference.py --dataset-name ycbv_real --dataset-path $YCBVSYN_PATH --dope-path $DOPE_PATH --gpu-id $GPU_ID --output-path $YCBVSYN_PATH --object-name $OBJECT_NAME --rgb-format png
+    python ./tools/dope/inference.py --dataset-name fastycb_qual --dataset-path $FASTYCB_PATH --dope-path $DOPE_PATH --gpu-id $GPU_ID --output-path $FASTYCB_PATH --object-name $OBJECT_NAME --rgb-format png
 done

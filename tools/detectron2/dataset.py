@@ -79,8 +79,8 @@ class DatasetDescription:
 
         if self.name == 'ycbv_bop_pbr' or self.name =='pbr_combo':
             self.generate_ycbv_bop_pbr()
-        elif self.name == 'ycbv_synthetic':
-            self.generate_synthetic()
+        elif self.name == 'fastycb':
+            self.generate_fastycb()
         elif self.name == 'ho3d':
             self.generate_ho3d()
 
@@ -200,15 +200,15 @@ class DatasetDescription:
                     self.dataset_dicts.append(record)
 
                     idx += 1
-                    
-    def generate_synthetic(self):
-        """Generate the Synthetic dataset description."""
+
+    def generate_fastycb(self):
+        """Generate the FastYCB dataset description."""
 
         idx = 0
 
         for object_name in self.synthetic_classes:
             short_name = object_name.split('_')[0]
-            
+
             # Compose input path
             path = os.path.join(self.path, object_name)
             rgb_path = os.path.join(path, 'rgb')

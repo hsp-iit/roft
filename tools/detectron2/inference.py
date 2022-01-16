@@ -54,7 +54,7 @@ class Detectron2Inference():
         {
             'ycbv_bop_pbr' : 'ycbv_bop_pbr',
             'ho3d' : 'ho3d',
-            'ycbv_synthetic' : 'ycbv_synthetic',
+            'fastycb' : 'fastycb',
             'pbr_combo' : 'pbr_combo',
         }
 
@@ -101,7 +101,7 @@ class Detectron2Inference():
 
                 self.process_sequence(path, output_path)
 
-        elif self.dataset_name == 'ycbv_synthetic':
+        elif self.dataset_name == 'fastycb':
             # Compose input path
             path = os.path.join(self.dataset_path, self.object_name)
 
@@ -130,7 +130,7 @@ class Detectron2Inference():
             index = image.split('/')[-1].split('.')[0]
             im = cv2.imread(image)
 
-            if self.dataset_name == 'ycbv_synthetic':
+            if self.dataset_name == 'fastycb':
                 # These frames are @ 1280x720, hence they are zeropadded, extended and resized
                 # to the original resolution required for detectron2
                 im_extended = numpy.zeros((960, 1280, 3))
@@ -157,7 +157,7 @@ class Detectron2Inference():
             cv2.imwrite(os.path.join(debugging_path, name + '_' + str(index) + '.jpg'), view)
 
             # These frames are @ 1280x720, hence we need to restore them back
-            if self.dataset_name == 'ycbv_synthetic':
+            if self.dataset_name == 'fastycb':
                 tmp = cv2.resize(mask, (1280, 960))
                 tmp_reduced = numpy.zeros((720, 1280))
                 tmp_reduced = tmp[120:720 + 120, :]
