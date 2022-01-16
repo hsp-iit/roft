@@ -1,10 +1,10 @@
-# Required for Table I
+# Table I
 bash test/test_full_all.sh
 
-# Required for Table II
+# Table II
 bash test/test_full_noflowaid_all.sh
 
-# Required for Table IV
+# Table IV
 bash test/test_full_gt_mask_all.sh
 bash test/test_full_gt_mask_gt_pose_all.sh
 bash test/test_full_gt_pose_all.sh
@@ -13,3 +13,7 @@ bash test/test_full_nooutrej_all.sh
 bash test/test_full_nopose_all.sh
 bash test/test_full_noposesync_all.sh
 bash test/test_full_novel_all.sh
+
+# Figure 3
+bash test/test_full.sh 003_cracker_box_real
+bash test/test_full.sh 006_mustard_bottle_real

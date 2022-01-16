@@ -15,6 +15,15 @@ python evaluation/evaluate.py --experiment-name exp_fastycb_ablation --metric-na
 pdflatex -output-directory=./evaluation_output evaluation_output/exp_fastycb_ablation_mix.tex
 mv evaluation_output/exp_fastycb_ablation_mix.pdf evaluation_output/tableIV.pdf
 
+# Figure 3
+python evaluation/evaluate.py --experiment-name exp_fastycb --output-head thumbnail
+mv evaluation_output/exp_fastycb/thumb.png evaluation_output/Fig3_left.png
+
+python evaluation/evaluate.py --experiment-name exp_fastycb_qual --output-head thumbnail
+mv evaluation_output/exp_fastycb_qual/thumb.png evaluation_output/Fig3_right.png
+
 rm evaluation_output/*.log
 rm evaluation_output/*.aux
+rm -r evaluation_output/exp_fastycb
+rm -r evaluation_output/exp_fastycb_qual
 deactivate
