@@ -31,7 +31,7 @@ RUN curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | d
 
 # Install additional dependencies
 RUN apt update && \
-    apt install --no-install-recommends -y -qq evince libassimp-dev libconfig++-dev libglfw3-dev libglew-dev libglm-dev libeigen3-dev libopencv-dev libpython3-dev libtclap-dev pybind11-dev texlive-base texlive-latex-base && \
+    apt install --no-install-recommends -y -qq evince eog libassimp-dev libconfig++-dev libglfw3-dev libglew-dev libglm-dev libeigen3-dev libopencv-dev libpython3-dev libtclap-dev pybind11-dev texlive-base texlive-latex-base && \
     rm -rf /var/lib/apt/lists/*
 
 # Build bayes-filters-lib
