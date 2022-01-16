@@ -7,7 +7,9 @@
 #
 #===============================================================================
 
-. roft_env/bin/activate
+if [ -f roft_env/bin/activate ]; then
+   . roft_env/bin/activate
+fi
 
 CONVERSION_TOOL_PATH=./tools/dataset/conversion/
 FASTYCB_PATH='./dataset/fast-ycb'
@@ -104,4 +106,6 @@ else
     echo "[ho3d] Skipping as the dataset 'ho3d' is not available in folder 'dataset'"
 fi
 
-deactivate
+if [ -f roft_env/bin/activate ]; then
+   deactivate
+fi
