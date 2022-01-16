@@ -21,7 +21,7 @@
 
 ## Reproducing the experiments
 
-We support running the experiments on the FastYCB dataset via the provided Docker image.
+We support running the experiments on the [FastYCB](https://github.com/hsp-iit/fast-ycb) dataset via the provided Docker image.
 
 1. Pull the docker image:
     ```console
@@ -77,14 +77,14 @@ We support running the experiments on the FastYCB dataset via the provided Docke
 If you find the ROFT code useful, please consider citing the associated publication:
 
 ```bibtex
-@ARTICLE{9568706,  
-author={Piga, Nicola A. and Onyshchuk, Yuriy and Pasquale, Giulia and Pattacini, Ugo and Natale, Lorenzo},  
-journal={IEEE Robotics and Automation Letters},   
-title={ROFT: Real-Time Optical Flow-Aided 6D Object Pose and Velocity Tracking},   
-year={2022},  
-volume={7},  
-number={1},  
-pages={159-166},  
+@ARTICLE{9568706,
+author={Piga, Nicola A. and Onyshchuk, Yuriy and Pasquale, Giulia and Pattacini, Ugo and Natale, Lorenzo},
+journal={IEEE Robotics and Automation Letters},
+title={ROFT: Real-Time Optical Flow-Aided 6D Object Pose and Velocity Tracking},
+year={2022},
+volume={7},
+number={1},
+pages={159-166},
 doi={10.1109/LRA.2021.3119379}
 }
 ```
