@@ -1,0 +1,15 @@
+# Required for Table I
+bash test/test_full_all.sh
+
+# Required for Table II
+bash test/test_full_noflowaid_all.sh
+
+# Required for Table IV
+bash test/test_full_gt_mask_all.sh
+bash test/test_full_gt_mask_gt_pose_all.sh
+bash test/test_full_gt_pose_all.sh
+bash test/test_full_noflowaid_all.sh
+bash test/test_full_nooutrej_all.sh
+bash test/test_full_nopose_all.sh
+bash test/test_full_noposesync_all.sh
+bash test/test_full_novel_all.sh
