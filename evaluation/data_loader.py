@@ -47,9 +47,9 @@ class DataLoader():
         self.dataset_paths['fastycb_qual'] = self.dataset_paths['fastycb']
         self.dataset_mesh_paths =\
         {
-            'fastycb' : './YCB_Video_Models/',
-            'fastycb_qual' : './YCB_Video_Models/',
-            'ho3d' : './YCB_Video_Models/'
+            'fastycb' : './YCB_Video_Models/models/',
+            'fastycb_qual' : './YCB_Video_Models/models/',
+            'ho3d' : './YCB_Video_Models/models/'
         }
 
         self.dataset_video_ids = {}
