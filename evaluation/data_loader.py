@@ -39,7 +39,8 @@ class DataLoader():
 
         self.dataset_paths =\
         {
-            name : open(os.path.join('./config/', name + '_location'), 'r').readline() for name in ['ho3d', 'ycbv_synthetic']
+            'ho3d' : './dataset/ho3d/',
+            'ycbv_synthetic' : './dataset/fast-ycb'
         }
         self.dataset_paths['ycbv_real'] = self.dataset_paths['ycbv_synthetic']
         self.dataset_mesh_paths =\

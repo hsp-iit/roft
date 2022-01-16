@@ -45,7 +45,7 @@ class Metric():
             exit(1)
 
         # Load point clouds for ADD-AUC and ADI-AUC evaluation
-        ycbv_models_path = './YCB_Video_Models/'
+        ycbv_models_path = './YCB_Video_Models/models/'
         self.auc_points = { object_name : self.load_point_cloud(os.path.join(ycbv_models_path, object_name, 'points.xyz')) for object_name in Objects().objects['models']}
 
 
