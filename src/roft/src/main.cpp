@@ -7,6 +7,8 @@
 
 #include <ConfigParser.h>
 
+#include <BayesFilters/FilteringAlgorithm.h>
+
 #include <ROFT/CameraMeasurement.h>
 #include <ROFT/DatasetImageSegmentation.h>
 #include <ROFT/DatasetImageSegmentationDelayed.h>
@@ -27,6 +29,7 @@
 #include <RobotsIO/Utils/ImageFileProbe.h>
 #include <RobotsIO/Utils/Parameters.h>
 
+using namespace bfl;
 using namespace Eigen;
 using namespace ROFT;
 using namespace RobotsIO::Camera;
@@ -279,6 +282,154 @@ int main(int argc, char** argv)
     std::cout << "- alpha: " << ut_alpha << std::endl;
     std::cout << "- beta: "  << ut_beta << std::endl;
     std::cout << "- kappa: " << ut_kappa << std::endl;
+
+    /* Compose vectors. */
+    VectorXd p_initial_condition(13);
+    p_initial_condition.head<3>() = p_v_0;
+    p_initial_condition.segment<3>(3) = p_w_0;
+    p_initial_condition.segment<3>(6) = p_x_0;
+    Quaterniond q_0 (AngleAxisd(p_axis_angle_0(3), p_axis_angle_0.head<3>()));
+    p_initial_condition.tail<4>()(0) = q_0.w();
+    p_initial_condition.tail<4>()(1) = q_0.x();
+    p_initial_condition.tail<4>()(2) = q_0.y();
+    p_initial_condition.tail<4>()(3) = q_0.z();
+
+    VectorXd p_initial_covariance(12);
+    p_initial_covariance.head<3>() = p_cov_v_0;
+    p_initial_covariance.segment<3>(3) = p_cov_w_0;
+    p_initial_covariance.segment<3>(6) = p_cov_x_0;
+    p_initial_covariance.tail<3>() = p_cov_q_0;
+
+    VectorXd v_initial_condition(6);
+    v_initial_condition.head<3>() = v_v_0;
+    v_initial_condition.tail<3>() = v_w_0;
+
+    VectorXd v_initial_covariance(6);
+    v_initial_covariance.head<3>() = v_cov_v_0;
+    v_initial_covariance.tail<3>() = v_cov_w_0;
+
+    VectorXd p_model_covariance(6);
+    p_model_covariance.head<3>() = sigma_ang_vel;
+    p_model_covariance.tail<3>() = psd_lin_acc;
+
+    VectorXd v_model_covariance(6);
+    v_model_covariance.head<3>() = kin_q_v;
+    v_model_covariance.tail<3>() = kin_q_w;
+
+    VectorXd p_measurement_covariance(12);
+    p_measurement_covariance.head<3>() = p_meas_cov_v;
+    p_measurement_covariance.segment<3>(3) = p_meas_cov_w;
+    p_measurement_covariance.segment<3>(6) = p_meas_cov_x;
+    p_measurement_covariance.tail<3>() = p_meas_cov_q;
+
+    VectorXd v_measurement_covariance = v_meas_cov_flow;
+
+    /* Camera source. */
+    std::unique_ptr<Camera> camera_src = std::make_unique<DatasetCamera>
+    (
+        camera_path,
+        camera_data_prefix, camera_rgb_prefix, camera_depth_prefix,
+        camera_data_format, camera_rgb_format, camera_depth_format,
+        camera_heading_zeros, camera_index_offset,
+        camera_width, camera_height,
+        camera_fx, camera_cx, camera_fy, camera_cy
+    );
+    std::shared_ptr<CameraMeasurement> camera = std::make_shared<CameraMeasurement>(std::move(camera_src));
+
+    /* Model parameters. */
+    ModelParameters model_parameters;
+    model_parameters.name(model_name);
+    model_parameters.use_internal_db(model_use_internal_db);
+    model_parameters.internal_db_name(model_internal_db_name);
+    model_parameters.mesh_external_path(model_external_path);
+
+    /* Pose source. */
+    std::shared_ptr<RobotsIO::Utils::Transform> pose;
+    if (pose_delay || pose_fps_reduction)
+    {
+        if (!pose_fps_reduction)
+            pose_desired_fps = pose_original_fps;
+
+        pose = std::make_shared<DatasetTransformDelayed>(pose_original_fps, pose_desired_fps, pose_delay, pose_path, pose_skip_rows, pose_skip_cols, 7);
+    }
+    else
+        pose = std::make_shared<DatasetTransform>(pose_path, pose_skip_rows, pose_skip_cols, 7);
+
+    /* Segmentation source. */
+    std::shared_ptr<ImageSegmentationSource> segmentation;
+    if (segmentation_delay || segmentation_fps_reduction)
+    {
+        if (!segmentation_fps_reduction)
+            segmentation_desired_fps = segmentation_original_fps;
+
+        segmentation = std::make_shared<DatasetImageSegmentationDelayed>
+        (
+            segmentation_original_fps, segmentation_desired_fps, segmentation_delay,
+            segmentation_path, segmentation_format,
+            camera_width, camera_height,
+            segmentation_set, model_parameters,
+            segmentation_heading_zeros, segmentation_index_offset
+        );
+    }
+    else
+        segmentation = std::make_shared<DatasetImageSegmentation>
+        (
+            segmentation_path, segmentation_format,
+            camera_width, camera_height,
+            segmentation_set, model_parameters,
+            segmentation_heading_zeros, segmentation_index_offset
+        );
+
+    /* Flow source. */
+    std::shared_ptr<ImageOpticalFlowSource> flow;
+    // if (optical_flow_source == "NVOF")
+// #ifdef HAS_NVOF
+    // {
+    //     flow = std::make_shared<OTL::ImageOpticalFlowNVOF>(camera, OTL::ImageOpticalFlowNVOF::NVOFPerformance::Slow, false);
+    // }
+// #else
+    // {
+    //     throw(std::runtime_error(log_name_ + "::ctor. Error: cannot use NVIDIA NVOF since your OpenCV installation does not support it."));
+    // }
+// #endif
+    flow = std::make_shared<DatasetImageOpticalFlow>(optical_flow_path, optical_flow_set, camera_width, camera_height, optical_flow_heading_zeros, optical_flow_index_offset);
+
+
+    /* Filter. */
+    std::unique_ptr<Filter> filter = std::make_unique<Filter>
+    (
+        camera, segmentation, flow, pose,
+        model_parameters,
+        p_initial_condition, p_initial_covariance, p_model_covariance, p_measurement_covariance,
+        v_initial_condition, v_initial_covariance, v_model_covariance, v_measurement_covariance,
+        ut_alpha, ut_beta, ut_kappa,
+        sample_time,
+        use_pose_measurement, use_pose_resync, outlier_rejection_enable, outlier_rejection_gain,
+        use_velocity_measurement, flow_weighting, flow_aided_segmentation, depth_maximum, subsampling_radius,
+        enable_log, log_path, ""
+    );
+    if (enable_log_segmentation)
+    {
+        std::unique_ptr<Probe> probe_0 = std::unique_ptr<ImageFileProbe>
+        (
+            new ImageFileProbe(log_path + "/segmentation/", "", "png")
+        );
+        filter->set_probe("output_segmentation", std::move(probe_0));
+
+        std::unique_ptr<Probe> probe_1 = std::unique_ptr<ImageFileProbe>
+        (
+            new ImageFileProbe(log_path + "/segmentation_refined/", "", "png")
+        );
+        filter->set_probe("output_segmentation_refined", std::move(probe_1));
+    }
+    if (enable_log)
+        filter->enable_log(log_path, "");
+
+    /* Run filter. */
+    filter->boot();
+    filter->run();
+    if (!filter->wait())
+        return EXIT_FAILURE;
 
     return EXIT_SUCCESS;
 }

@@ -13,6 +13,9 @@ project(ROFT
 
 set(CMAKE_CXX_STANDARD 14)
 
+# BayesFilters
+find_package(BayesFilters REQUIRED)
+
 # Eigen 3
 find_package(Eigen3 REQUIRED)
 
@@ -46,6 +49,7 @@ target_include_directories(ROFT-tracker
 
 target_link_libraries(ROFT-tracker
                       PRIVATE
+                      BayesFilters::BayesFilters
                       Eigen3::Eigen
                       PkgConfig::LIBCONFIG++
                       RobotsIO::RobotsIO
