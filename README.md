@@ -38,11 +38,12 @@ We support running the experiments on the [Fast-YCB](https://github.com/hsp-iit/
     cd build
     make install
     ```
-1. Download and extract the accompanying data (Fast-YCB dataset and pre-evaluated results):
+1. Download and extract the accompanying data (Fast-YCB dataset and pre-evaluated results) and the YCB-Video model set:
     ```console
     cd /home/user/roft
     bash tools/download/download_results.sh
     bash tools/download/download_fastycb.sh
+    bash tools/download/download_ycb_models.sh
     ```
 1. Run the experiments (optional):
     ```console
