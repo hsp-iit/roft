@@ -19,6 +19,8 @@
   <a href="https://ieeexplore.ieee.org/ielx7/7083369/9568780/9568706/supp1-3119379.mp4?arnumber=9568706"><b>Video</b></a>
 </div>
 
+![CI badge](https://github.com/hsp-iit/roft/workflows/C++%20CI%20Workflow/badge.svg)
+
 ## Reproducing the experiments
 
 We support running the experiments on the [Fast-YCB](https://github.com/hsp-iit/fast-ycb) dataset via the provided Docker image.
