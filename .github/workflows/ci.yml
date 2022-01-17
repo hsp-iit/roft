@@ -1,0 +1,84 @@
+name: C++ CI Workflow
+
+on:
+  push:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: '[${{ matrix.os }}@${{ matrix.build_type }}]'
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        build_type: [Release]
+        os: [ubuntu-20.04]
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Remove broken apt repos [Ubuntu]
+      if: contains(matrix.os, 'ubuntu')
+      run: for apt_file in `grep -lr microsoft /etc/apt/sources.list.d/`; do sudo rm $apt_file; done
+
+    - name: Dependencies [Ubuntu]
+      if: contains(matrix.os, 'ubuntu')
+      shell: bash -l {0}
+      run: |
+        sudo apt install -y cmake libassimp-dev libconfig++-dev libglfw3-dev libglew-dev libglm-dev libeigen3-dev libopencv-dev libpython3-dev libtclap-dev pybind11-dev
+
+    - name: Dependencies (from source) [Ubuntu]
+      if: contains(matrix.os, 'ubuntu')
+      shell: bash -l {0}
+      run: |
+        # bayes-filters-lib
+        cd ${GITHUB_WORKSPACE}
+        git clone https://github.com/xenvre/bayes-filters-lib
+        cd bayes-filters-lib
+        git checkout of-aided-tracking
+        mkdir build
+        cd build
+        cmake -DCMAKE_INSTALL_PREFIX=${GITHUB_WORKSPACE} ..
+        cmake --build . --config ${{ matrix.build_type }} --target install
+
+        # superimpose-mesh-lib
+        cd ${GITHUB_WORKSPACE}
+        git clone https://github.com/robotology/ycm
+        cd ycm
+        mkdir build
+        cd build
+        cmake -DCMAKE_INSTALL_PREFIX=${GITHUB_WORKSPACE} ..
+        cmake --build . --config ${{ matrix.build_type }} --target install
+
+        cd ${GITHUB_WORKSPACE}
+        git clone https://github.com/xenvre/superimpose-mesh-lib
+        cd superimpose-mesh-lib
+        git checkout of-aided-tracking
+        mkdir build
+        cd build
+        cmake -DCMAKE_INSTALL_PREFIX=${GITHUB_WORKSPACE} ..
+        cmake --build . --config ${{ matrix.build_type }} --target install
+
+        # robots-io
+        cd ${GITHUB_WORKSPACE}
+        git clone https://github.com/xenvre/robots-io
+        cd robots-io
+        mkdir build
+        cd build
+        cmake -DCMAKE_INSTALL_PREFIX=${GITHUB_WORKSPACE} ..
+        cmake --build . --config ${{ matrix.build_type }} --target install
+
+    - name: Configure CMake [Ubuntu]
+      if: contains(matrix.os, 'ubuntu')
+      shell: bash -l {0}
+      run: |
+        mkdir build
+        cd build
+        cmake -DCMAKE_PREFIX_PATH=${GITHUB_WORKSPACE} -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DBUILD_RENDERER=ON ..
+
+    - name: Build
+      shell: bash -l {0}
+      run: |
+        cd build
+        cmake --build . --config ${{matrix.build_type}}
