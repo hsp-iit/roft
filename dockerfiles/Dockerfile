@@ -92,9 +92,9 @@ RUN virtualenv roft_env -p `which python3` && \
 # Download third-party assets and tools
 WORKDIR /home/user/roft
 RUN . roft_env/bin/activate && \
-    bash tools/third_party/download_google_drive_file.sh https://drive.google.com/file/d/1gmcDD-5bkJfcMKLZb3zGgH_HUFbulQWu/view && \
-    unzip YCB_Video_Models.zip -d YCB_Video_Models/ && \
-    rm YCB_Video_Models.zip && \
+    # bash tools/third_party/download_google_drive_file.sh https://drive.google.com/file/d/1gmcDD-5bkJfcMKLZb3zGgH_HUFbulQWu/view && \
+    # unzip YCB_Video_Models.zip -d YCB_Video_Models/ && \
+    # rm YCB_Video_Models.zip && \
     git clone https://github.com/NVIDIA/Dataset_Utilities tools/third_party/Dataset_Utilities && \
     cd tools/third_party/Dataset_Utilities && \
     git checkout 532b8c76e3d7946748a10af3398438b35383f157 && \
