@@ -47,6 +47,11 @@ We support running the experiments on the [Fast-YCB](https://github.com/hsp-iit/
     bash tools/download/download_fastycb.sh
     bash tools/download/download_ycb_models.sh
     ```
+1. Initialize the datasets:
+    ```console
+    cd /home/user/roft
+    bash test/init.sh
+    ```
 1. Run the experiments (optional):
     ```console
     cd /home/user/roft
