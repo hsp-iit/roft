@@ -33,6 +33,10 @@ We support running the experiments on the [Fast-YCB](https://github.com/hsp-iit/
     ```console
     docker run -it --rm --user user --env="DISPLAY" --net=host --device /dev/dri/ ghcr.io/hsp-iit/roft:latest
     ```
+    If an NVIDIA GPU is adopted, please use instead:
+    ```console
+    docker run -it --rm --user user --env="DISPLAY" --net=host -e NVIDIA_DRIVER_CAPABILITIES=all -v /tmp/.X11-unix:/tmp/.X11-unix --gpus all --runtime=nvidia ghcr.io/hsp-iit/roft:latest
+    ```
 1. Update and build the project:
     ```console
     cd /home/user/roft
