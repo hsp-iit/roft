@@ -5,11 +5,11 @@
  * GPL-2+ license. See the accompanying LICENSE file for details.
  */
 
-#include <OTL/ImageOpticalFlowNVOF.h>
+#include <ROFT/ImageOpticalFlowNVOF.h>
 
 
 using namespace Eigen;
-using namespace OTL;
+using namespace ROFT;
 using namespace RobotsIO;
 using namespace bfl;
 using namespace cv::cuda;
@@ -87,11 +87,13 @@ ImageOpticalFlowNVOF::~ImageOpticalFlowNVOF()
         if (nvof_1_0_ != nullptr)
             nvof_1_0_->collectGarbage();
     }
+#if CV_MAJOR_VERSION == 4 && CV_MINOR_VERSION == 5 && CV_SUBMINOR_VERSION >= 2
     else if (nvof_version_ == 2)
     {
         if (nvof_2_0_ != nullptr)
             nvof_2_0_->collectGarbage();
     }
+#endif
 }
 
 
@@ -130,19 +132,23 @@ bool ImageOpticalFlowNVOF::step_frame()
     /* Evaluate flow. */
     if (nvof_version_ == 1)
         nvof_1_0_->calc(gpu_last_frame_, gpu_frame, gpu_flow);
+#if CV_MAJOR_VERSION == 4 && CV_MINOR_VERSION == 5 && CV_SUBMINOR_VERSION >= 2
     else if (nvof_version_ == 2)
         nvof_2_0_->calc(gpu_last_frame_, gpu_frame, gpu_flow);
+#endif
 
     if(nvof_version_ == 1)
     {
         /* In this case we avoid upsampling as data is just duplicated all-over the pixels. */
         gpu_flow.download(flow_);
     }
+#if CV_MAJOR_VERSION == 4 && CV_MINOR_VERSION == 5 && CV_SUBMINOR_VERSION >= 2
     else if (nvof_version_ == 2)
     {
         /* In this case per-pixel flow is provided with minimum overhead. */
         nvof_2_0_->convertToFloat(gpu_flow, flow_);
     }
+#endif
 
     /* Store last frame. */
     gpu_last_frame_ = gpu_frame;
@@ -177,7 +183,7 @@ float ImageOpticalFlowNVOF::get_scaling_factor() const
 }
 
 
-int ImageOpticalFlowNVOF::get_matrix_type() const override
+int ImageOpticalFlowNVOF::get_matrix_type() const
 {
     return matrix_type_;
 }

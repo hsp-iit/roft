@@ -5,17 +5,17 @@
  * GPL-2+ license. See the accompanying LICENSE file for details.
  */
 
-#include <OTL/CameraMeasurement.h>
-#include <OTL/ImageOpticalFlowNVOF.h>
-#include <OTL/OpticalFlowUtilities.h>
+#include <ROFT/CameraMeasurement.h>
+#include <ROFT/ImageOpticalFlowNVOF.h>
+#include <ROFT/OpticalFlowUtilities.h>
 
 #include <RobotsIO/Camera/DatasetCamera.h>
 
 #include <sstream>
 #include <string>
 
-using namespace OTL;
-using namespace OTL::OpticalFlowUtils;
+using namespace ROFT;
+using namespace ROFT::OpticalFlowUtils;
 using namespace RobotsIO::Camera;
 
 
@@ -39,7 +39,7 @@ bool parse_size_t (char** argv, const std::size_t& index, const std::string& nam
 
 int main(int argc, char** argv)
 {
-    const std::string log_name = "6d-of-tracking-of-dumper";
+    const std::string log_name = "ROFT-of-dumper";
 
     if (argc != 9)
     {

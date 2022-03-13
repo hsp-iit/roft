@@ -382,18 +382,10 @@ int main(int argc, char** argv)
 
     /* Flow source. */
     std::shared_ptr<ImageOpticalFlowSource> flow;
-    // if (optical_flow_source == "NVOF")
 // #ifdef HAS_NVOF
-    // {
-    //     flow = std::make_shared<OTL::ImageOpticalFlowNVOF>(camera, OTL::ImageOpticalFlowNVOF::NVOFPerformance::Slow, false);
-    // }
-// #else
-    // {
-    //     throw(std::runtime_error(log_name_ + "::ctor. Error: cannot use NVIDIA NVOF since your OpenCV installation does not support it."));
-    // }
+    // flow = std::make_shared<ImageOpticalFlowNVOF>(camera, ImageOpticalFlowNVOF::NVOFPerformance_1_0::Slow, false);
 // #endif
     flow = std::make_shared<DatasetImageOpticalFlow>(optical_flow_path, optical_flow_set, camera_width, camera_height, optical_flow_heading_zeros, optical_flow_index_offset);
-
 
     /* Filter. */
     std::unique_ptr<Filter> filter = std::make_unique<Filter>

@@ -5,14 +5,14 @@
  * GPL-2+ license. See the accompanying LICENSE file for details.
  */
 
-#include <OTL/DatasetImageOpticalFlow.h>
-#include <OTL/OpticalFlowUtilities.h>
+#include <ROFT/DatasetImageOpticalFlow.h>
+#include <ROFT/OpticalFlowUtilities.h>
 
 #include <sstream>
 #include <string>
 
-using namespace OTL;
-using namespace OTL::OpticalFlowUtils;
+using namespace ROFT;
+using namespace ROFT::OpticalFlowUtils;
 
 
 bool parse_size_t (char** argv, const std::size_t& index, const std::string& name, std::size_t& retrieved)
@@ -35,7 +35,7 @@ bool parse_size_t (char** argv, const std::size_t& index, const std::string& nam
 
 int main(int argc, char** argv)
 {
-    const std::string log_name = "6d-of-tracking-of-renderer";
+    const std::string log_name = "ROFT-of-renderer";
 
     if (argc != 8)
     {

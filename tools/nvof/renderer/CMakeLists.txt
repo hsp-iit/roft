@@ -7,9 +7,7 @@
 #
 #===============================================================================
 
-set(EXE_TARGET_NAME 6d-of-tracking-of-renderer)
-
-find_package(OTL REQUIRED)
+set(EXE_TARGET_NAME ROFT-of-renderer)
 
 set(${EXE_TARGET_NAME}_HDR
 )
@@ -27,7 +25,7 @@ target_include_directories(${EXE_TARGET_NAME}
 
 target_link_libraries(${EXE_TARGET_NAME}
                       PRIVATE
-                      OTL::OTL
+                      ROFTLib
 )
 
 install(TARGETS ${EXE_TARGET_NAME} DESTINATION bin)

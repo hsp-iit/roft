@@ -67,7 +67,9 @@ private:
 
     cv::Ptr<cv::cuda::NvidiaOpticalFlow_1_0> nvof_1_0_;
 
+#if CV_MAJOR_VERSION == 4 && CV_MINOR_VERSION == 5 && CV_SUBMINOR_VERSION >= 2
     cv::Ptr<cv::cuda::NvidiaOpticalFlow_2_0> nvof_2_0_;
+#endif
 
     cv::cuda::GpuMat gpu_last_frame_;
 

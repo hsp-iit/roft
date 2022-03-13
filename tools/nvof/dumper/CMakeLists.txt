@@ -7,9 +7,7 @@
 #
 #===============================================================================
 
-set(EXE_TARGET_NAME 6d-of-tracking-of-dumper)
-
-find_package(OTL REQUIRED)
+set(EXE_TARGET_NAME ROFT-of-dumper)
 
 find_package(RobotsIO REQUIRED)
 
@@ -30,7 +28,7 @@ target_include_directories(${EXE_TARGET_NAME}
 target_link_libraries(${EXE_TARGET_NAME}
                       PRIVATE
                       RobotsIO::RobotsIO
-                      OTL::OTL
+                      ROFTLib
 )
 
 install(TARGETS ${EXE_TARGET_NAME} DESTINATION bin)
