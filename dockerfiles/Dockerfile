@@ -19,7 +19,7 @@ ENV LANG=en_US.UTF-8
 
 # Install essentials
 RUN apt update && \
-    apt install --no-install-recommends -y -qq apt-utils build-essential ca-certificates cmake cmake-curses-gui curl emacs-nox git glmark2 gnupg2 htop iputils-ping lsb-release mesa-utils nano psmisc python3-virtualenv sudo unzip vim wget && \
+    apt install --no-install-recommends -y -qq apt-utils build-essential ca-certificates cmake cmake-curses-gui curl emacs-nox git glmark2 gnupg2 htop iputils-ping jq lsb-release mesa-utils nano psmisc python3-virtualenv sudo unzip vim wget zip && \
     rm -rf /var/lib/apt/lists/*
 
 # Install GitHub cli
