@@ -26,6 +26,7 @@ jobs:
       if: contains(matrix.os, 'ubuntu')
       shell: bash -l {0}
       run: |
+        sudo apt-get update
         sudo apt install -y cmake libassimp-dev libconfig++-dev libglfw3-dev libglew-dev libglm-dev libeigen3-dev libopencv-dev libpython3-dev libtclap-dev pybind11-dev
 
     - name: Dependencies (from source) [Ubuntu]
