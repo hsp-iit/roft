@@ -7,7 +7,7 @@
 #
 #===============================================================================
 
-set(EXE_TARGET_NAME 6d-of-tracking-rs-capture)
+set(EXE_TARGET_NAME ROFT-rs-capture)
 
 find_package(OpenCV REQUIRED)
 
