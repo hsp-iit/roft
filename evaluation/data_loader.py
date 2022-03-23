@@ -34,8 +34,8 @@ class DataLoader():
         root_path = './results/'
         self.paths =\
         {
-            'ours' : root_path + 'ours/',
-            'se3tracknet' : root_path + 'TrackNet_results/',
+            'ours' : root_path + 'ROFT_results/',
+            'se3tracknet' : root_path + 'se3TrackNet_results/',
             'poserbpf' : root_path + 'PoseRBPF_results/'
         }
 
