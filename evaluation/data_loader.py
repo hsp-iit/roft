@@ -264,7 +264,7 @@ class DataLoader():
         dataset_name = config['dataset']
         se3_dataset_name = dataset_map[config['dataset']]
 
-        # For dope, poses used durinig re-initialization are available
+        # For dope, poses used during re-initialization are available
         if config['reinit_from'] == 'dope':
             contents_map['reinit_dope'] = 'pose_measurements'
 
@@ -372,7 +372,7 @@ class DataLoader():
         dataset_name = config['dataset']
         poserbpf_dataset_name = dataset_map[config['dataset']]
 
-        # For dope, poses used durinig re-initialization are available
+        # For dope, poses used during re-initialization are available
         if config['reinit_from'] == 'dope':
             contents_map['reinit_dope'] = 'pose_measurements'
 
