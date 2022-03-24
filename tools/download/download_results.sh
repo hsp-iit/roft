@@ -7,3 +7,4 @@ curl -L -H X-Dataverse-key:$TOKEN $SERVER/api/access/dataset/:persistentId/?pers
 unzip -qq results.zip
 rm results.zip
 rm MANIFEST.TXT
+rm README.txt
