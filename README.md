@@ -103,6 +103,7 @@ doi={10.1109/LRA.2021.3119379}
 
 and/or the repository itself by pressing on the `Cite this respository` button in the **About** section.
 
+The pre-evaluated results on the [Fast-YCB](https://github.com/hsp-iit/fast-ycb) dataset are stored within the IIT Dataverse and identified by the following [![DOI:10.48557/9FJW42](http://img.shields.io/badge/DOI-10.48557/9FJW42-0a7bbc.svg)](https://doi.org/10.48557/9FJW42).
 
 ## Maintainer
 
