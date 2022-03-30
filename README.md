@@ -19,7 +19,7 @@
   <a href="https://ieeexplore.ieee.org/ielx7/7083369/9568780/9568706/supp1-3119379.mp4?arnumber=9568706"><b>Video</b></a>
 </div>
 
-![CI badge](https://github.com/hsp-iit/roft/workflows/C++%20CI%20Workflow/badge.svg)
+[![DOI](https://zenodo.org/badge/308858064.svg)](https://zenodo.org/badge/latestdoi/308858064) ![CI badge](https://github.com/hsp-iit/roft/workflows/C++%20CI%20Workflow/badge.svg)
 
 ## Reproducing the experiments
 
