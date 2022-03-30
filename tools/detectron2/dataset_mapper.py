@@ -1,4 +1,9 @@
 # Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved
+#
+# This code was taken from the Detectron2 code base and has been modified.
+# The original License associated to this file can be found in ./LICENSE_Detectron2.
+#
+
 import copy
 import logging
 import numpy as np
@@ -87,7 +92,7 @@ class Mapper:
             recompute_boxes = cfg.MODEL.MASK_ON
         else:
             recompute_boxes = False
-        
+
         if use_augmentation:
             augs =\
             [
