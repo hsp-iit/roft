@@ -18,5 +18,6 @@ authors:
   orcid: "https://orcid.org/0000-0002-8777-5233"
 title: "roft"
 version: v1.0.0
+doi: 10.5281/zenodo.6396283
 date-released: 2022-03-30
 url: "https://github.com/hsp-iit/roft"
