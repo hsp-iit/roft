@@ -31,15 +31,15 @@ public:
 
     virtual void motion(const Eigen::Ref<const Eigen::MatrixXd>& cur_states, Eigen::Ref<Eigen::MatrixXd> mot_states) override;
 
-    void setSamplingTime(const double& sample_time) override;
+    bool setSamplingTime(const double& sample_time) override;
 
     bool setProperty(const std::string& property) override;
 
-    Eigen::MatrixXd getNoiseCovarianceMatrix() const override;
+    Eigen::MatrixXd getNoiseCovarianceMatrix() override;
 
-    bfl::VectorDescription getInputDescription() const override;
+    bfl::VectorDescription getInputDescription() override;
 
-    bfl::VectorDescription getStateDescription() const override;
+    bfl::VectorDescription getStateDescription() override;
 
 private:
     void evaluate_noise_covariance_matrix(const double& T);

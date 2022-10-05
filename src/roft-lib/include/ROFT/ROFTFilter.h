@@ -32,15 +32,15 @@
 #include <opencv2/opencv.hpp>
 
 namespace ROFT {
-    class Filter;
+    class ROFTFilter;
 }
 
 
-class ROFT::Filter : public bfl::FilteringAlgorithm,
-                     public RobotsIO::Utils::ProbeContainer
+class ROFT::ROFTFilter : public bfl::FilteringAlgorithm,
+                         public RobotsIO::Utils::ProbeContainer
 {
 public:
-    Filter
+    ROFTFilter
     (
         std::shared_ptr<ROFT::CameraMeasurement> camera_measurement,
         std::shared_ptr<ROFT::ImageSegmentationSource> segmentation_source,
@@ -73,18 +73,18 @@ public:
         const std::string& log_prefix
     );
 
-    virtual ~Filter();
+    virtual ~ROFTFilter();
 
-    bool runCondition() override;
+    bool run_condition() override;
 
-    bool initialization() override;
+    bool initialization_step() override;
 
     bool skip(const std::string& what_step, const bool status) override;
 
 protected:
     std::vector<std::string> log_file_names(const std::string& prefix_path, const std::string& prefix_name) override;
 
-    void filteringStep() override;
+    void filtering_step() override;
 
 private:
     void start_time_count();
@@ -189,7 +189,7 @@ private:
 
     /* Log name. */
 
-    const std::string log_name_ = "Filter";
+    const std::string log_name_ = "ROFTFilter";
 };
 
 #endif /* ROFT_FILTER_H */

@@ -23,7 +23,7 @@ SpatialVelocityModel::SpatialVelocityModel(const Ref<const MatrixXd> sigma_v, co
     Q_.block<3, 3>(3, 3) = sigma_w;
 
     input_description_ = VectorDescription(6, 0, 6);
-    state_description_ = input_description_.get_noiseless_description();
+    state_description_ = input_description_.noiseless_description();
 }
 
 
@@ -37,19 +37,19 @@ Eigen::MatrixXd SpatialVelocityModel::getStateTransitionMatrix()
 }
 
 
-Eigen::MatrixXd SpatialVelocityModel::getNoiseCovarianceMatrix() const
+Eigen::MatrixXd SpatialVelocityModel::getNoiseCovarianceMatrix()
 {
     return Q_;
 }
 
 
-VectorDescription SpatialVelocityModel::getInputDescription() const
+VectorDescription SpatialVelocityModel::getInputDescription()
 {
     return input_description_;
 }
 
 
-VectorDescription SpatialVelocityModel::getStateDescription() const
+VectorDescription SpatialVelocityModel::getStateDescription()
 {
     return state_description_;
 }

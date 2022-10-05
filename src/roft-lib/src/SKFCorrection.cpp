@@ -57,7 +57,7 @@ void SKFCorrection::correctStep(const GaussianMixture& pred_state, GaussianMixtu
 
     /* Check if the size of the measurement is not zero and compatible with measurement_sub_size. */
     VectorDescription description = measurement_model_->getMeasurementDescription();
-    std::size_t meas_size = description.linear_size;
+    std::size_t meas_size = description.linear_size();
     valid_measurement &= (meas_size != 0);
     valid_measurement &= ((meas_size % measurement_sub_size_ ) == 0);
 

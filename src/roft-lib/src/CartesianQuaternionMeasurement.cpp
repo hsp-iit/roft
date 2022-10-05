@@ -244,7 +244,7 @@ std::pair<bool, bfl::Data> CartesianQuaternionMeasurement::predictedMeasure(cons
        For this reason, it is assumed that noise_covariance_.rows() noise components are provided in cur_states.bottomRows(noise_covariance_.cols()). */
     const Ref<const MatrixXd> noise = current_states.bottomRows(noise_covariance_.rows());
 
-    MatrixXd predicted_measure(measurement_description_.total_size, current_states.cols());
+    MatrixXd predicted_measure(measurement_description_.total_size(), current_states.cols());
     MatrixXd predicted_pose(7, current_states.cols());
     MatrixXd predicted_velocity(6, current_states.cols());
 

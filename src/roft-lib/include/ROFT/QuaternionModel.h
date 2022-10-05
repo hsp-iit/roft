@@ -31,15 +31,15 @@ public:
 
     virtual void motion(const Eigen::Ref<const Eigen::MatrixXd>& cur_states, Eigen::Ref<Eigen::MatrixXd> mot_states) override;
 
-    Eigen::MatrixXd getNoiseCovarianceMatrix() const override;
+    Eigen::MatrixXd getNoiseCovarianceMatrix() override;
 
-    bfl::VectorDescription getInputDescription() const override;
+    bfl::VectorDescription getInputDescription() override;
 
-    bfl::VectorDescription getStateDescription() const override;
+    bfl::VectorDescription getStateDescription() override;
 
     bool setProperty(const std::string& property);
 
-    void setSamplingTime(const double& sample_time) override;
+    bool setSamplingTime(const double& sample_time) override;
 
 private:
     Eigen::MatrixXd propagate_quaternion(const Eigen::Ref<const Eigen::MatrixXd>& current_quaternion, const Eigen::Ref<const Eigen::MatrixXd>& angular_velocities);
