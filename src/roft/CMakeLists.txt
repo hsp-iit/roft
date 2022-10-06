@@ -9,7 +9,7 @@
 
 project(ROFT
         LANGUAGES CXX
-        VERSION 1.0.0)
+        VERSION 1.1.0)
 
 set(CMAKE_CXX_STANDARD 14)
 
