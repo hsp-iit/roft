@@ -42,7 +42,6 @@ set(${LIBRARY_TARGET_NAME}_HDR
     include/ROFT/DatasetImageOpticalFlow.h
     include/ROFT/DatasetImageSegmentation.h
     include/ROFT/DatasetImageSegmentationDelayed.h
-    include/ROFT/Filter.h
     include/ROFT/ImageOpticalFlowMeasurement.hpp
     include/ROFT/ImageOpticalFlowSource.h
     include/ROFT/ImageSegmentationMeasurement.h
@@ -52,8 +51,10 @@ set(${LIBRARY_TARGET_NAME}_HDR
     include/ROFT/ModelParameters.h
     include/ROFT/OpticalFlowUtilities.h
     include/ROFT/QuaternionModel.h
+    include/ROFT/ROFTFilter.h
     include/ROFT/SpatialVelocityModel.h
     include/ROFT/SKFCorrection.h
+    include/ROFT/UKFCorrection.h
 )
 
 # Source files
@@ -64,7 +65,6 @@ set(${LIBRARY_TARGET_NAME}_SRC
     src/DatasetImageOpticalFlow.cpp
     src/DatasetImageSegmentation.cpp
     src/DatasetImageSegmentationDelayed.cpp
-    src/Filter.cpp
     src/ImageOpticalFlowSource.cpp
     src/ImageSegmentationMeasurement.cpp
     src/ImageSegmentationSource.cpp
@@ -72,8 +72,10 @@ set(${LIBRARY_TARGET_NAME}_SRC
     src/ModelParameters.cpp
     src/OpticalFlowUtilities.cpp
     src/QuaternionModel.cpp
+    src/ROFTFilter.cpp
     src/SpatialVelocityModel.cpp
     src/SKFCorrection.cpp
+    src/UKFCorrection.cpp
 )
 
 # Support for NVIDIA Optical Flow within OpenCV is optional

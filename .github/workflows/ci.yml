@@ -35,9 +35,9 @@ jobs:
       run: |
         # bayes-filters-lib
         cd ${GITHUB_WORKSPACE}
-        git clone https://github.com/xenvre/bayes-filters-lib
+        git clone https://github.com/robotology/bayes-filters-lib
         cd bayes-filters-lib
-        git checkout of-aided-tracking
+        git checkout devel
         mkdir build
         cd build
         cmake -DCMAKE_INSTALL_PREFIX=${GITHUB_WORKSPACE} ..

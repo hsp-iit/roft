@@ -26,11 +26,11 @@ public:
 
     Eigen::MatrixXd getStateTransitionMatrix() override;
 
-    Eigen::MatrixXd getNoiseCovarianceMatrix() const override;
+    Eigen::MatrixXd getNoiseCovarianceMatrix() override;
 
-    bfl::VectorDescription getInputDescription() const override;
+    bfl::VectorDescription getInputDescription() override;
 
-    bfl::VectorDescription getStateDescription() const override;
+    bfl::VectorDescription getStateDescription() override;
 
     bool setProperty(const std::string& property) override;
 

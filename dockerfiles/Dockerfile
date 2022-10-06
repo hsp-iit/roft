@@ -36,8 +36,8 @@ RUN apt update && \
     rm -rf /var/lib/apt/lists/*
 
 # Build bayes-filters-lib
-RUN git clone https://github.com/xenvre/bayes-filters-lib && \
-    cd bayes-filters-lib && git checkout of-aided-tracking && mkdir build && cd build && \
+RUN git clone https://github.com/robotology/bayes-filters-lib && \
+    cd bayes-filters-lib && git checkout devel && mkdir build && cd build && \
     cmake .. && \
     make install
 

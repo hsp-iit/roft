@@ -19,7 +19,7 @@
 #include <ROFT/ImageOpticalFlowSource.h>
 #include <ROFT/ImageSegmentationSource.h>
 #include <ROFT/ModelParameters.h>
-#include <ROFT/Filter.h>
+#include <ROFT/ROFTFilter.h>
 
 #include <RobotsIO/Camera/Camera.h>
 #include <RobotsIO/Camera/DatasetCamera.h>
@@ -388,7 +388,7 @@ int main(int argc, char** argv)
     flow = std::make_shared<DatasetImageOpticalFlow>(optical_flow_path, optical_flow_set, camera_width, camera_height, optical_flow_heading_zeros, optical_flow_index_offset);
 
     /* Filter. */
-    std::unique_ptr<Filter> filter = std::make_unique<Filter>
+    std::unique_ptr<ROFTFilter> filter = std::make_unique<ROFTFilter>
     (
         camera, segmentation, flow, pose,
         model_parameters,

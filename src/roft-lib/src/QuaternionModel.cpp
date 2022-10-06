@@ -53,19 +53,19 @@ void QuaternionModel::propagate(const Ref<const MatrixXd>& current, Ref<MatrixXd
 }
 
 
-VectorDescription QuaternionModel::getInputDescription() const
+VectorDescription QuaternionModel::getInputDescription()
 {
     return input_description_;
 }
 
 
-VectorDescription QuaternionModel::getStateDescription() const
+VectorDescription QuaternionModel::getStateDescription()
 {
     return state_description_;
 }
 
 
-Eigen::MatrixXd QuaternionModel::getNoiseCovarianceMatrix() const
+Eigen::MatrixXd QuaternionModel::getNoiseCovarianceMatrix()
 {
     return Q_;
 }
@@ -77,9 +77,11 @@ bool QuaternionModel::setProperty(const std::string& property)
 }
 
 
-void QuaternionModel::setSamplingTime(const double& sample_time)
+bool QuaternionModel::setSamplingTime(const double& sample_time)
 {
     sample_time_ = sample_time;
+
+    return true;
 }
 
 

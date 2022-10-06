@@ -5,13 +5,12 @@
  * GPL-2+ license. See the accompanying LICENSE file for details.
  */
 
-#include <ROFT/Filter.h>
+#include <ROFT/ROFTFilter.h>
 
 #include <BayesFilters/AdditiveMeasurementModel.h>
 #include <BayesFilters/KFPrediction.h>
 #include <BayesFilters/LinearStateModel.h>
 #include <BayesFilters/UKFPrediction.h>
-#include <BayesFilters/UKFCorrection.h>
 
 #include <ROFT/CartesianQuaternionMeasurement.h>
 #include <ROFT/CartesianQuaternionModel.h>
@@ -19,6 +18,7 @@
 #include <ROFT/MeshResource.h>
 #include <ROFT/SpatialVelocityModel.h>
 #include <ROFT/SKFCorrection.h>
+#include <ROFT/UKFCorrection.h>
 
 #include <RobotsIO/Camera/CameraParameters.h>
 
@@ -29,7 +29,7 @@ using namespace RobotsIO::Utils;
 using namespace bfl;
 
 
-Filter::Filter
+ROFTFilter::ROFTFilter
 (
     std::shared_ptr<ROFT::CameraMeasurement> camera_measurement,
     std::shared_ptr<ROFT::ImageSegmentationSource> segmentation_source,
@@ -168,14 +168,14 @@ Filter::Filter
     );
 
     /* Correction. */
-    p_correction_ = std::unique_ptr<UKFCorrection>
+    p_correction_ = std::unique_ptr<ROFT::UKFCorrection>
     (
-        new UKFCorrection(std::move(measurement_model), ut_alpha, ut_beta, ut_kappa, true)
+        new ROFT::UKFCorrection(std::move(measurement_model), ut_alpha, ut_beta, ut_kappa)
     );
 
-    v_correction_ = std::unique_ptr<SKFCorrection>
+    v_correction_ = std::unique_ptr<ROFT::SKFCorrection>
     (
-        new SKFCorrection(std::move(flow), 2, flow_weighting)
+        new ROFT::SKFCorrection(std::move(flow), 2, flow_weighting)
     );
 
     /* Depth rendering for outlier rejection. */
@@ -198,19 +198,19 @@ Filter::Filter
 }
 
 
-Filter::~Filter()
+ROFTFilter::~ROFTFilter()
 {
     disable_log();
 }
 
 
-bool Filter::runCondition()
+bool ROFTFilter::run_condition()
 {
     return true;
 }
 
 
-bool Filter::initialization()
+bool ROFTFilter::initialization_step()
 {
     /* Initialize Gaussian belief. */
     v_corr_belief_.mean().head<3>() = v_v_0_;
@@ -234,14 +234,14 @@ bool Filter::initialization()
 }
 
 
-bool Filter::skip(const std::string& what_step, const bool status)
+bool ROFTFilter::skip(const std::string& what_step, const bool status)
 {
     /* Not implemented. */
     return false;
 }
 
 
-std::vector<std::string> Filter::log_file_names(const std::string& prefix_path, const std::string& prefix_name)
+std::vector<std::string> ROFTFilter::log_file_names(const std::string& prefix_path, const std::string& prefix_name)
 {
     return  {prefix_path + "/" + prefix_name + "pose_estimate",
              prefix_path + "/" + prefix_name + "velocity_estimate",
@@ -249,7 +249,7 @@ std::vector<std::string> Filter::log_file_names(const std::string& prefix_path, 
 }
 
 
-void Filter::filteringStep()
+void ROFTFilter::filtering_step()
 {
     bool data_in;
 
@@ -323,7 +323,7 @@ void Filter::filteringStep()
 
     if (p_correction_->getMeasurementModel().freeze(CartesianQuaternionMeasurement::MeasurementMode::Standard))
     {
-        if (p_correction_->getMeasurementModel().getMeasurementDescription().total_size == 13)
+        if (p_correction_->getMeasurementModel().getMeasurementDescription().total_size() == 13)
         {
             if (pose_resync_)
             {
@@ -340,7 +340,7 @@ void Filter::filteringStep()
                 {
                     p_prediction_->predict(p_corr_belief_, p_pred_belief_);
 
-                    if (outlier_rejection_ && p_correction_->getMeasurementModel().getMeasurementDescription().total_size == 13)
+                    if (outlier_rejection_ && p_correction_->getMeasurementModel().getMeasurementDescription().total_size() == 13)
                         p_corr_belief_ = correct_outlier_rejection(p_pred_belief_, true);
                     else
                         p_correction_->correct(p_pred_belief_, p_corr_belief_);
@@ -449,19 +449,19 @@ void Filter::filteringStep()
 }
 
 
-void Filter::start_time_count()
+void ROFTFilter::start_time_count()
 {
     std_time_0_ = std::chrono::steady_clock::now();
 }
 
 
-double Filter::stop_time_count()
+double ROFTFilter::stop_time_count()
 {
     return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - std_time_0_).count();
 }
 
 
-std::pair<bool, bfl::Gaussian> Filter::pick_best_alternative(const std::vector<bfl::Gaussian>& alternatives, const bool use_buffered_features)
+std::pair<bool, bfl::Gaussian> ROFTFilter::pick_best_alternative(const std::vector<bfl::Gaussian>& alternatives, const bool use_buffered_features)
 {
     auto failed = std::make_pair(false, Gaussian());
 
@@ -618,7 +618,7 @@ std::pair<bool, bfl::Gaussian> Filter::pick_best_alternative(const std::vector<b
 }
 
 
-bool Filter::buffer_outlier_rejection_features()
+bool ROFTFilter::buffer_outlier_rejection_features()
 {
     /* Measure depth. */
     bfl::Data camera_data;
@@ -643,7 +643,7 @@ bool Filter::buffer_outlier_rejection_features()
 }
 
 
-Gaussian Filter::correct_outlier_rejection(const Gaussian& prediction, const bool use_buffered_features)
+Gaussian ROFTFilter::correct_outlier_rejection(const Gaussian& prediction, const bool use_buffered_features)
 {
     Gaussian correction = prediction;
     Gaussian corr_belief_v = prediction;

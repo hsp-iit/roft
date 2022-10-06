@@ -141,29 +141,31 @@ void CartesianQuaternionModel::evaluate_noise_covariance_matrix(const double& T)
 }
 
 
-VectorDescription CartesianQuaternionModel::getInputDescription() const
+VectorDescription CartesianQuaternionModel::getInputDescription()
 {
     return input_description_;
 }
 
 
-VectorDescription CartesianQuaternionModel::getStateDescription() const
+VectorDescription CartesianQuaternionModel::getStateDescription()
 {
     /* 9 linear components (x_dot, y_dot, z_dot, w_x, w_y, w_z, x, y, z) and 1 quaternion. */
     return state_description_;
 }
 
 
-Eigen::MatrixXd CartesianQuaternionModel::getNoiseCovarianceMatrix() const
+Eigen::MatrixXd CartesianQuaternionModel::getNoiseCovarianceMatrix()
 {
     return Q_;
 }
 
 
-void CartesianQuaternionModel::setSamplingTime(const double& sample_time)
+bool CartesianQuaternionModel::setSamplingTime(const double& sample_time)
 {
    sample_time_ = sample_time;
    evaluate_noise_covariance_matrix(sample_time_);
+
+   return true;
 }
 
 
