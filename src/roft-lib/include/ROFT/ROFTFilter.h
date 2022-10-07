@@ -21,13 +21,12 @@
 #include <ROFT/ImageSegmentationMeasurement.h>
 #include <ROFT/ImageSegmentationSource.h>
 #include <ROFT/ModelParameters.h>
+#include <ROFT/SICAD.h>
 
 #include <RobotsIO/Camera/Camera.h>
 #include <RobotsIO/Utils/ProbeContainer.h>
 #include <RobotsIO/Utils/SpatialVelocityBuffer.h>
 #include <RobotsIO/Utils/Transform.h>
-
-#include <SuperimposeMesh/SICAD.h>
 
 #include <opencv2/opencv.hpp>
 
@@ -151,7 +150,7 @@ private:
 
     RobotsIO::Camera::CameraParameters camera_parameters_;
 
-    std::unique_ptr<SICAD> renderer_;
+    std::unique_ptr<ROFT::SICAD> renderer_;
 
     const bool outlier_rejection_;
 
