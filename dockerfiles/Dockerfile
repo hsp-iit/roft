@@ -46,8 +46,8 @@ RUN git clone https://github.com/robotology/ycm && \
     cd ycm && mkdir build && cd build && \
     cmake .. && \
     make install
-RUN git clone https://github.com/xenvre/superimpose-mesh-lib && \
-    cd superimpose-mesh-lib && git checkout of-aided-tracking && mkdir build && cd build && \
+RUN git clone https://github.com/robotology/superimpose-mesh-lib && \
+    cd superimpose-mesh-lib && git checkout devel && mkdir build && cd build && \
     cmake .. && \
     make install
 
