@@ -53,9 +53,9 @@ jobs:
         cmake --build . --config ${{ matrix.build_type }} --target install
 
         cd ${GITHUB_WORKSPACE}
-        git clone https://github.com/xenvre/superimpose-mesh-lib
+        git clone https://github.com/robotology/superimpose-mesh-lib
         cd superimpose-mesh-lib
-        git checkout of-aided-tracking
+        git checkout devel
         mkdir build
         cd build
         cmake -DCMAKE_INSTALL_PREFIX=${GITHUB_WORKSPACE} ..

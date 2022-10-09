@@ -53,6 +53,9 @@ set(${LIBRARY_TARGET_NAME}_HDR
     include/ROFT/QuaternionModel.h
     include/ROFT/ROFTFilter.h
     include/ROFT/SpatialVelocityModel.h
+    include/ROFT/SICAD.h
+    include/ROFT/SICADModel.h
+    include/ROFT/SICADShader.h
     include/ROFT/SKFCorrection.h
     include/ROFT/UKFCorrection.h
 )
@@ -74,6 +77,9 @@ set(${LIBRARY_TARGET_NAME}_SRC
     src/QuaternionModel.cpp
     src/ROFTFilter.cpp
     src/SpatialVelocityModel.cpp
+    src/SICAD.cpp
+    src/SICADModel.cpp
+    src/SICADShader.cpp
     src/SKFCorrection.cpp
     src/UKFCorrection.cpp
 )
@@ -101,6 +107,13 @@ cmrc_add_resource_library(${LIBRARY_TARGET_NAME}_Resources
                           meshes/DOPE/009_gelatin_box.obj
                           meshes/DOPE/010_potted_meat_can.obj
                           meshes/DOPE/021_bleach_cleanser.obj
+                          shader/shader_background.frag
+                          shader/shader_background.vert
+                          shader/shader_frame.frag
+                          shader/shader_frame.vert
+                          shader/shader_model.frag
+                          shader/shader_model_texture.frag
+                          shader/shader_model.vert
 )
 
 # Add library
