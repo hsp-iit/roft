@@ -17,7 +17,6 @@
 #include <ROFT/ImageOpticalFlowNVOF.h>
 #endif
 #include <ROFT/ImageOpticalFlowSource.h>
-#include <ROFT/ImageSegmentationSource.h>
 #include <ROFT/ModelParameters.h>
 #include <ROFT/ROFTFilter.h>
 
@@ -28,6 +27,7 @@
 #include <RobotsIO/Utils/DatasetTransformDelayed.h>
 #include <RobotsIO/Utils/ImageFileProbe.h>
 #include <RobotsIO/Utils/Parameters.h>
+#include <RobotsIO/Utils/Segmentation.h>
 
 using namespace bfl;
 using namespace Eigen;
@@ -356,7 +356,7 @@ int main(int argc, char** argv)
         pose = std::make_shared<DatasetTransform>(pose_path, pose_skip_rows, pose_skip_cols, 7);
 
     /* Segmentation source. */
-    std::shared_ptr<ImageSegmentationSource> segmentation;
+    std::shared_ptr<Segmentation> segmentation;
     if (segmentation_delay || segmentation_fps_reduction)
     {
         if (!segmentation_fps_reduction)

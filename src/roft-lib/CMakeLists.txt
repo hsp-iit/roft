@@ -46,7 +46,6 @@ set(${LIBRARY_TARGET_NAME}_HDR
     include/ROFT/ImageOpticalFlowSource.h
     include/ROFT/ImageSegmentationMeasurement.h
     include/ROFT/ImageSegmentationOFAidedSource.hpp
-    include/ROFT/ImageSegmentationSource.h
     include/ROFT/MeshResource.h
     include/ROFT/ModelParameters.h
     include/ROFT/OpticalFlowUtilities.h
@@ -70,7 +69,6 @@ set(${LIBRARY_TARGET_NAME}_SRC
     src/DatasetImageSegmentationDelayed.cpp
     src/ImageOpticalFlowSource.cpp
     src/ImageSegmentationMeasurement.cpp
-    src/ImageSegmentationSource.cpp
     src/MeshResource.cpp
     src/ModelParameters.cpp
     src/OpticalFlowUtilities.cpp

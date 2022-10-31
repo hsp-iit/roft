@@ -10,10 +10,10 @@
 
 #include <ROFT/CameraMeasurement.h>
 #include <ROFT/ImageOpticalFlowSource.h>
-#include <ROFT/ImageSegmentationSource.h>
 #include <ROFT/OpticalFlowUtilities.h>
 
 #include <RobotsIO/Camera/CameraParameters.h>
+#include <RobotsIO/Utils/Segmentation.h>
 
 #include <opencv2/opencv.hpp>
 
@@ -27,10 +27,10 @@ namespace ROFT {
 
 
 template <class T>
-class ROFT::ImageSegmentationOFAidedSource : public ROFT::ImageSegmentationSource
+class ROFT::ImageSegmentationOFAidedSource : public RobotsIO::Utils::Segmentation
 {
 public:
-    ImageSegmentationOFAidedSource(std::shared_ptr<ROFT::ImageSegmentationSource> segmentation_source, std::shared_ptr<ROFT::ImageOpticalFlowSource> flow_source, std::shared_ptr<ROFT::CameraMeasurement> camera_measurement, const std::size_t connected_components = 1, const bool synchronous_mode = true);
+    ImageSegmentationOFAidedSource(std::shared_ptr<RobotsIO::Utils::Segmentation> segmentation_source, std::shared_ptr<ROFT::ImageOpticalFlowSource> flow_source, std::shared_ptr<ROFT::CameraMeasurement> camera_measurement, const std::size_t connected_components = 1, const bool synchronous_mode = true);
 
     virtual ~ImageSegmentationOFAidedSource();
 
@@ -47,7 +47,7 @@ public:
 private:
     cv::Mat map(const std::vector<cv::Mat>& flow);
 
-    std::shared_ptr<ROFT::ImageSegmentationSource> segmentation_;
+    std::shared_ptr<RobotsIO::Utils::Segmentation> segmentation_;
 
     std::shared_ptr<ROFT::ImageOpticalFlowSource> flow_;
 
@@ -80,7 +80,7 @@ private:
 template <class T>
 ROFT::ImageSegmentationOFAidedSource<T>::ImageSegmentationOFAidedSource
 (
-    std::shared_ptr<ROFT::ImageSegmentationSource> segmentation_source,
+    std::shared_ptr<RobotsIO::Utils::Segmentation> segmentation_source,
     std::shared_ptr<ROFT::ImageOpticalFlowSource> flow_source,
     std::shared_ptr<ROFT::CameraMeasurement> camera_measurement,
     const std::size_t connected_components,

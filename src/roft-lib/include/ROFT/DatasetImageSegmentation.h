@@ -8,8 +8,9 @@
 #ifndef ROFT_DATASETIMAGESEGMENTATION_H
 #define ROFT_DATASETIMAGESEGMENTATION_H
 
-#include <ROFT/ImageSegmentationSource.h>
 #include <ROFT/ModelParameters.h>
+
+#include <RobotsIO/Utils/Segmentation.h>
 
 #include <memory>
 #include <string>
@@ -19,7 +20,7 @@ namespace ROFT {
 }
 
 
-class ROFT::DatasetImageSegmentation : public ROFT::ImageSegmentationSource
+class ROFT::DatasetImageSegmentation : public RobotsIO::Utils::Segmentation
 {
 public:
     DatasetImageSegmentation(const std::string& dataset_path, const std::string& format, const std::size_t width, const std::size_t height, const std::string& segmentation_set, const ROFT::ModelParameters& model_parameters, const std::size_t heading_zeros = 0, const std::size_t index_offset = 0, const bool simulate_missing_detections = false);

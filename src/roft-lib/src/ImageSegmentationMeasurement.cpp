@@ -10,12 +10,13 @@
 #include <Eigen/Dense>
 
 using namespace Eigen;
+using namespace RobotsIO::Utils;
 using namespace ROFT;
 using namespace bfl;
 using namespace cv;
 
 
-ImageSegmentationMeasurement::ImageSegmentationMeasurement(std::shared_ptr<ImageSegmentationSource> segmentation_source, const std::size_t& width, const std::size_t& height) :
+ImageSegmentationMeasurement::ImageSegmentationMeasurement(std::shared_ptr<Segmentation> segmentation_source, const std::size_t& width, const std::size_t& height) :
     segmentation_source_(segmentation_source),
     width_(width),
     height_(height)

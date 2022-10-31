@@ -11,7 +11,7 @@
 #include <BayesFilters/Data.h>
 #include <BayesFilters/MeasurementModel.h>
 
-#include <ROFT/ImageSegmentationSource.h>
+#include <RobotsIO/Utils/Segmentation.h>
 
 #include <opencv2/opencv.hpp>
 
@@ -26,7 +26,7 @@ class ROFT::ImageSegmentationMeasurement : public bfl::MeasurementModel
 {
 public:
 
-    ImageSegmentationMeasurement(std::shared_ptr<ImageSegmentationSource> segmentation_source,  const std::size_t& width = 0, const std::size_t& height = 0);
+    ImageSegmentationMeasurement(std::shared_ptr<RobotsIO::Utils::Segmentation> segmentation_source,  const std::size_t& width = 0, const std::size_t& height = 0);
 
     ~ImageSegmentationMeasurement();
 
@@ -45,7 +45,7 @@ public:
     double get_data_loading_time() const;
 
 protected:
-    std::shared_ptr<ImageSegmentationSource> segmentation_source_;
+    std::shared_ptr<RobotsIO::Utils::Segmentation> segmentation_source_;
 
     std::size_t width_;
 

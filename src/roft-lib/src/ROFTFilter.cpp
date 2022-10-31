@@ -31,9 +31,9 @@ using namespace bfl;
 
 ROFTFilter::ROFTFilter
 (
-    std::shared_ptr<ROFT::CameraMeasurement> camera_measurement,
-    std::shared_ptr<ROFT::ImageSegmentationSource> segmentation_source,
-    std::shared_ptr<ROFT::ImageOpticalFlowSource> flow_source,
+    std::shared_ptr<CameraMeasurement> camera_measurement,
+    std::shared_ptr<Segmentation> segmentation_source,
+    std::shared_ptr<ImageOpticalFlowSource> flow_source,
     std::shared_ptr<RobotsIO::Utils::Transform> pose_measurement,
     const ModelParameters& model_parameters,
     const Eigen::Ref<const Eigen::VectorXd>& initial_condition_p,

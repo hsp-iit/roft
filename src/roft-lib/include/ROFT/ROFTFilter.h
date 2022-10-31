@@ -19,12 +19,12 @@
 #include <ROFT/ImageOpticalFlowMeasurement.hpp>
 #include <ROFT/ImageOpticalFlowSource.h>
 #include <ROFT/ImageSegmentationMeasurement.h>
-#include <ROFT/ImageSegmentationSource.h>
 #include <ROFT/ModelParameters.h>
 #include <ROFT/SICAD.h>
 
 #include <RobotsIO/Camera/Camera.h>
 #include <RobotsIO/Utils/ProbeContainer.h>
+#include <RobotsIO/Utils/Segmentation.h>
 #include <RobotsIO/Utils/SpatialVelocityBuffer.h>
 #include <RobotsIO/Utils/Transform.h>
 
@@ -42,7 +42,7 @@ public:
     ROFTFilter
     (
         std::shared_ptr<ROFT::CameraMeasurement> camera_measurement,
-        std::shared_ptr<ROFT::ImageSegmentationSource> segmentation_source,
+        std::shared_ptr<RobotsIO::Utils::Segmentation> segmentation_source,
         std::shared_ptr<ROFT::ImageOpticalFlowSource> flow_source,
         std::shared_ptr<RobotsIO::Utils::Transform> pose_measurement,
         const ModelParameters& model_parameters,
@@ -182,7 +182,7 @@ private:
     ImageOpticalFlowMeasurement<cv::Vec2s>* flow_meas_alt_s_ = nullptr;
 
     /* Segmentation debugging. */
-    std::shared_ptr<ROFT::ImageSegmentationSource> segmentation_debug_;
+    std::shared_ptr<RobotsIO::Utils::Segmentation> segmentation_debug_;
 
     cv::Mat last_mask_;
 
