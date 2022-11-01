@@ -9,6 +9,7 @@
 
 #include <BayesFilters/utils.h>
 
+#include <chrono>
 #include <thread>
 
 using namespace Eigen;

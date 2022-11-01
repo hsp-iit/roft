@@ -17,6 +17,7 @@
 
 #include <opencv2/opencv.hpp>
 
+#include <chrono>
 #include <memory>
 #include <string>
 
