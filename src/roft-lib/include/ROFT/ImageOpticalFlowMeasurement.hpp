@@ -364,6 +364,12 @@ bool ROFT::ImageOpticalFlowMeasurement<T>::setProperty(const std::string& proper
     {
         return ((measurement_.col(0).size() / 2) >= 3);
     }
+    else if (property == "reset")
+    {
+        flow_available_ = false;
+        is_first_frame_ = true;
+        return true;
+    }
 
     return false;
 }
