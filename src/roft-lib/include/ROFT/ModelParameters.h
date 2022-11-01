@@ -32,6 +32,8 @@ public:
 
     robots_io_declare_std_field(ModelParameters, string, mesh_external_path);
 
+    robots_io_declare_std_field(ModelParameters, string, textured_mesh_external_path);
+
     robots_io_declare_std_field(ModelParameters, string, cloud_external_path);
 };
 

@@ -24,6 +24,10 @@ robots_io_declare_std_field_impl(ModelParameters, string, internal_db_name);
 
 robots_io_declare_std_field_impl(ModelParameters, string, mesh_external_path);
 
+
+robots_io_declare_std_field_impl(ModelParameters, string, textured_mesh_external_path);
+
+
 robots_io_declare_std_field_impl(ModelParameters, string, cloud_external_path);
 
 
@@ -37,6 +41,8 @@ ModelParameters::ModelParameters()
     internal_db_name("");
 
     mesh_external_path("");
+
+    textured_mesh_external_path("");
 
     cloud_external_path("");
 }
