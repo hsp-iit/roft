@@ -30,7 +30,7 @@ template <class T>
 class ROFT::ImageSegmentationOFAidedSource : public RobotsIO::Utils::Segmentation
 {
 public:
-    ImageSegmentationOFAidedSource(std::shared_ptr<RobotsIO::Utils::Segmentation> segmentation_source, std::shared_ptr<ROFT::ImageOpticalFlowSource> flow_source, std::shared_ptr<ROFT::CameraMeasurement> camera_measurement, const std::size_t connected_components = 1, const bool synchronous_mode = true);
+    ImageSegmentationOFAidedSource(std::shared_ptr<RobotsIO::Utils::Segmentation> segmentation_source, std::shared_ptr<ROFT::ImageOpticalFlowSource> flow_source, std::shared_ptr<ROFT::CameraMeasurement> camera_measurement);
 
     virtual ~ImageSegmentationOFAidedSource();
 
@@ -52,10 +52,6 @@ private:
     std::shared_ptr<ROFT::ImageOpticalFlowSource> flow_;
 
     std::shared_ptr<ROFT::CameraMeasurement> camera_;
-
-    std::size_t number_connected_components_;
-
-    bool synchronous_mode_ = true;
 
     bool segmentation_available_ = false;
 
@@ -82,15 +78,11 @@ ROFT::ImageSegmentationOFAidedSource<T>::ImageSegmentationOFAidedSource
 (
     std::shared_ptr<RobotsIO::Utils::Segmentation> segmentation_source,
     std::shared_ptr<ROFT::ImageOpticalFlowSource> flow_source,
-    std::shared_ptr<ROFT::CameraMeasurement> camera_measurement,
-    const std::size_t connected_components,
-    const bool synchronous_mode
+    std::shared_ptr<ROFT::CameraMeasurement> camera_measurement
 ) :
     segmentation_(segmentation_source),
     flow_(flow_source),
     camera_(camera_measurement),
-    number_connected_components_(connected_components),
-    synchronous_mode_(synchronous_mode),
     flow_grid_size_(flow_source->get_grid_size()),
     flow_scaling_factor_(flow_source->get_scaling_factor()),
     segm_frames_between_iterations_(segmentation_source->get_frames_between_iterations())
@@ -241,7 +233,7 @@ cv::Mat ROFT::ImageSegmentationOFAidedSource<T>::map(const std::vector<cv::Mat>&
 template <class T>
 bool ROFT::ImageSegmentationOFAidedSource<T>::is_stepping_required() const
 {
-    return (synchronous_mode_ == true);
+    return true;
 }
 
 

@@ -118,9 +118,10 @@ ROFTFilter::ROFTFilter
     if (flow_aided_segmentation)
     {
         if (flow_source->get_matrix_type() == CV_32FC2)
-            segmentation_ = std::make_shared<ImageSegmentationMeasurement>(std::make_shared<ImageSegmentationOFAidedSource<cv::Vec2f>>(segmentation_source, flow_source, camera_, 3, true));
+            segmentation_ = std::make_shared<ImageSegmentationMeasurement>(std::make_shared<ImageSegmentationOFAidedSource<cv::Vec2f>>(segmentation_source, flow_source, camera_));
         else if (flow_source->get_matrix_type() == CV_16SC2)
-            segmentation_ = std::make_shared<ImageSegmentationMeasurement>(std::make_shared<ImageSegmentationOFAidedSource<cv::Vec2s>>(segmentation_source, flow_source, camera_, 3, true));      }
+            segmentation_ = std::make_shared<ImageSegmentationMeasurement>(std::make_shared<ImageSegmentationOFAidedSource<cv::Vec2s>>(segmentation_source, flow_source, camera_));
+    }
     else
         segmentation_ = std::make_shared<ImageSegmentationMeasurement>(segmentation_source);
 
