@@ -135,9 +135,13 @@ bool ROFT::ImageSegmentationOFAidedSource<T>::step_frame()
         valid_segmentation = false;
     }
 
-    /* Check if the mask is informative, otherwise it is skipped. */
     if (valid_segmentation)
     {
+        /* At this stage, we provide RGB input for Segmentation sources that might require it. */
+        if (!(rgb_image_.empty()))
+            segmentation_->set_rgb_image(rgb_image_);
+
+        /* Check if the mask is informative, otherwise it is skipped. */
         cv::Mat non_zero_coordinates;
         findNonZero(mask, non_zero_coordinates);
         if (non_zero_coordinates.total() == 0)
