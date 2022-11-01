@@ -27,8 +27,6 @@ public:
 
     virtual bool step_frame();
 
-    // virtual bool set_frame(const std::size_t& index);
-
     virtual bool is_stepping_required() const = 0;
 
     virtual double get_data_loading_time() const;
