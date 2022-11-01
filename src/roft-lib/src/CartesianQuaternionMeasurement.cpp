@@ -9,16 +9,20 @@
 
 #include <BayesFilters/utils.h>
 
+#include <thread>
+
 using namespace Eigen;
 using namespace ROFT;
 using namespace bfl;
 using namespace bfl::utils;
+using namespace std::literals::chrono_literals;
 
 
 CartesianQuaternionMeasurement::CartesianQuaternionMeasurement
 (
     std::shared_ptr<RobotsIO::Utils::Transform> pose_measurement,
     std::shared_ptr<RobotsIO::Utils::SpatialVelocity> velocity_measurement,
+    std::shared_ptr<ROFT::CameraMeasurement> camera_measurement,
     const bool use_screw_velocity,
     const bool use_pose_measurement,
     const bool use_velocity_measurement,
@@ -26,13 +30,16 @@ CartesianQuaternionMeasurement::CartesianQuaternionMeasurement
     const Ref<const MatrixXd> sigma_quaternion,
     const Ref<const MatrixXd> sigma_linear_velocity,
     const Ref<const MatrixXd> sigma_angular_velocity,
+    const bool wait_source_initialization,
     const bool enable_log
 ) :
     pose_measurement_(pose_measurement),
     velocity_measurement_(velocity_measurement),
+    camera_measurement_(camera_measurement),
     use_screw_velocity_(use_screw_velocity),
     use_pose_measurement_(use_pose_measurement),
     use_velocity_measurement_(use_velocity_measurement),
+    wait_source_initialization_(wait_source_initialization),
     pose_frames_between_iterations_(pose_measurement->get_frames_between_iterations()),
     enable_log_(enable_log)
 {
@@ -49,6 +56,29 @@ CartesianQuaternionMeasurement::CartesianQuaternionMeasurement
     R_pose_velocity_.block<6, 6>(0, 0) = R_velocity_;
     R_pose_velocity_.block<6, 6>(6, 6) = R_pose_;
 }
+
+
+CartesianQuaternionMeasurement::CartesianQuaternionMeasurement
+(
+    std::shared_ptr<RobotsIO::Utils::Transform> pose_measurement,
+    std::shared_ptr<RobotsIO::Utils::SpatialVelocity> velocity_measurement,
+    const bool use_screw_velocity,
+    const bool use_pose_measurement,
+    const bool use_velocity_measurement,
+    const Ref<const MatrixXd> sigma_position,
+    const Ref<const MatrixXd> sigma_quaternion,
+    const Ref<const MatrixXd> sigma_linear_velocity,
+    const Ref<const MatrixXd> sigma_angular_velocity,
+    const bool enable_log
+) :
+    CartesianQuaternionMeasurement
+    (
+        pose_measurement, velocity_measurement, /* camera_measurement */ nullptr,
+        use_screw_velocity, use_pose_measurement, use_velocity_measurement,
+        sigma_position, sigma_quaternion, sigma_linear_velocity, sigma_angular_velocity,
+        /* wait_source_initialization = */ false, enable_log
+    )
+{}
 
 
 CartesianQuaternionMeasurement::~CartesianQuaternionMeasurement()
@@ -150,9 +180,59 @@ bool CartesianQuaternionMeasurement::freeze(const Data& data)
         }
     }
 
-    is_pose_ = use_pose_measurement_ && pose_measurement_->freeze(false);
-    if (is_pose_)
-        last_pose_ = pose_measurement_->transform();
+    /* Provide RGB input for Transform sources that might require it. */
+    cv::Mat rgb;
+    if (camera_measurement_ != nullptr)
+    {
+        bfl::Data camera_data;
+        bool valid_data = false;
+        std::tie(valid_data, camera_data) = camera_measurement_->measure();
+        if (!valid_data)
+        {
+            std::cout << log_name_ << "::freeze. Warning: RGB from camera measurement is not available." << std::endl;
+            return false;
+        }
+        std::tie(std::ignore, rgb, std::ignore) = bfl::any::any_cast<CameraMeasurement::CameraMeasurementTuple>(camera_data);
+    }
+
+    is_pose_ = false;
+    if (use_pose_measurement_)
+    {
+        is_pose_ = pose_measurement_->freeze(false);
+
+        if ((!rgb.empty()) && wait_source_initialization_)
+        {
+            std::size_t number_trials = 5;
+            for (std::size_t i = 0; (i < number_trials) && (!is_pose_); i++)
+            {
+                pose_measurement_->set_rgb_image(rgb);
+
+                is_pose_ = pose_measurement_->freeze(false);
+
+                std::this_thread::sleep_for(500ms);
+            }
+
+            if (is_pose_)
+                wait_source_initialization_ = false;
+            else
+                return false;
+        }
+
+        if (is_pose_)
+            last_pose_ = pose_measurement_->transform();
+        else if ((pose_frames_between_iterations_ < 0) && (pose_measurement_->transform_received()))
+        {
+            /* If the pose was received but it is invalid and
+               the number of frames between each iteration is not known,
+               the velocity buffer must be voided. */
+            while (buffer_velocities_.size() > 1)
+                buffer_velocities_.pop_front();
+        }
+
+
+        if ((!rgb.empty()) && (is_pose_ || pose_measurement_->transform_received()))
+            pose_measurement_->set_rgb_image(rgb);
+    }
 
     bool valid_freeze = true;
     if (is_first_velocity_in_ && is_pose_)
