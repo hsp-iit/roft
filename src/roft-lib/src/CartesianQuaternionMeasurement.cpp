@@ -92,9 +92,15 @@ bool CartesianQuaternionMeasurement::freeze(const Data& data)
 
     if (mode == MeasurementMode::PopBufferedMeasurement)
     {
-        while (buffer_velocities_.size() > pose_frames_between_iterations_ + 1)
-            buffer_velocities_.pop_front();
 
+        if (pose_frames_between_iterations_ > 0)
+        {
+            while (buffer_velocities_.size() > pose_frames_between_iterations_ + 1)
+                buffer_velocities_.pop_front();
+        }
+
+        /* We need to store the last velocity we received,
+           to be used later on when we will receive the pose associated to the current frame. */
         if (buffer_velocities_.size() == 0)
         {
             buffer_velocities_.push_back(measurement_.col(0).head<6>());
