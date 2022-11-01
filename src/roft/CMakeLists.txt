@@ -53,7 +53,7 @@ target_link_libraries(ROFT-tracker
                       Eigen3::Eigen
                       PkgConfig::LIBCONFIG++
                       RobotsIO::RobotsIO
-                      ROFTLib
+                      ROFT
 )
 
 install(TARGETS ROFT-tracker DESTINATION bin)
