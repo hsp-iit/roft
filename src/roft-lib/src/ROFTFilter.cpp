@@ -120,9 +120,9 @@ ROFTFilter::ROFTFilter
         RobotsIO::Camera::CameraParameters parameters;
         std::tie(std::ignore, parameters) = camera_->camera_parameters();
         if (flow_source->get_matrix_type() == CV_32FC2)
-            segmentation_ = std::make_shared<ImageSegmentationMeasurement>(std::make_shared<ImageSegmentationOFAidedSource<cv::Vec2f>>(segmentation_source, flow_source, parameters));
+            segmentation_ = std::make_shared<ImageSegmentationMeasurement>(std::make_shared<ImageSegmentationOFAidedSource<cv::Vec2f>>(segmentation_source, flow_source, parameters, false));
         else if (flow_source->get_matrix_type() == CV_16SC2)
-            segmentation_ = std::make_shared<ImageSegmentationMeasurement>(std::make_shared<ImageSegmentationOFAidedSource<cv::Vec2s>>(segmentation_source, flow_source, parameters));
+            segmentation_ = std::make_shared<ImageSegmentationMeasurement>(std::make_shared<ImageSegmentationOFAidedSource<cv::Vec2s>>(segmentation_source, flow_source, parameters, false));
     }
     else
         segmentation_ = std::make_shared<ImageSegmentationMeasurement>(segmentation_source);

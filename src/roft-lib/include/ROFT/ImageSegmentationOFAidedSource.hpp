@@ -20,6 +20,9 @@
 #include <memory>
 #include <string>
 
+using namespace std::literals::chrono_literals;
+
+
 namespace ROFT {
     template <class T>
     class ImageSegmentationOFAidedSource;
@@ -30,7 +33,7 @@ template <class T>
 class ROFT::ImageSegmentationOFAidedSource : public RobotsIO::Utils::Segmentation
 {
 public:
-    ImageSegmentationOFAidedSource(std::shared_ptr<RobotsIO::Utils::Segmentation> segmentation_source, std::shared_ptr<ROFT::ImageOpticalFlowSource> flow_source, const RobotsIO::Camera::CameraParameters& camera_parameters);
+    ImageSegmentationOFAidedSource(std::shared_ptr<RobotsIO::Utils::Segmentation> segmentation_source, std::shared_ptr<ROFT::ImageOpticalFlowSource> flow_source, const RobotsIO::Camera::CameraParameters& camera_parameters, const bool& wait_source_initialization);
 
     virtual ~ImageSegmentationOFAidedSource();
 
@@ -52,6 +55,8 @@ private:
     std::shared_ptr<RobotsIO::Utils::Segmentation> segmentation_;
 
     std::shared_ptr<ROFT::ImageOpticalFlowSource> flow_;
+
+    bool wait_source_initialization_;
 
     bool segmentation_available_ = false;
 
@@ -80,10 +85,12 @@ ROFT::ImageSegmentationOFAidedSource<T>::ImageSegmentationOFAidedSource
 (
     std::shared_ptr<RobotsIO::Utils::Segmentation> segmentation_source,
     std::shared_ptr<ROFT::ImageOpticalFlowSource> flow_source,
-    const RobotsIO::Camera::CameraParameters& camera_parameters
+    const RobotsIO::Camera::CameraParameters& camera_parameters,
+    const bool& wait_source_initialization
 ) :
     segmentation_(segmentation_source),
     flow_(flow_source),
+    wait_source_initialization_(wait_source_initialization),
     flow_grid_size_(flow_source->get_grid_size()),
     flow_scaling_factor_(flow_source->get_scaling_factor()),
     segm_frames_between_iterations_(segmentation_source->get_frames_between_iterations())
@@ -123,6 +130,35 @@ bool ROFT::ImageSegmentationOFAidedSource<T>::step_frame()
     bool valid_segmentation = false;
     cv::Mat mask;
     std::tie(valid_segmentation, mask) = segmentation_->segmentation(false);
+
+    /* Wait for segmentation initialization. */
+    if (!segmentation_available_ && wait_source_initialization_)
+    {
+        /* At this stage, we provide RGB input for Segmentation sources that might require it. */
+        std::size_t number_trials = 5;
+        for (std::size_t i = 0; (i < number_trials) && (!valid_segmentation); i++)
+        {
+            if (!rgb_image_.empty())
+                segmentation_->set_rgb_image(rgb_image_);
+
+            if (segmentation_->is_stepping_required())
+                segmentation_->step_frame();
+
+            std::tie(valid_segmentation, mask) = segmentation_->segmentation(false);
+
+            std::this_thread::sleep_for(200ms);
+        }
+
+        /* Verify that the mask has been received. */
+        if (!valid_segmentation)
+            return false;
+
+        /* Verify that the mask is not empty. */
+        cv::Mat non_zero_coordinates;
+        findNonZero(mask, non_zero_coordinates);
+        if (non_zero_coordinates.total() == 0)
+            return false;
+    }
 
     if (!segmentation_available_ && valid_segmentation)
     {
