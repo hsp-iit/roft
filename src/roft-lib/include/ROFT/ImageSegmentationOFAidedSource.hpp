@@ -30,7 +30,7 @@ template <class T>
 class ROFT::ImageSegmentationOFAidedSource : public RobotsIO::Utils::Segmentation
 {
 public:
-    ImageSegmentationOFAidedSource(std::shared_ptr<RobotsIO::Utils::Segmentation> segmentation_source, std::shared_ptr<ROFT::ImageOpticalFlowSource> flow_source, std::shared_ptr<ROFT::CameraMeasurement> camera_measurement);
+    ImageSegmentationOFAidedSource(std::shared_ptr<RobotsIO::Utils::Segmentation> segmentation_source, std::shared_ptr<ROFT::ImageOpticalFlowSource> flow_source, const RobotsIO::Camera::CameraParameters& camera_parameters);
 
     virtual ~ImageSegmentationOFAidedSource();
 
@@ -50,8 +50,6 @@ private:
     std::shared_ptr<RobotsIO::Utils::Segmentation> segmentation_;
 
     std::shared_ptr<ROFT::ImageOpticalFlowSource> flow_;
-
-    std::shared_ptr<ROFT::CameraMeasurement> camera_;
 
     bool segmentation_available_ = false;
 
@@ -78,22 +76,18 @@ ROFT::ImageSegmentationOFAidedSource<T>::ImageSegmentationOFAidedSource
 (
     std::shared_ptr<RobotsIO::Utils::Segmentation> segmentation_source,
     std::shared_ptr<ROFT::ImageOpticalFlowSource> flow_source,
-    std::shared_ptr<ROFT::CameraMeasurement> camera_measurement
+    const RobotsIO::Camera::CameraParameters& camera_parameters
 ) :
     segmentation_(segmentation_source),
     flow_(flow_source),
-    camera_(camera_measurement),
     flow_grid_size_(flow_source->get_grid_size()),
     flow_scaling_factor_(flow_source->get_scaling_factor()),
     segm_frames_between_iterations_(segmentation_source->get_frames_between_iterations())
 {
-    RobotsIO::Camera::CameraParameters parameters;
-    std::tie(std::ignore, parameters) = camera_->camera_parameters();
-
-    coords_ = cv::Mat(cv::Size(parameters.width(), parameters.height()), CV_32FC2);
-    for (std::size_t i = 0; i < parameters.width(); i++)
+    coords_ = cv::Mat(cv::Size(camera_parameters.width(), camera_parameters.height()), CV_32FC2);
+    for (std::size_t i = 0; i < camera_parameters.width(); i++)
     {
-        for(std::size_t j = 0; j < parameters.height(); j++)
+        for(std::size_t j = 0; j < camera_parameters.height(); j++)
         {
             coords_.at<cv::Vec2f>(j, i) = cv::Vec2f(float(i), float(j));
         }
