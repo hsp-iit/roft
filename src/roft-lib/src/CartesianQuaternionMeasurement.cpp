@@ -40,6 +40,7 @@ CartesianQuaternionMeasurement::CartesianQuaternionMeasurement
     use_screw_velocity_(use_screw_velocity),
     use_pose_measurement_(use_pose_measurement),
     use_velocity_measurement_(use_velocity_measurement),
+    wait_source_initialization_default_(wait_source_initialization),
     wait_source_initialization_(wait_source_initialization),
     pose_frames_between_iterations_(pose_measurement->get_frames_between_iterations()),
     enable_log_(enable_log)
@@ -473,6 +474,23 @@ VectorDescription CartesianQuaternionMeasurement::getInputDescription() const
 VectorDescription CartesianQuaternionMeasurement::getMeasurementDescription() const
 {
     return measurement_description_;
+}
+
+
+bool CartesianQuaternionMeasurement::setProperty(const std::string& property)
+{
+    if (property == "reset")
+    {
+        is_first_velocity_in_ = false;
+
+        is_pose_ = false;
+
+        wait_source_initialization_ = wait_source_initialization_default_;
+
+        return true;
+    }
+
+    return false;
 }
 
 

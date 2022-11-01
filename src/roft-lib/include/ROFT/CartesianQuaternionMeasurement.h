@@ -48,6 +48,8 @@ public:
 
     bfl::VectorDescription getMeasurementDescription() const override;
 
+    bool setProperty(const std::string& property) override;
+
     enum class MeasurementMode { Standard, RepeatOnlyVelocity, PopBufferedMeasurement };
 
 protected:
@@ -99,6 +101,8 @@ private:
     bool use_pose_measurement_;
 
     bool use_velocity_measurement_;
+
+    const bool wait_source_initialization_default_;
 
     bool wait_source_initialization_;
 
