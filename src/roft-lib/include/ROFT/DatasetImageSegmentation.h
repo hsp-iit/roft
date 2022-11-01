@@ -31,8 +31,6 @@ public:
 
     bool step_frame() override;
 
-    // bool set_frame(const std::size_t& index) override;
-
     bool is_stepping_required() const override;
 
     void reset_data_loading_time() override;
