@@ -10,14 +10,14 @@
 #include <Eigen/Dense>
 
 using namespace Eigen;
-using namespace RobotsIO::Utils;
 using namespace ROFT;
 using namespace bfl;
 using namespace cv;
 
 
-ImageSegmentationMeasurement::ImageSegmentationMeasurement(std::shared_ptr<Segmentation> segmentation_source, const std::size_t& width, const std::size_t& height) :
+ImageSegmentationMeasurement::ImageSegmentationMeasurement(std::shared_ptr<RobotsIO::Utils::Segmentation> segmentation_source, std::shared_ptr<ROFT::CameraMeasurement> camera_measurement, const std::size_t& width, const std::size_t& height) :
     segmentation_source_(segmentation_source),
+    camera_(camera_measurement),
     width_(width),
     height_(height)
 {}
@@ -29,7 +29,23 @@ ImageSegmentationMeasurement::~ImageSegmentationMeasurement()
 
 bool ImageSegmentationMeasurement::freeze(const Data& data)
 {
-    /* Step frame in case of an offline segmentation source. */
+    /* Provide RGB input for Segmentation sources that might require it if the camera measurement is available. */
+    if (camera_ != nullptr)
+    {
+        bfl::Data camera_data;
+        bool valid_data = false;
+        std::tie(valid_data, camera_data) = camera_->measure();
+        if (!valid_data)
+        {
+            std::cout << log_name_ << "::freeze. Warning: RGB from camera measurement is not available." << std::endl;
+            return false;
+        }
+        cv::Mat rgb;
+        std::tie(std::ignore, rgb, std::ignore) = bfl::any::any_cast<CameraMeasurement::CameraMeasurementTuple>(camera_data);
+        segmentation_source_->set_rgb_image(rgb);
+    }
+
+    /* Step frame if required. */
     if (segmentation_source_->is_stepping_required())
         segmentation_source_->step_frame();
 
