@@ -44,6 +44,8 @@ public:
 
     bool is_stepping_required() const override;
 
+    bool reset() override;
+
     void reset_data_loading_time() override;
 
     double get_data_loading_time() const override;
@@ -56,6 +58,8 @@ private:
     std::shared_ptr<RobotsIO::Utils::Segmentation> segmentation_;
 
     std::shared_ptr<ROFT::ImageOpticalFlowSource> flow_;
+
+    const bool wait_source_initialization_default_;
 
     bool wait_source_initialization_;
 
@@ -91,6 +95,7 @@ ROFT::ImageSegmentationOFAidedSource<T>::ImageSegmentationOFAidedSource
 ) :
     segmentation_(segmentation_source),
     flow_(flow_source),
+    wait_source_initialization_default_(wait_source_initialization),
     wait_source_initialization_(wait_source_initialization),
     flow_grid_size_(flow_source->get_grid_size()),
     flow_scaling_factor_(flow_source->get_scaling_factor()),
@@ -287,6 +292,25 @@ template <class T>
 std::pair<bool, cv::Mat> ROFT::ImageSegmentationOFAidedSource<T>::segmentation(const bool& blocking)
 {
     return std::make_pair(segmentation_available_, mask_);
+}
+
+
+template <class T>
+bool ROFT::ImageSegmentationOFAidedSource<T>::reset()
+{
+    wait_source_initialization_ = wait_source_initialization_default_;
+
+    segmentation_available_ = false;
+
+    is_first_frame_ = true;
+
+    flow_buffer_.clear();
+
+    rgb_image_ = cv::Mat();
+
+    mask_ = cv::Mat();
+
+    return segmentation_->reset();
 }
 
 
