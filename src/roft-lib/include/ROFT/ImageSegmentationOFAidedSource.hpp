@@ -138,6 +138,22 @@ bool ROFT::ImageSegmentationOFAidedSource<T>::step_frame()
         valid_segmentation = false;
     }
 
+    /* Check if the mask is informative, otherwise it is skipped. */
+    if (valid_segmentation)
+    {
+        cv::Mat non_zero_coordinates;
+        findNonZero(mask, non_zero_coordinates);
+        if (non_zero_coordinates.total() == 0)
+        {
+            valid_segmentation = false;
+
+            /* If the number of frames between iterations is not known,
+               we drop the accumulated flow frames in the buffer. */
+            if (segm_frames_between_iterations_ <= 0)
+                flow_buffer_.clear();
+        }
+    }
+
     /* Get flow. */
     bool valid_flow = false;
     cv::Mat flow;
@@ -147,15 +163,6 @@ bool ROFT::ImageSegmentationOFAidedSource<T>::step_frame()
     {
         /* If flow is available, store it in the buffer. */
         flow_buffer_.push_back(flow.clone());
-    }
-
-    /* Check if the mask is informative, otherwise it is skipped. */
-    if (valid_segmentation)
-    {
-        cv::Mat non_zero_coordinates;
-        findNonZero(mask, non_zero_coordinates);
-        if (non_zero_coordinates.total() == 0)
-            valid_segmentation = false;
     }
 
     if (valid_segmentation)
@@ -186,9 +193,13 @@ cv::Mat ROFT::ImageSegmentationOFAidedSource<T>::map(const std::vector<cv::Mat>&
 {
     cv::Mat map = cv::Mat(cv::Size(coords_.cols, coords_.rows), CV_32FC2, cv::Scalar(0.0, 0.0));
 
-    int flow_starting_index = int(flow.size()) - segm_frames_between_iterations_;
-    if (flow_starting_index < 0)
-        flow_starting_index = 0;
+    int flow_starting_index = 0;
+    if (segm_frames_between_iterations_ > 0)
+    {
+        flow_starting_index = int(flow.size()) - segm_frames_between_iterations_;
+        if (flow_starting_index < 0)
+            flow_starting_index = 0;
+    }
 
     cv::Mat non_zero_coordinates;
     findNonZero(mask_, non_zero_coordinates);
