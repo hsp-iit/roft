@@ -34,6 +34,8 @@ public:
 
     virtual ~ImageSegmentationOFAidedSource();
 
+    void set_rgb_image(const cv::Mat& image) override;
+
     bool step_frame() override;
 
     bool is_stepping_required() const override;
@@ -60,6 +62,8 @@ private:
     const float flow_scaling_factor_;
 
     const int segm_frames_between_iterations_;
+
+    cv::Mat rgb_image_;
 
     cv::Mat mask_;
 
@@ -98,6 +102,13 @@ ROFT::ImageSegmentationOFAidedSource<T>::ImageSegmentationOFAidedSource
 template <class T>
 ROFT::ImageSegmentationOFAidedSource<T>::~ImageSegmentationOFAidedSource()
 {}
+
+
+template <class T>
+void ROFT::ImageSegmentationOFAidedSource<T>::set_rgb_image(const cv::Mat& image)
+{
+    rgb_image_ = image.clone();
+}
 
 
 template <class T>
