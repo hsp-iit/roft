@@ -13,6 +13,7 @@
 #include <BayesFilters/MeasurementModel.h>
 
 #include <ROFT/CameraMeasurement.h>
+#include <ROFT/ImageSegmentationMeasurement.h>
 
 #include <RobotsIO/Utils/Transform.h>
 #include <RobotsIO/Utils/SpatialVelocity.h>
@@ -30,7 +31,7 @@ class ROFT::CartesianQuaternionMeasurement : public bfl::MeasurementModel
 public:
     CartesianQuaternionMeasurement(std::shared_ptr<RobotsIO::Utils::Transform> pose_measurement, std::shared_ptr<RobotsIO::Utils::SpatialVelocity> velocity_measurement, const bool use_screw_velocity, const bool use_pose_measurement, const bool use_velocity_measurement, const Eigen::Ref<const Eigen::MatrixXd> sigma_position, const Eigen::Ref<const Eigen::MatrixXd> sigma_quaternion, const Eigen::Ref<const Eigen::MatrixXd> sigma_linear_velocity, const Eigen::Ref<const Eigen::MatrixXd> sigma_angular_velocity, const bool enable_log);
 
-    CartesianQuaternionMeasurement(std::shared_ptr<RobotsIO::Utils::Transform> pose_measurement, std::shared_ptr<RobotsIO::Utils::SpatialVelocity> velocity_measurement, std::shared_ptr<ROFT::CameraMeasurement> camera_measurement, const bool use_screw_velocity, const bool use_pose_measurement, const bool use_velocity_measurement, const Eigen::Ref<const Eigen::MatrixXd> sigma_position, const Eigen::Ref<const Eigen::MatrixXd> sigma_quaternion, const Eigen::Ref<const Eigen::MatrixXd> sigma_linear_velocity, const Eigen::Ref<const Eigen::MatrixXd> sigma_angular_velocity, const bool wait_source_initialization, const bool enable_log);
+    CartesianQuaternionMeasurement(std::shared_ptr<RobotsIO::Utils::Transform> pose_measurement, std::shared_ptr<RobotsIO::Utils::SpatialVelocity> velocity_measurement, std::shared_ptr<ROFT::CameraMeasurement> camera_measurement, std::shared_ptr<ROFT::ImageSegmentationMeasurement> segmentation_measurement, const bool use_screw_velocity, const bool use_pose_measurement, const bool use_velocity_measurement, const Eigen::Ref<const Eigen::MatrixXd> sigma_position, const Eigen::Ref<const Eigen::MatrixXd> sigma_quaternion, const Eigen::Ref<const Eigen::MatrixXd> sigma_linear_velocity, const Eigen::Ref<const Eigen::MatrixXd> sigma_angular_velocity, const bool wait_source_initialization, const bool enable_log);
 
     virtual ~CartesianQuaternionMeasurement();
 
@@ -52,6 +53,8 @@ public:
 
     enum class MeasurementMode { Standard, RepeatOnlyVelocity, PopBufferedMeasurement };
 
+    enum class TransformFeedback { None, RGB, DepthSegmentation };
+
 protected:
     std::vector<std::string> log_file_names(const std::string& prefix_path, const std::string& prefix_name) override;
 
@@ -61,6 +64,8 @@ private:
     std::shared_ptr<RobotsIO::Utils::SpatialVelocity> velocity_measurement_;
 
     std::shared_ptr<ROFT::CameraMeasurement> camera_measurement_;
+
+    std::shared_ptr<ROFT::ImageSegmentationMeasurement> segmentation_measurement_;
 
     bool is_velocity_measurement_degenerate_ = false;
 
@@ -87,6 +92,8 @@ private:
     MeasurementType measurement_type_ = MeasurementType::None;
 
     MeasurementMode measurement_mode_ = MeasurementMode::Standard;
+
+    TransformFeedback transform_feedback_ = TransformFeedback::None;
 
     bfl::VectorDescription input_description_;
 

@@ -24,6 +24,7 @@ CartesianQuaternionMeasurement::CartesianQuaternionMeasurement
     std::shared_ptr<RobotsIO::Utils::Transform> pose_measurement,
     std::shared_ptr<RobotsIO::Utils::SpatialVelocity> velocity_measurement,
     std::shared_ptr<ROFT::CameraMeasurement> camera_measurement,
+    std::shared_ptr<ROFT::ImageSegmentationMeasurement> segmentation_measurement,
     const bool use_screw_velocity,
     const bool use_pose_measurement,
     const bool use_velocity_measurement,
@@ -75,7 +76,7 @@ CartesianQuaternionMeasurement::CartesianQuaternionMeasurement
 ) :
     CartesianQuaternionMeasurement
     (
-        pose_measurement, velocity_measurement, /* camera_measurement */ nullptr,
+        pose_measurement, velocity_measurement, /* camera_measurement */ nullptr, /* segmentation_measurement */ nullptr,
         use_screw_velocity, use_pose_measurement, use_velocity_measurement,
         sigma_position, sigma_quaternion, sigma_linear_velocity, sigma_angular_velocity,
         /* wait_source_initialization = */ false, enable_log
@@ -188,8 +189,11 @@ bool CartesianQuaternionMeasurement::freeze(const Data& data)
         }
     }
 
-    /* Provide RGB input for Transform sources that might require it. */
+    /* Provide RGB or Depth + Segmentation input for Transform sources that might require it. */
     cv::Mat rgb;
+    Eigen::MatrixXf depth;
+    cv::Mat segmentation;
+
     if (camera_measurement_ != nullptr)
     {
         bfl::Data camera_data;
@@ -197,23 +201,41 @@ bool CartesianQuaternionMeasurement::freeze(const Data& data)
         std::tie(valid_data, camera_data) = camera_measurement_->measure();
         if (!valid_data)
         {
-            std::cout << log_name_ << "::freeze. Warning: RGB from camera measurement is not available." << std::endl;
+            std::cout << log_name_ << "::freeze. Warning: RGB/Depth from camera measurement is not available." << std::endl;
             return false;
         }
-        std::tie(std::ignore, rgb, std::ignore) = bfl::any::any_cast<CameraMeasurement::CameraMeasurementTuple>(camera_data);
+        std::tie(std::ignore, rgb, depth) = bfl::any::any_cast<CameraMeasurement::CameraMeasurementTuple>(camera_data);
+    }
+
+    if (segmentation_measurement_ != nullptr)
+    {
+        bfl::Data segmentation_data;
+        bool valid_segmentation = false;
+        std::tie(valid_segmentation, segmentation_data) = segmentation_measurement_->measure();
+        if (!valid_segmentation)
+        {
+            std::cout << log_name_ << "::freeze. Warning: segmentation from segmentation measurement is not available." << std::endl;
+            return false;
+        }
+        std::tie(std::ignore, segmentation) = bfl::any::any_cast<std::pair<bool, cv::Mat>>(segmentation_data);
     }
 
     is_pose_ = false;
+    bool images_ready = ((transform_feedback_ == TransformFeedback::RGB) && !(rgb.empty())) ||
+                        ((transform_feedback_ == TransformFeedback::DepthSegmentation) && (depth.size() != 0) && !(segmentation.empty()));
     if (use_pose_measurement_)
     {
         is_pose_ = pose_measurement_->freeze(false);
 
-        if ((!rgb.empty()) && wait_source_initialization_)
+        if (images_ready && wait_source_initialization_)
         {
             std::size_t number_trials = 5;
             for (std::size_t i = 0; (i < number_trials) && (!is_pose_); i++)
             {
-                pose_measurement_->set_rgb_image(rgb);
+                if (transform_feedback_ == TransformFeedback::RGB)
+                    pose_measurement_->set_rgb_image(rgb);
+                else if (transform_feedback_ == TransformFeedback::DepthSegmentation)
+                    pose_measurement_->set_depth_segmentation_image(depth, segmentation);
 
                 is_pose_ = pose_measurement_->freeze(false);
 
@@ -238,8 +260,13 @@ bool CartesianQuaternionMeasurement::freeze(const Data& data)
         }
 
 
-        if ((!rgb.empty()) && (is_pose_ || pose_measurement_->transform_received()))
-            pose_measurement_->set_rgb_image(rgb);
+        if (images_ready && (is_pose_ || pose_measurement_->transform_received()))
+        {
+            if (transform_feedback_ == TransformFeedback::RGB)
+                pose_measurement_->set_rgb_image(rgb);
+            else if (transform_feedback_ == TransformFeedback::DepthSegmentation)
+                pose_measurement_->set_depth_segmentation_image(depth, segmentation);
+        }
     }
 
     bool valid_freeze = true;
@@ -488,6 +515,16 @@ bool CartesianQuaternionMeasurement::setProperty(const std::string& property)
         wait_source_initialization_ = wait_source_initialization_default_;
 
         return true;
+    }
+    else if (property == "transform_feedback_rgb")
+    {
+        transform_feedback_ = TransformFeedback::RGB;
+
+        return true;
+    }
+    else if (property == "transform_feedback_depth_segmentation")
+    {
+        transform_feedback_ = TransformFeedback::DepthSegmentation;
     }
 
     return false;
