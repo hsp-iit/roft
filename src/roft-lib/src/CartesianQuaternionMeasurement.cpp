@@ -38,6 +38,7 @@ CartesianQuaternionMeasurement::CartesianQuaternionMeasurement
     pose_measurement_(pose_measurement),
     velocity_measurement_(velocity_measurement),
     camera_measurement_(camera_measurement),
+    segmentation_measurement_(segmentation_measurement),
     use_screw_velocity_(use_screw_velocity),
     use_pose_measurement_(use_pose_measurement),
     use_velocity_measurement_(use_velocity_measurement),
