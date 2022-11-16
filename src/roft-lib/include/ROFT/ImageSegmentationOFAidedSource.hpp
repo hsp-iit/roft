@@ -38,7 +38,7 @@ public:
 
     virtual ~ImageSegmentationOFAidedSource();
 
-    void set_rgb_image(const cv::Mat& image) override;
+    void set_rgb_image(const cv::Mat& image, const double& timestamp) override;
 
     bool step_frame() override;
 
@@ -118,9 +118,10 @@ ROFT::ImageSegmentationOFAidedSource<T>::~ImageSegmentationOFAidedSource()
 
 
 template <class T>
-void ROFT::ImageSegmentationOFAidedSource<T>::set_rgb_image(const cv::Mat& image)
+void ROFT::ImageSegmentationOFAidedSource<T>::set_rgb_image(const cv::Mat& image, const double& timestamp)
 {
     rgb_image_ = image.clone();
+    rgb_image_time_stamp_ = timestamp;
 }
 
 
