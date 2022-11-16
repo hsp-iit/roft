@@ -41,8 +41,10 @@ bool ImageSegmentationMeasurement::freeze(const Data& data)
             return false;
         }
         cv::Mat rgb;
+        double rgb_timestamp;
         std::tie(std::ignore, rgb, std::ignore) = bfl::any::any_cast<CameraMeasurement::CameraMeasurementTuple>(camera_data);
-        segmentation_source_->set_rgb_image(rgb);
+        std::tie(std::ignore, rgb_timestamp) = camera_->camera_time_stamp_rgb();
+        segmentation_source_->set_rgb_image(rgb, rgb_timestamp);
     }
 
     /* Step frame if required. */
