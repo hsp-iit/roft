@@ -52,6 +52,8 @@ public:
 
     std::pair<bool, cv::Mat> segmentation(const bool& blocking = false) override;
 
+    double get_time_stamp() override;
+
 private:
     cv::Mat map(const std::vector<cv::Mat>& flow);
 
@@ -293,6 +295,13 @@ template <class T>
 std::pair<bool, cv::Mat> ROFT::ImageSegmentationOFAidedSource<T>::segmentation(const bool& blocking)
 {
     return std::make_pair(segmentation_available_, mask_);
+}
+
+
+template <class T>
+double ROFT::ImageSegmentationOFAidedSource<T>::get_time_stamp()
+{
+    return rgb_image_time_stamp_;
 }
 
 
