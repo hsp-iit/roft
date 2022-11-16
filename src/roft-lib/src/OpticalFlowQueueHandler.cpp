@@ -34,8 +34,13 @@ std::vector<cv::Mat> OpticalFlowQueueHandler::get_buffer_region(const double& in
     std::size_t index;
     bool found = false;
     for (index = 0; index < buffer_.size(); index++)
+    {
         if (abs(buffer_[index].timestamp - initial_time_stamp) < 1e-3)
+        {
             found = true;
+            break;
+        }
+    }
 
     /* Return empty buffer if not found. */
     if (!found)
