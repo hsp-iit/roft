@@ -244,7 +244,16 @@ bool ROFT::ImageSegmentationOFAidedSource<T>::step_frame()
         /* If a new mask is available, the buffered optical flow is used to propagate it. */
         mask.copyTo(mask_);
 
-        cv::remap(mask_, mask_, map(flow_handler_.get_buffer_region(mask_time_stamp)), cv::Mat(), cv::INTER_LINEAR, cv::BORDER_CONSTANT);
+        auto buffer = flow_handler_.get_buffer_region(mask_time_stamp);
+        if (buffer.size() > 0)
+            cv::remap(mask_, mask_, map(buffer), cv::Mat(), cv::INTER_LINEAR, cv::BORDER_CONSTANT);
+        else
+        {
+            /* If no mask available, propagate the last mask using the current optical flow. */
+            mask_.at<uchar>(0, 0) = 0;
+            cv::remap(mask_, mask_, map({flow}), cv::Mat(), cv::INTER_LINEAR, cv::BORDER_CONSTANT);
+        }
+
     }
     else if (valid_flow && !valid_segmentation)
     {
