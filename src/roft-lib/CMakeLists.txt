@@ -49,6 +49,7 @@ set(${LIBRARY_TARGET_NAME}_HDR
     include/ROFT/MeshResource.h
     include/ROFT/ModelParameters.h
     include/ROFT/OpticalFlowUtilities.h
+    include/ROFT/OpticalFlowQueueHandler.h
     include/ROFT/QuaternionModel.h
     include/ROFT/ROFTFilter.h
     include/ROFT/SpatialVelocityModel.h
@@ -72,6 +73,7 @@ set(${LIBRARY_TARGET_NAME}_SRC
     src/MeshResource.cpp
     src/ModelParameters.cpp
     src/OpticalFlowUtilities.cpp
+    src/OpticalFlowQueueHandler.cpp
     src/QuaternionModel.cpp
     src/ROFTFilter.cpp
     src/SpatialVelocityModel.cpp
