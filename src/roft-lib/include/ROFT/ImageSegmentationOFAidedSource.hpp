@@ -96,7 +96,7 @@ private:
 
     /* Optical flow buffer. */
 
-    const std::size_t flow_queue_max_size_ = 20;
+    const std::size_t flow_queue_max_size_ = 30;
 
     ROFT::OpticalFlowQueueHandler flow_handler_;
 
