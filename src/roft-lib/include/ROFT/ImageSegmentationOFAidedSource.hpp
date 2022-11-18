@@ -10,7 +10,6 @@
 
 #include <ROFT/CameraMeasurement.h>
 #include <ROFT/ImageOpticalFlowSource.h>
-#include <ROFT/OpticalFlowQueueHandler.h>
 #include <ROFT/OpticalFlowUtilities.h>
 
 #include <RobotsIO/Camera/CameraParameters.h>
@@ -35,7 +34,7 @@ template <class T>
 class ROFT::ImageSegmentationOFAidedSource : public RobotsIO::Utils::Segmentation
 {
 public:
-    ImageSegmentationOFAidedSource(std::shared_ptr<RobotsIO::Utils::Segmentation> segmentation_source, std::shared_ptr<ROFT::ImageOpticalFlowSource> flow_source, const RobotsIO::Camera::CameraParameters& camera_parameters, const bool& wait_source_initialization, const std::size_t& source_feed_rate = -1);
+    ImageSegmentationOFAidedSource(std::shared_ptr<RobotsIO::Utils::Segmentation> segmentation_source, std::shared_ptr<ROFT::ImageOpticalFlowSource> flow_source, const RobotsIO::Camera::CameraParameters& camera_parameters, const bool& wait_source_initialization);
 
     virtual ~ImageSegmentationOFAidedSource();
 
@@ -53,16 +52,12 @@ public:
 
     std::pair<bool, cv::Mat> segmentation(const bool& blocking = false) override;
 
-    double get_time_stamp() override;
-
 private:
     cv::Mat map(const std::vector<cv::Mat>& flow);
 
     std::shared_ptr<RobotsIO::Utils::Segmentation> segmentation_;
 
     std::shared_ptr<ROFT::ImageOpticalFlowSource> flow_;
-
-    /* Source handling. */
 
     const bool wait_source_initialization_default_;
 
@@ -72,19 +67,11 @@ private:
 
     bool is_first_frame_ = true;
 
-    const int segm_frames_between_iterations_;
-
-    const std::size_t source_feed_rate_;
-
-    std::size_t feed_rate_counter_ = 0;
-
-    /* Optical flow parameters. */
-
     const std::size_t flow_grid_size_;
 
     const float flow_scaling_factor_;
 
-    /* Storage. */
+    const int segm_frames_between_iterations_;
 
     cv::Mat rgb_image_;
 
@@ -92,15 +79,7 @@ private:
 
     cv::Mat coords_;
 
-    double rgb_image_time_stamp_;
-
-    /* Optical flow buffer. */
-
-    const std::size_t flow_queue_max_size_ = 30;
-
-    ROFT::OpticalFlowQueueHandler flow_handler_;
-
-    /* */
+    std::vector<cv::Mat> flow_buffer_;
 
     const std::string log_name_ = "ImageSegmentationOFAidedSource";
 };
@@ -112,8 +91,7 @@ ROFT::ImageSegmentationOFAidedSource<T>::ImageSegmentationOFAidedSource
     std::shared_ptr<RobotsIO::Utils::Segmentation> segmentation_source,
     std::shared_ptr<ROFT::ImageOpticalFlowSource> flow_source,
     const RobotsIO::Camera::CameraParameters& camera_parameters,
-    const bool& wait_source_initialization,
-    const std::size_t& source_feed_rate
+    const bool& wait_source_initialization
 ) :
     segmentation_(segmentation_source),
     flow_(flow_source),
@@ -121,9 +99,7 @@ ROFT::ImageSegmentationOFAidedSource<T>::ImageSegmentationOFAidedSource
     wait_source_initialization_(wait_source_initialization),
     flow_grid_size_(flow_source->get_grid_size()),
     flow_scaling_factor_(flow_source->get_scaling_factor()),
-    segm_frames_between_iterations_(segmentation_source->get_frames_between_iterations()),
-    source_feed_rate_(source_feed_rate),
-    flow_handler_(flow_queue_max_size_)
+    segm_frames_between_iterations_(segmentation_source->get_frames_between_iterations())
 {
     coords_ = cv::Mat(cv::Size(camera_parameters.width(), camera_parameters.height()), CV_32FC2);
     for (std::size_t i = 0; i < camera_parameters.width(); i++)
@@ -145,7 +121,6 @@ template <class T>
 void ROFT::ImageSegmentationOFAidedSource<T>::set_rgb_image(const cv::Mat& image, const double& timestamp)
 {
     rgb_image_ = image.clone();
-    rgb_image_time_stamp_ = timestamp;
 }
 
 
@@ -161,7 +136,6 @@ bool ROFT::ImageSegmentationOFAidedSource<T>::step_frame()
     bool valid_segmentation = false;
     cv::Mat mask;
     std::tie(valid_segmentation, mask) = segmentation_->segmentation(false);
-    double mask_time_stamp = segmentation_->get_time_stamp();
 
     /* Wait for segmentation initialization. */
     if (!segmentation_available_ && wait_source_initialization_)
@@ -171,13 +145,12 @@ bool ROFT::ImageSegmentationOFAidedSource<T>::step_frame()
         for (std::size_t i = 0; (i < number_trials) && (!valid_segmentation); i++)
         {
             if (!rgb_image_.empty())
-                segmentation_->set_rgb_image(rgb_image_, rgb_image_time_stamp_);
+                segmentation_->set_rgb_image(rgb_image_, 0);
 
             if (segmentation_->is_stepping_required())
                 segmentation_->step_frame();
 
             std::tie(valid_segmentation, mask) = segmentation_->segmentation(false);
-            mask_time_stamp = segmentation_->get_time_stamp();
 
             std::this_thread::sleep_for(200ms);
         }
@@ -193,21 +166,6 @@ bool ROFT::ImageSegmentationOFAidedSource<T>::step_frame()
             return false;
     }
 
-    /* Handle source feedback. */
-    if (source_feed_rate_ > 0)
-    {
-        if (feed_rate_counter_ == source_feed_rate_)
-        {
-            if (!rgb_image_.empty())
-            {
-                feed_rate_counter_ = 0;
-                segmentation_->set_rgb_image(rgb_image_, rgb_image_time_stamp_);
-            }
-        }
-        else
-            feed_rate_counter_++;
-    }
-
     if (!segmentation_available_ && valid_segmentation)
     {
         /* The first time the mask is received, it is considered as an initialization. */
@@ -221,11 +179,22 @@ bool ROFT::ImageSegmentationOFAidedSource<T>::step_frame()
 
     if (valid_segmentation)
     {
+        /* At this stage, we provide RGB input for Segmentation sources that might require it. */
+        if (!(rgb_image_.empty()))
+            segmentation_->set_rgb_image(rgb_image_, 0);
+
         /* Check if the mask is informative, otherwise it is skipped. */
         cv::Mat non_zero_coordinates;
         findNonZero(mask, non_zero_coordinates);
         if (non_zero_coordinates.total() == 0)
+        {
             valid_segmentation = false;
+
+            /* If the number of frames between iterations is not known,
+               we drop the accumulated flow frames in the buffer. */
+            if (segm_frames_between_iterations_ <= 0)
+                flow_buffer_.clear();
+        }
     }
 
     /* Get flow. */
@@ -236,23 +205,17 @@ bool ROFT::ImageSegmentationOFAidedSource<T>::step_frame()
     if (valid_flow)
     {
         /* If flow is available, store it in the buffer. */
-        flow_handler_.add_flow(flow, rgb_image_time_stamp_);
+        flow_buffer_.push_back(flow.clone());
     }
 
     if (valid_segmentation)
     {
         /* If a new mask is available, the buffered optical flow is used to propagate it. */
         mask.copyTo(mask_);
+        cv::remap(mask_, mask_, map(flow_buffer_), cv::Mat(), cv::INTER_LINEAR, cv::BORDER_CONSTANT);
 
-        auto buffer = flow_handler_.get_buffer_region(mask_time_stamp);
-        if (buffer.size() > 0)
-            cv::remap(mask_, mask_, map(buffer), cv::Mat(), cv::INTER_LINEAR, cv::BORDER_CONSTANT);
-        else
-        {
-            /* If no mask available, propagate the last mask using the current optical flow. */
-            mask_.at<uchar>(0, 0) = 0;
-            cv::remap(mask_, mask_, map({flow}), cv::Mat(), cv::INTER_LINEAR, cv::BORDER_CONSTANT);
-        }
+        /* Remove buffered flows. */
+        flow_buffer_.clear();
 
     }
     else if (valid_flow && !valid_segmentation)
@@ -333,13 +296,6 @@ std::pair<bool, cv::Mat> ROFT::ImageSegmentationOFAidedSource<T>::segmentation(c
 
 
 template <class T>
-double ROFT::ImageSegmentationOFAidedSource<T>::get_time_stamp()
-{
-    return rgb_image_time_stamp_;
-}
-
-
-template <class T>
 bool ROFT::ImageSegmentationOFAidedSource<T>::reset()
 {
     wait_source_initialization_ = wait_source_initialization_default_;
@@ -348,13 +304,11 @@ bool ROFT::ImageSegmentationOFAidedSource<T>::reset()
 
     is_first_frame_ = true;
 
-    flow_handler_.clear();
+    flow_buffer_.clear();
 
     rgb_image_ = cv::Mat();
 
     mask_ = cv::Mat();
-
-    feed_rate_counter_ = 0;
 
     return segmentation_->reset();
 }
