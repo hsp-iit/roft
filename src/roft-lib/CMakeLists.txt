@@ -46,6 +46,7 @@ set(${LIBRARY_TARGET_NAME}_HDR
     include/ROFT/ImageOpticalFlowSource.h
     include/ROFT/ImageSegmentationMeasurement.h
     include/ROFT/ImageSegmentationOFAidedSource.hpp
+    include/ROFT/ImageSegmentationOFAidedSourceStamped.hpp
     include/ROFT/MeshResource.h
     include/ROFT/ModelParameters.h
     include/ROFT/OpticalFlowUtilities.h
