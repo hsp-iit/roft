@@ -37,7 +37,6 @@ jobs:
         cd ${GITHUB_WORKSPACE}
         git clone https://github.com/robotology/bayes-filters-lib
         cd bayes-filters-lib
-        git checkout devel
         mkdir build
         cd build
         cmake -DCMAKE_INSTALL_PREFIX=${GITHUB_WORKSPACE} ..
