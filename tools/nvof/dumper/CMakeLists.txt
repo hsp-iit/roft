@@ -28,7 +28,7 @@ target_include_directories(${EXE_TARGET_NAME}
 target_link_libraries(${EXE_TARGET_NAME}
                       PRIVATE
                       RobotsIO::RobotsIO
-                      ROFTLib
+                      ROFT
 )
 
 install(TARGETS ${EXE_TARGET_NAME} DESTINATION bin)
