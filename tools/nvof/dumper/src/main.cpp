@@ -41,14 +41,16 @@ int main(int argc, char** argv)
 {
     const std::string log_name = "ROFT-of-dumper";
 
-    if (argc != 9)
+    if (argc != 10)
     {
-        std::cerr << "Synopsis: " + log_name + " <dataset_path> <data_format> <rgb_format> <heading_zeros> <index_offset> <camera_width> <camera_height> <output_path>" << std::endl << std::endl;
+        std::cerr << "Synopsis: " + log_name + " <dataset_path> <data_format> <rgb_format> <heading_zeros> <index_offset> <camera_width> <camera_height> <nvof_version> <output_path>" << std::endl << std::endl;
 
         std::cerr << "  It is expected that (<camera_width> x <camera_height>) frames of the form %0<heading_zero>d.<rgb_format> are available within <dataset_path>/rgb/. " << std::endl
                   << "  The first frame starts from index (0 + <index_offset>)." << std::endl << std::endl;
 
-        std::cerr << "  It is also expected that a data.<data_format> file respecting RobotsIO::Camera log format is available in <dataset_path>." << std::endl;
+        std::cerr << "  It is also expected that a data.<data_format> file respecting RobotsIO::Camera log format is available in <dataset_path>." << std::endl << std::endl;
+
+        std::cerr << "  <nvof_version> to be chosen among \"nvof1\" and \"nvof2\"." << std::endl;
 
         return EXIT_FAILURE;
     }
@@ -75,7 +77,14 @@ int main(int argc, char** argv)
     if (!parse_size_t(argv, 7, "camera_height", camera_height))
         return EXIT_FAILURE;
 
-    std::string output_path{argv[8]};
+    const std::string nvof_version{argv[8]};
+    if ((nvof_version != "nvof1") && (nvof_version != "nvof2"))
+    {
+        std::cerr << "Invalid <nvof_version> \"" + nvof_version + "\"" << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    std::string output_path{argv[9]};
     if (output_path.back() != '/')
         output_path += '/';
 
@@ -104,7 +113,11 @@ int main(int argc, char** argv)
     auto camera_measurement = std::make_shared<CameraMeasurement>(std::move(camera));
 
     /* Initialize optical flow source. */
-    ImageOpticalFlowNVOF flow_source(camera_measurement, ImageOpticalFlowNVOF::NVOFPerformance_1_0::Slow, true);
+    std::unique_ptr<ImageOpticalFlowNVOF> flow_source;
+    if (nvof_version == "nvof1")
+        flow_source = std::make_unique<ImageOpticalFlowNVOF>(camera_measurement, ImageOpticalFlowNVOF::NVOFPerformance_1_0::Slow, true);
+    else if (nvof_version == "nvof2")
+        flow_source = std::make_unique<ImageOpticalFlowNVOF>(camera_measurement, ImageOpticalFlowNVOF::NVOFPerformance_2_0::Slow, true);
 
     /* Process frames. */
     while(camera_measurement->freeze(CameraMeasurementType::RGB))
@@ -112,9 +125,9 @@ int main(int argc, char** argv)
         bool valid_flow = false;
         cv::Mat flow;
 
-        flow_source.step_frame();
+        flow_source->step_frame();
 
-        std::tie(valid_flow, flow) = flow_source.flow(false);
+        std::tie(valid_flow, flow) = flow_source->flow(false);
 
         if (valid_flow)
         {
