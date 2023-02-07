@@ -9,6 +9,12 @@
 
 set(EXE_TARGET_NAME ROFT-of-dumper)
 
+find_package(OpenCV REQUIRED)
+
+if (NOT OpenCV_opencv_cudaoptflow_FOUND)
+  message(FATAL_ERROR "The OpenCV installation on this system is missing the OpenCV_opencv_cudaoptflow contrib module.""")
+endif()
+
 find_package(RobotsIO REQUIRED)
 
 set(${EXE_TARGET_NAME}_HDR
