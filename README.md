@@ -25,6 +25,8 @@
 
 We support running the experiments on the [Fast-YCB](https://github.com/hsp-iit/fast-ycb) dataset via the provided Docker image.
 
+> If you want to install the repository manually, please refer to the recipe contained in the [**`Dockerfile`**](./dockerfiles/Dockerfile).
+
 1. Pull the docker image:
     ```console
     docker pull ghcr.io/hsp-iit/roft:latest
@@ -77,8 +79,6 @@ We support running the experiments on the [Fast-YCB](https://github.com/hsp-iit/
     The docker image provides `evince` and `eog` in order open pdf and png files, respectively.
 
 > In order to run part of the provided software it could be required to temporarily execute `xhost +` in a console outside of Docker in order to allow the container accessing the X server facilities. The command can be run even **after** the container has been already launched.
-
-> If you want to install the repository manually, please refer to the recipe contained in the [**`Dockerfile`**](./dockerfiles/Dockerfile). Please be aware that the results might differ if unsupported versions of the dependencies are used.
 
 > Support for reproducing the experiments on the HO-3D dataset will be added in the near future.
 
